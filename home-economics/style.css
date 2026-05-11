@@ -1,0 +1,227 @@
+/* Home Economics — Food Safety hazard hunter
+   Warm kitchen palette: cream, butter, terracotta, warning red */
+:root {
+  --hec-cream:    #FFF6E1;
+  --hec-butter:   #FFD86A;
+  --hec-terra:    #C76838;
+  --hec-deep:     #7C3A1F;
+  --hec-line:     #595959;
+  --hec-warn:     #D62828;
+  --hec-good:     #3F7D34;
+  --hec-ink:      #2C1A0F;
+  --hec-panel:    #FFFFFF;
+  --hec-faded:    #8A6D4F;
+}
+
+body {
+  background: linear-gradient(180deg, var(--hec-cream) 0%, #FBE6B6 100%);
+  color: var(--hec-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.hec { max-width: 1200px; margin: 0 auto; padding: 1.3rem 1.1rem 3rem; }
+
+.hec-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: var(--hec-panel);
+  border: 1px solid #E0C896;
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 1rem;
+}
+.kicker {
+  display: inline-block;
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--hec-warn);
+  color: white;
+  padding: 0.25rem 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+.hec-hero h1 {
+  margin: 0.5rem 0 0.35rem;
+  color: var(--hec-deep);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: -0.01em;
+}
+.hec-hero p {
+  margin: 0;
+  max-width: 56ch;
+  color: #5C422A;
+}
+
+.hec-stats {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.stat {
+  background: var(--hec-cream);
+  border: 1.5px solid #E0C896;
+  border-radius: 10px;
+  padding: 0.4rem 0.7rem;
+  min-width: 84px;
+  text-align: center;
+}
+.stat-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hec-faded);
+  font-weight: 700;
+}
+.stat-value {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--hec-deep);
+}
+.hec-reset {
+  background: transparent;
+  border: 1.5px solid var(--hec-line);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hec-reset:hover { background: var(--hec-cream); }
+
+.hec-feedback {
+  margin: 0 0 0.7rem;
+  background: var(--hec-panel);
+  border-left: 6px solid var(--hec-butter);
+  border-top: 1px solid #E0C896;
+  border-right: 1px solid #E0C896;
+  border-bottom: 1px solid #E0C896;
+  padding: 0.65rem 0.9rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  min-height: 1.3em;
+}
+.hec-feedback strong { color: var(--hec-deep); }
+.hec-feedback.ok  { border-left-color: var(--hec-good); background: #F0F8EF; }
+.hec-feedback.bad { border-left-color: var(--hec-warn); background: #FFEBEB; }
+
+/* ---- Kitchen SVG ---- */
+.hec-stage {
+  background: var(--hec-panel);
+  border: 2px solid var(--hec-line);
+  border-radius: 12px;
+  padding: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.kitchen-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: crosshair;
+}
+.hz { cursor: pointer; }
+.hz.found {
+  animation: hz-found 0.5s;
+}
+.hz.found > * { filter: drop-shadow(0 0 4px #3F7D34); }
+@keyframes hz-found {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* glow rings overlaid by JS */
+.hit-ring {
+  fill: none;
+  stroke: var(--hec-good);
+  stroke-width: 3;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.hit-ring.miss { stroke: var(--hec-warn); }
+
+/* ---- Checklist + bottom ---- */
+.hec-bottom {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.hec-start {
+  background: var(--hec-deep);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+.hec-start:hover { background: var(--hec-terra); }
+
+.hec-checklist {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  background: var(--hec-panel);
+  border: 1px solid #E0C896;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.4rem 0.9rem;
+  min-width: 280px;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: var(--hec-faded);
+  padding: 0.2rem 0.1rem;
+}
+.check-item.done {
+  color: var(--hec-good);
+  font-weight: 700;
+}
+.check-item .box {
+  width: 16px; height: 16px;
+  border: 2px solid #C8A560;
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.check-item.done .box {
+  border-color: var(--hec-good);
+  background: var(--hec-good);
+  color: white;
+}
+.check-item.done .box::after {
+  content: "✓";
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* ---- Result ---- */
+.hec-result {
+  margin-top: 1rem;
+  background: var(--hec-panel);
+  border: 2px solid var(--hec-deep);
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
+  text-align: center;
+}
+.hec-result h2 {
+  margin: 0 0 0.4rem;
+  color: var(--hec-deep);
+  font-size: 1.6rem;
+}
+.hec-result p { margin: 0 0 0.9rem; }

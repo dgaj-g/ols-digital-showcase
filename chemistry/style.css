@@ -1,0 +1,371 @@
+/* Chemistry — clean cool-blues, scientific palette, group-coded element cells */
+:root {
+  --chem-bg: #0F1F2E;
+  --chem-surface: #FFFFFF;
+  --chem-panel: #F1F5F9;
+  --chem-ink: #0F172A;
+  --chem-muted: #64748B;
+  --chem-line: #CBD5E1;
+  --chem-accent: #0E7490;
+  --chem-accent-deep: #075466;
+  --chem-mono: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  /* element-category colours */
+  --el-alkali:    #FFB4A2;
+  --el-alkaline:  #FFDDB3;
+  --el-transition: #FFE9A8;
+  --el-postmetal: #C8E6C9;
+  --el-metalloid: #B3E1DD;
+  --el-nonmetal:  #B3D7F2;
+  --el-halogen:   #E0B3D7;
+  --el-noble:     #D8B3E5;
+  --el-lanthanide:#F4C2C2;
+  --el-actinide:  #E6BFD9;
+  --el-unknown:   #E5E7EB;
+}
+
+body {
+  background: linear-gradient(180deg, #ECF2F8 0%, #DCE6F2 100%);
+  color: var(--chem-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.chem { max-width: 1280px; margin: 0 auto; padding: 1.3rem 1rem 3rem; }
+
+.chem-hero {
+  background: linear-gradient(135deg, #134E5E 0%, #0E7490 100%);
+  color: white;
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.chem-hero::after {
+  content: "";
+  position: absolute;
+  right: -40px; top: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.chem-hero h1 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.01em;
+}
+.chem-hero p { margin: 0; opacity: 0.92; max-width: 60ch; }
+
+.chem-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid var(--chem-accent);
+}
+.chem-tab {
+  background: transparent;
+  border: 2px solid var(--chem-accent);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--chem-accent);
+  margin-bottom: -2px;
+}
+.chem-tab:hover { background: rgba(14,116,144,0.08); }
+.chem-tab.active {
+  background: var(--chem-accent);
+  color: white;
+}
+
+/* ---- Explore layout ---- */
+.chem-explore {
+  display: grid;
+  grid-template-columns: 220px 1fr 260px;
+  gap: 1rem;
+}
+@media (max-width: 1000px) {
+  .chem-explore { grid-template-columns: 1fr; }
+  .chem-controls, .chem-detail { order: 2; }
+  .chem-grid-wrap { order: 1; overflow-x: auto; }
+}
+
+.chem-controls {
+  background: var(--chem-surface);
+  border: 1px solid var(--chem-line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  height: fit-content;
+}
+.chem-control-row { margin-bottom: 0.9rem; }
+.ctrl-label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chem-muted);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.chem-pill-row { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.chem-pill {
+  background: white;
+  border: 1.5px solid var(--chem-line);
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--chem-ink);
+  transition: background 0.12s;
+}
+.chem-pill:hover { background: rgba(14,116,144,0.1); }
+.chem-pill.active {
+  background: var(--chem-accent);
+  color: white;
+  border-color: var(--chem-accent);
+}
+.chem-clear {
+  background: transparent;
+  border: 1.5px solid var(--chem-line);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+.chem-clear:hover { background: var(--chem-panel); }
+
+/* ---- Periodic grid ---- */
+.chem-grid-wrap {
+  background: var(--chem-surface);
+  border: 1px solid var(--chem-line);
+  border-radius: 12px;
+  padding: 0.7rem;
+  overflow-x: auto;
+}
+.chem-grid {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  grid-template-rows: repeat(7, auto);
+  gap: 3px;
+  min-width: 720px;
+}
+.el {
+  background: var(--el-unknown);
+  border: 1px solid #595959;
+  border-radius: 4px;
+  padding: 2px 0;
+  text-align: center;
+  font-family: var(--chem-mono);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s, box-shadow 0.12s, opacity 0.15s;
+  min-height: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.el .el-num {
+  font-size: 0.55rem;
+  color: #555;
+  line-height: 1;
+}
+.el .el-sym {
+  font-size: 0.85rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--chem-ink);
+}
+.el:hover { transform: scale(1.05); box-shadow: 0 4px 10px rgba(15,23,42,0.18); z-index: 2; }
+.el.active {
+  outline: 2px solid var(--chem-accent-deep);
+  outline-offset: 1px;
+  z-index: 3;
+}
+.el.dim { opacity: 0.28; }
+.el.hl { box-shadow: 0 0 0 2px var(--chem-accent-deep) inset; }
+.el-alkali    { background: var(--el-alkali); }
+.el-alkaline  { background: var(--el-alkaline); }
+.el-transition{ background: var(--el-transition); }
+.el-postmetal { background: var(--el-postmetal); }
+.el-metalloid { background: var(--el-metalloid); }
+.el-nonmetal  { background: var(--el-nonmetal); }
+.el-halogen   { background: var(--el-halogen); }
+.el-noble     { background: var(--el-noble); }
+.el-lanthanide{ background: var(--el-lanthanide); }
+.el-actinide  { background: var(--el-actinide); }
+.el-placeholder {
+  background: transparent;
+  border: 1px dashed #c0c8d4;
+  font-size: 0.6rem;
+  color: #888;
+  padding: 2px;
+}
+
+/* ---- Detail panel ---- */
+.chem-detail {
+  background: var(--chem-surface);
+  border: 1px solid var(--chem-line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  height: fit-content;
+  position: sticky;
+  top: 1rem;
+}
+.detail-cue {
+  text-align: center;
+  color: var(--chem-muted);
+  font-style: italic;
+  padding: 2rem 0.5rem;
+  margin: 0;
+}
+.detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--chem-line);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.detail-num {
+  font-family: var(--chem-mono);
+  color: var(--chem-muted);
+  font-size: 0.85rem;
+}
+.detail-sym {
+  font-family: var(--chem-mono);
+  font-weight: 900;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--chem-accent-deep);
+}
+.detail-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.6rem;
+}
+.detail-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.detail-cell {
+  background: var(--chem-panel);
+  border-radius: 6px;
+  padding: 0.4rem 0.55rem;
+}
+.detail-cell-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chem-muted);
+  font-weight: 700;
+}
+.detail-cell-value {
+  font-family: var(--chem-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--chem-ink);
+}
+.detail-cat {
+  margin-top: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid #595959;
+}
+
+/* ---- Quiz ---- */
+.chem-quiz { display: flex; flex-direction: column; gap: 0.7rem; }
+.quiz-bar {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--chem-surface);
+  border: 1px solid var(--chem-line);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+}
+.quiz-stat { display: flex; flex-direction: column; min-width: 70px; }
+.quiz-stat .stat-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chem-muted);
+  font-weight: 700;
+}
+.quiz-stat .stat-val {
+  font-family: var(--chem-mono);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--chem-accent-deep);
+}
+.chem-reset {
+  margin-left: auto;
+  background: transparent;
+  border: 1.5px solid var(--chem-line);
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chem-reset:hover { background: var(--chem-panel); }
+
+.quiz-prompt {
+  background: var(--chem-surface);
+  border-left: 6px solid var(--chem-accent);
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  font-size: 1.05rem;
+  border-top: 1px solid var(--chem-line);
+  border-right: 1px solid var(--chem-line);
+  border-bottom: 1px solid var(--chem-line);
+}
+.quiz-prompt strong { color: var(--chem-accent-deep); }
+.chem-grid-quiz .el { cursor: pointer; }
+.chem-grid-quiz .el.flash-ok  { animation: el-flash-ok 0.4s; box-shadow: 0 0 0 3px #2A9F4F inset; }
+.chem-grid-quiz .el.flash-bad { animation: el-flash-bad 0.4s; box-shadow: 0 0 0 3px #D03030 inset; }
+@keyframes el-flash-ok { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+@keyframes el-flash-bad { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+
+.quiz-feedback {
+  min-height: 1.2em;
+  font-weight: 700;
+  font-style: italic;
+  text-align: center;
+  color: var(--chem-muted);
+}
+.quiz-feedback.ok  { color: #2A9F4F; }
+.quiz-feedback.bad { color: #D03030; }
+
+.quiz-start {
+  background: var(--chem-accent-deep);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: center;
+}
+.quiz-start:hover { background: var(--chem-accent); }
+
+.quiz-result {
+  background: var(--chem-surface);
+  border: 2px solid var(--chem-accent);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+.quiz-result h3 {
+  margin: 0 0 0.3rem;
+  color: var(--chem-accent-deep);
+  font-size: 1.5rem;
+}
+.quiz-result p { margin: 0 0 0.7rem; }
