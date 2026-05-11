@@ -95,7 +95,39 @@
             <span class="rt-sum-label">Verdict</span>
             <span class="rt-sum-value" id="rtVerdict">—</span>
           </div>
+          <div class="rt-summary-cell">
+            <span class="rt-sum-label">Practice effect</span>
+            <span class="rt-sum-value" id="rtPractice">—</span>
+          </div>
         </div>
+
+        <details class="rt-extras" open>
+          <summary>Your data — every trial</summary>
+          <div class="scatter-wrap">
+            <svg id="rtScatter" viewBox="0 0 660 220" class="scatter" aria-label="Trial-by-trial reaction times"></svg>
+          </div>
+          <div class="scatter-legend">
+            <span><span class="legend-dot" style="background:#2A9F4F"></span>Congruent (word and ink match)</span>
+            <span><span class="legend-dot" style="background:#D03030"></span>Incongruent (word and ink differ)</span>
+            <span><span class="legend-line"></span>Mean for each condition</span>
+          </div>
+        </details>
+
+        <details class="rt-extras">
+          <summary>How does your interference compare to a typical adult?</summary>
+          <div class="compare-bar">
+            <div class="compare-track">
+              <div class="compare-band" style="left:25%;width:25%"></div>
+              <div class="compare-tick" style="left:0%"><span>0 ms</span></div>
+              <div class="compare-tick" style="left:25%"><span>100 ms</span></div>
+              <div class="compare-tick" style="left:50%"><span>200 ms</span></div>
+              <div class="compare-tick" style="left:75%"><span>300 ms</span></div>
+              <div class="compare-tick" style="left:100%"><span>400+</span></div>
+              <div class="compare-you" id="compareYou"><span>you</span></div>
+            </div>
+            <p class="compare-help">Typical adult Stroop interference falls in the green band (about 100–200 ms). Reading is so automatic that almost everyone shows some interference.</p>
+          </div>
+        </details>
 
         <details class="rt-explain">
           <summary>Why does this happen?</summary>

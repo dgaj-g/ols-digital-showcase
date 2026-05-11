@@ -18,184 +18,60 @@
 
   <main class="hec">
 
-    <header class="hec-hero">
-      <div>
-        <span class="kicker">Spot the hazards</span>
-        <h1>The Unsafe Kitchen</h1>
-        <p>Find the food-safety hazards before time runs out. Tap anywhere in the scene you think something is wrong.</p>
+    <!-- Intro screen -->
+    <section class="hec-screen" id="screenIntro">
+      <div class="hec-card hec-card-intro">
+        <span class="hec-kicker">Kitchen Inspector</span>
+        <h1>Pass or fail the kitchen?</h1>
+        <p class="hec-lead">You're the food safety officer. Ten scenarios — for each one, decide what's wrong (or whether it's a safe practice). Pick the right hazard category to earn the point.</p>
+
+        <div class="hec-categories">
+          <div class="cat-chip" data-cat="cross"><span class="cat-dot" style="background:#C72E2E"></span>Cross-contamination</div>
+          <div class="cat-chip" data-cat="temp"><span class="cat-dot" style="background:#1F6FA8"></span>Temperature control</div>
+          <div class="cat-chip" data-cat="hygiene"><span class="cat-dot" style="background:#C76838"></span>Personal hygiene</div>
+          <div class="cat-chip" data-cat="chemical"><span class="cat-dot" style="background:#7C3F9E"></span>Chemical contamination</div>
+          <div class="cat-chip" data-cat="date"><span class="cat-dot" style="background:#B68515"></span>Out of date</div>
+          <div class="cat-chip" data-cat="physical"><span class="cat-dot" style="background:#3A4555"></span>Physical hazard</div>
+          <div class="cat-chip" data-cat="safe"><span class="cat-dot" style="background:#3F7D34"></span>Safe practice</div>
+        </div>
+
+        <button class="hec-go" id="btnStart" type="button">Start the inspection</button>
       </div>
-      <div class="hec-stats">
-        <div class="stat"><span class="stat-label">Found</span><span class="stat-value"><span id="foundCount">0</span> / <span id="totalCount">10</span></span></div>
-        <div class="stat"><span class="stat-label">Misses</span><span class="stat-value" id="missCount">0</span></div>
-        <div class="stat"><span class="stat-label">Time</span><span class="stat-value" id="timeLeft">— s</span></div>
-        <button class="hec-reset" id="btnReset" type="button">Reset</button>
+    </section>
+
+    <!-- Round screen -->
+    <section class="hec-screen" id="screenRound" hidden>
+      <header class="hec-bar">
+        <div class="bar-stat"><span class="bar-label">Inspection</span><span class="bar-val"><span id="rNum">1</span> / <span id="rTotal">10</span></span></div>
+        <div class="bar-stat"><span class="bar-label">Score</span><span class="bar-val" id="rScore">0</span></div>
+        <button class="hec-quit" id="btnQuit" type="button">Quit</button>
+      </header>
+
+      <div class="hec-card hec-card-round">
+        <div class="round-icon" id="roundIcon"></div>
+        <h2 class="round-scenario" id="roundScenario"></h2>
+        <p class="round-detail" id="roundDetail"></p>
+        <div class="round-options" id="roundOptions"></div>
+        <div class="round-feedback" id="roundFeedback" aria-live="polite"></div>
+        <button class="hec-go" id="btnNext" type="button" hidden>Next inspection →</button>
       </div>
-    </header>
+    </section>
 
-    <p class="hec-feedback" id="hecFeedback" aria-live="polite">Click <strong>Start</strong> to begin the timer.</p>
+    <!-- Results screen -->
+    <section class="hec-screen" id="screenResults" hidden>
+      <div class="hec-card hec-card-results">
+        <span class="hec-kicker">Inspection complete</span>
+        <h2 id="resultTitle"></h2>
+        <p class="hec-lead" id="resultMsg"></p>
 
-    <div class="hec-stage">
-      <svg viewBox="0 0 1000 560" id="kitchenSvg" class="kitchen-svg" aria-label="Cartoon kitchen scene with food safety hazards" xmlns="http://www.w3.org/2000/svg">
-        <!-- Back wall and floor -->
-        <rect x="0" y="0" width="1000" height="380" fill="#FFEFD0"/>
-        <rect x="0" y="380" width="1000" height="180" fill="#E8C895"/>
-        <line x1="0" y1="380" x2="1000" y2="380" stroke="#8C6A30" stroke-width="2"/>
-        <!-- Tile pattern on back wall -->
-        <g stroke="#F4DFB3" stroke-width="1" opacity="0.7">
-          <line x1="0" y1="60"  x2="1000" y2="60"/>
-          <line x1="0" y1="120" x2="1000" y2="120"/>
-          <line x1="0" y1="180" x2="1000" y2="180"/>
-          <line x1="0" y1="240" x2="1000" y2="240"/>
-        </g>
-        <!-- Window -->
-        <rect x="380" y="40" width="240" height="160" fill="#B7DEF0" stroke="#595959" stroke-width="2"/>
-        <line x1="500" y1="40"  x2="500" y2="200" stroke="#595959" stroke-width="2"/>
-        <line x1="380" y1="120" x2="620" y2="120" stroke="#595959" stroke-width="2"/>
-        <!-- Worktop -->
-        <rect x="0" y="290" width="1000" height="90" fill="#D5B58E" stroke="#595959" stroke-width="2"/>
-        <line x1="0" y1="304" x2="1000" y2="304" stroke="#A78B62" stroke-width="2"/>
-        <!-- Cupboard fronts under worktop -->
-        <rect x="0" y="380" width="1000" height="100" fill="#A88555" opacity="0.0"/>
+        <div class="cat-breakdown">
+          <h3>Hazard categories you covered</h3>
+          <div class="cat-grid" id="catGrid"></div>
+        </div>
 
-        <!-- ========== Fridge (left) ========== -->
-        <g id="fridge-group">
-          <rect x="40" y="120" width="160" height="290" fill="#FAFAFA" stroke="#595959" stroke-width="2"/>
-          <line x1="40" y1="240" x2="200" y2="240" stroke="#595959" stroke-width="2"/>
-          <rect x="170" y="170" width="14" height="40" fill="#888"/>
-          <rect x="170" y="290" width="14" height="40" fill="#888"/>
-          <!-- Display reading 12°C -->
-          <g id="hz-fridge-temp" class="hz" data-hz="fridgeTemp" tabindex="0" role="button" aria-label="Fridge temperature">
-            <rect x="60" y="140" width="80" height="34" fill="#0A0A0A" rx="3"/>
-            <text x="100" y="166" text-anchor="middle" fill="#FF4D4D" font-family="monospace" font-weight="700" font-size="22">12°C</text>
-          </g>
-          <!-- Open shelves visible -->
-          <line x1="40" y1="200" x2="200" y2="200" stroke="#CCC" stroke-width="1.5"/>
-          <!-- Inside fridge: cooked food next to raw chicken (cross-contamination) -->
-          <g id="hz-fridge-stack" class="hz" data-hz="fridgeStack" tabindex="0" role="button" aria-label="Items in fridge">
-            <!-- Raw chicken (pink) -->
-            <ellipse cx="80"  cy="218" rx="22" ry="10" fill="#F0B5B5" stroke="#A04444" stroke-width="1.5"/>
-            <text x="80" y="222" text-anchor="middle" font-size="9" font-weight="700" fill="#5A1A1A">RAW</text>
-            <!-- Cooked rice next to it -->
-            <ellipse cx="140" cy="218" rx="22" ry="10" fill="#FFF8C8" stroke="#A8924A" stroke-width="1.5"/>
-            <text x="140" y="222" text-anchor="middle" font-size="9" font-weight="700" fill="#5A4A1A">RICE</text>
-          </g>
-        </g>
-
-        <!-- ========== Milk on shelf (use-by passed) ========== -->
-        <g id="hz-milk" class="hz" data-hz="milkExpired" tabindex="0" role="button" aria-label="Milk carton">
-          <rect x="270" y="225" width="40" height="65" fill="#F5F5F5" stroke="#595959" stroke-width="1.5"/>
-          <polygon points="270,225 290,210 310,225" fill="#F5F5F5" stroke="#595959" stroke-width="1.5"/>
-          <text x="290" y="252" text-anchor="middle" font-size="9" font-weight="700" fill="#1A3A6B">MILK</text>
-          <text x="290" y="270" text-anchor="middle" font-size="7" fill="#A04444">USE BY</text>
-          <text x="290" y="280" text-anchor="middle" font-size="7" fill="#A04444">04 MAY</text>
-        </g>
-
-        <!-- ========== Worktop items ========== -->
-        <!-- Cutting board with raw meat AND lettuce on the same board -->
-        <g id="hz-board" class="hz" data-hz="sameBoard" tabindex="0" role="button" aria-label="Cutting board">
-          <rect x="350" y="300" width="170" height="56" rx="6" fill="#D2A779" stroke="#7C5A30" stroke-width="2"/>
-          <!-- Raw chicken pieces -->
-          <ellipse cx="390" cy="320" rx="18" ry="10" fill="#F0B5B5" stroke="#A04444" stroke-width="1.5"/>
-          <ellipse cx="390" cy="338" rx="14" ry="8" fill="#F0B5B5" stroke="#A04444" stroke-width="1.5"/>
-          <!-- Lettuce / salad next to it on the SAME board -->
-          <circle cx="475" cy="325" r="14" fill="#A8D080" stroke="#3F6E2E" stroke-width="1.5"/>
-          <circle cx="490" cy="335" r="11" fill="#A8D080" stroke="#3F6E2E" stroke-width="1.5"/>
-        </g>
-
-        <!-- Cracked egg in egg tray -->
-        <g id="hz-egg" class="hz" data-hz="crackedEgg" tabindex="0" role="button" aria-label="Egg tray">
-          <rect x="560" y="318" width="100" height="36" rx="4" fill="#C3996F" stroke="#7C5A30" stroke-width="1.5"/>
-          <circle cx="582" cy="334" r="10" fill="#FFF6D8" stroke="#A8924A" stroke-width="1.2"/>
-          <circle cx="610" cy="334" r="10" fill="#FFF6D8" stroke="#A8924A" stroke-width="1.2"/>
-          <circle cx="638" cy="334" r="10" fill="#FFF6D8" stroke="#A8924A" stroke-width="1.2"/>
-          <!-- crack on middle egg -->
-          <path d="M 605 328 L 608 331 L 605 334 L 608 337 L 614 339" fill="none" stroke="#7C5A30" stroke-width="1.5"/>
-          <ellipse cx="612" cy="342" rx="6" ry="2" fill="#FCE3A7"/>
-        </g>
-
-        <!-- Cleaning spray near food -->
-        <g id="hz-spray" class="hz" data-hz="chemicalNearFood" tabindex="0" role="button" aria-label="Cleaning spray">
-          <rect x="690" y="285" width="32" height="50" rx="3" fill="#79C0E8" stroke="#1F5A82" stroke-width="1.5"/>
-          <rect x="694" y="278" width="24" height="10" fill="#1F5A82"/>
-          <text x="706" y="312" text-anchor="middle" font-size="7" font-weight="700" fill="#FFF">CLEAN</text>
-          <text x="706" y="322" text-anchor="middle" font-size="7" font-weight="700" fill="#FFF">SPRAY</text>
-        </g>
-
-        <!-- Knives in sink with soapy water -->
-        <g id="sink-group">
-          <rect x="760" y="300" width="200" height="80" rx="6" fill="#BFC8D2" stroke="#595959" stroke-width="2"/>
-          <rect x="770" y="312" width="180" height="58" rx="4" fill="#E6EAEF" stroke="#7E8A99" stroke-width="1.2"/>
-          <!-- Tap -->
-          <rect x="850" y="270" width="14" height="32" fill="#9AA3AC"/>
-          <rect x="846" y="266" width="22" height="8" fill="#7C8590"/>
-          <g id="hz-knives" class="hz" data-hz="knivesInSink" tabindex="0" role="button" aria-label="Knives in sink">
-            <!-- soapy bubbles -->
-            <circle cx="800" cy="334" r="9" fill="#FFFFFF" opacity="0.85"/>
-            <circle cx="820" cy="342" r="11" fill="#FFFFFF" opacity="0.85"/>
-            <circle cx="840" cy="333" r="8" fill="#FFFFFF" opacity="0.85"/>
-            <circle cx="860" cy="346" r="12" fill="#FFFFFF" opacity="0.85"/>
-            <circle cx="892" cy="340" r="9" fill="#FFFFFF" opacity="0.85"/>
-            <!-- knife handle peeking out -->
-            <rect x="828" y="316" width="22" height="6" rx="2" fill="#3A2A1A" stroke="#7C5A30" stroke-width="1"/>
-            <polygon points="850,318 880,322 850,326" fill="#CFCFCF" stroke="#595959" stroke-width="1"/>
-          </g>
-        </g>
-
-        <!-- Bin overflowing -->
-        <g id="hz-bin" class="hz" data-hz="binOverflow" tabindex="0" role="button" aria-label="Bin">
-          <rect x="20" y="420" width="80" height="120" rx="4" fill="#888" stroke="#595959" stroke-width="2"/>
-          <rect x="12" y="408" width="96" height="14" rx="2" fill="#666" stroke="#595959" stroke-width="2"/>
-          <!-- overflowing trash -->
-          <path d="M 22 408 L 30 396 L 40 410 L 50 392 L 62 408 L 72 396 L 84 408 L 96 402" fill="#F0E0B0" stroke="#A8924A" stroke-width="1.5"/>
-          <circle cx="48" cy="402" r="5" fill="#E89A6E" stroke="#A04444" stroke-width="1"/>
-          <rect x="62" y="394" width="10" height="6" fill="#A8C8E0" stroke="#1F5A82" stroke-width="1"/>
-        </g>
-
-        <!-- Wet floor / spill -->
-        <g id="hz-spill" class="hz" data-hz="wetFloor" tabindex="0" role="button" aria-label="Wet floor">
-          <ellipse cx="540" cy="480" rx="80" ry="14" fill="#A8D5EC" opacity="0.85" stroke="#1F5A82" stroke-width="1.5"/>
-          <ellipse cx="560" cy="478" rx="20" ry="4" fill="#FFFFFF" opacity="0.7"/>
-        </g>
-
-        <!-- Personal hygiene: hair not tied + no apron on chef -->
-        <g id="hz-chef" class="hz" data-hz="hair" tabindex="0" role="button" aria-label="Chef figure">
-          <!-- Body -->
-          <rect x="650" y="430" width="60" height="100" rx="6" fill="#F5F5F5" stroke="#595959" stroke-width="1.5"/>
-          <!-- Loose hair -->
-          <path d="M 660 415 Q 645 430 655 460 M 700 415 Q 715 430 705 460" fill="none" stroke="#3A2A1A" stroke-width="3"/>
-          <!-- Head -->
-          <circle cx="680" cy="408" r="22" fill="#F2D6B3" stroke="#7C5A30" stroke-width="1.5"/>
-          <path d="M 660 405 Q 680 380 700 405" fill="#3A2A1A"/>
-          <circle cx="673" cy="410" r="1.6" fill="#2A1A0A"/>
-          <circle cx="687" cy="410" r="1.6" fill="#2A1A0A"/>
-          <path d="M 673 420 Q 680 423 687 420" stroke="#A04444" stroke-width="1.4" fill="none"/>
-        </g>
-
-        <!-- Cooked food left out on counter (room temp) -->
-        <g id="hz-rice" class="hz" data-hz="leftOut" tabindex="0" role="button" aria-label="Food left out">
-          <ellipse cx="240" cy="332" rx="32" ry="9" fill="#A87E3F" stroke="#5A3F1A" stroke-width="1.5"/>
-          <path d="M 210 332 Q 240 305 270 332" fill="#FFF8C8" stroke="#A8924A" stroke-width="1.5"/>
-          <!-- steam waves -->
-          <path d="M 225 300 Q 230 290 225 282" fill="none" stroke="#CCC" stroke-width="1.5" opacity="0.6"/>
-          <path d="M 245 296 Q 250 286 245 278" fill="none" stroke="#CCC" stroke-width="1.5" opacity="0.6"/>
-          <path d="M 260 300 Q 265 290 260 282" fill="none" stroke="#CCC" stroke-width="1.5" opacity="0.6"/>
-        </g>
-
-        <!-- Hazard hit indicator template (positioned via JS) -->
-        <g id="hitMarkers"></g>
-      </svg>
-    </div>
-
-    <div class="hec-bottom">
-      <button class="hec-start" id="btnStart" type="button">Start the timer</button>
-      <ul class="hec-checklist" id="checklist"></ul>
-    </div>
-
-    <div class="hec-result" id="hecResult" hidden>
-      <h2 id="hecResultTitle">Round over.</h2>
-      <p id="hecResultMsg"></p>
-      <button class="hec-start" id="btnPlayAgain" type="button">Play again</button>
-    </div>
+        <button class="hec-go" id="btnAgain" type="button">Inspect a different kitchen</button>
+      </div>
+    </section>
 
   </main>
 

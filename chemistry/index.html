@@ -23,11 +23,6 @@
       <p>Tap any element to inspect it. Highlight a whole group or period. Or jump into challenge mode and beat the clock.</p>
     </header>
 
-    <nav class="chem-tabs">
-      <button class="chem-tab active" data-tab="explore">Explore</button>
-      <button class="chem-tab" data-tab="quiz">Challenge — find the element</button>
-    </nav>
-
     <section class="chem-pane chem-explore" id="paneExplore">
       <aside class="chem-controls">
         <div class="chem-control-row">
@@ -39,6 +34,9 @@
           <div class="chem-pill-row" id="periodPills"></div>
         </div>
         <button class="chem-clear" id="btnClear" type="button">Clear highlight</button>
+        <button class="chem-launch" id="btnLaunchQuiz" type="button">
+          Start a 60-second challenge →
+        </button>
       </aside>
 
       <div class="chem-grid-wrap">
@@ -55,17 +53,16 @@
         <div class="quiz-stat"><span class="stat-label">Question</span><span class="stat-val"><span id="qNum">1</span> / <span id="qTotal">10</span></span></div>
         <div class="quiz-stat"><span class="stat-label">Score</span><span class="stat-val" id="qScore">0</span></div>
         <div class="quiz-stat"><span class="stat-label">Time</span><span class="stat-val" id="qTime">60 s</span></div>
-        <button class="chem-reset" id="qReset" type="button">Reset</button>
+        <button class="chem-reset" id="qBack" type="button">← Back to explore</button>
       </header>
 
-      <div class="quiz-prompt" id="qPrompt">Click <strong>Start</strong> to begin the challenge.</div>
+      <div class="quiz-prompt" id="qPrompt"></div>
 
       <div class="chem-grid-wrap">
         <div class="chem-grid chem-grid-quiz" id="qGrid"></div>
       </div>
 
       <div class="quiz-feedback" id="qFeedback" aria-live="polite"></div>
-      <button class="quiz-start" id="qStart" type="button">Start the challenge</button>
 
       <div class="quiz-result" id="qResult" hidden>
         <h3>Time's up.</h3>

@@ -61,10 +61,65 @@
     </section>
 
     <div class="biz-result" id="bizResult" hidden>
-      <h2 id="bizResultTitle">Round complete</h2>
+      <h2 id="bizResultTitle">Round 1 complete</h2>
       <p id="bizResultMsg"></p>
-      <button class="biz-go" id="btnAgain" type="button">Play again</button>
+      <div class="biz-actions">
+        <button class="biz-go" id="btnRound2" type="button">Continue to Round 2 — characteristics →</button>
+        <button class="biz-go-secondary" id="btnAgain" type="button">Restart Round 1</button>
+      </div>
     </div>
+
+    <!-- Round 2 — characteristic matching -->
+    <section class="biz-round2" id="round2" hidden>
+      <header class="biz-hero biz-hero-r2">
+        <span class="kicker">Round 2</span>
+        <h2>Match each characteristic to the right sector</h2>
+        <p>Eight statements describe how organisations are owned, funded or run. Drag each statement to the sector it best fits — or tap then choose a column.</p>
+      </header>
+
+      <section class="biz-stats" id="r2Stats">
+        <div class="bstat"><span class="bstat-label">Sorted</span><span class="bstat-value"><span id="r2Sorted">0</span> / 8</span></div>
+        <div class="bstat"><span class="bstat-label">Correct</span><span class="bstat-value" id="r2Correct">0</span></div>
+        <div class="bstat"><span class="bstat-label">Wrong</span><span class="bstat-value" id="r2Wrong">0</span></div>
+        <div class="bstat"><span class="bstat-label">Score</span><span class="bstat-value" id="r2Score">0 %</span></div>
+        <button class="biz-reset" id="btnR2Reset" type="button">Reset</button>
+      </section>
+
+      <p class="biz-feedback" id="r2Feedback" aria-live="polite">Drag a characteristic into the column where it belongs.</p>
+
+      <section class="biz-board">
+        <div class="biz-col" data-sector="public">
+          <header class="biz-col-head">
+            <span class="biz-col-tag public-tag">Public sector</span>
+            <p class="biz-col-help">Owned by the state. Funded by taxation. Aims to provide essential services.</p>
+          </header>
+          <div class="biz-drop" data-drop-r2="public"></div>
+        </div>
+        <div class="biz-pool" id="r2Pool">
+          <header class="biz-pool-head">
+            <span class="pool-tag">Characteristics</span>
+            <p class="pool-help">Tap a statement to pick it up, then tap a column. Or drag it directly.</p>
+          </header>
+          <div class="biz-pool-cards" id="r2PoolCards"></div>
+        </div>
+        <div class="biz-col" data-sector="private">
+          <header class="biz-col-head">
+            <span class="biz-col-tag private-tag">Private sector</span>
+            <p class="biz-col-help">Owned by individuals or shareholders. Funded by sales / investors. Aims to make profit.</p>
+          </header>
+          <div class="biz-drop" data-drop-r2="private"></div>
+        </div>
+      </section>
+
+      <div class="biz-result" id="r2Result" hidden>
+        <h2 id="r2Title">Round 2 complete</h2>
+        <p id="r2Msg"></p>
+        <div class="biz-actions">
+          <button class="biz-go" id="btnR2Again" type="button">Play Round 2 again</button>
+          <button class="biz-go-secondary" id="btnBackR1" type="button">← Back to Round 1</button>
+        </div>
+      </div>
+    </section>
 
   </main>
 

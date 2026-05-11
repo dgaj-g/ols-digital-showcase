@@ -239,18 +239,25 @@ document.getElementById("btnClear").addEventListener("click", () => {
   click();
 });
 
-// ---- Tabs ----
+// ---- Mode switching: single Launch button in Explore starts the quiz ----
 const paneExplore = document.getElementById("paneExplore");
 const paneQuiz    = document.getElementById("paneQuiz");
-document.querySelectorAll(".chem-tab").forEach(b => {
-  b.addEventListener("click", () => {
-    document.querySelectorAll(".chem-tab").forEach(x => x.classList.remove("active"));
-    b.classList.add("active");
-    const t = b.dataset.tab;
-    paneExplore.hidden = t !== "explore";
-    paneQuiz.hidden    = t !== "quiz";
-    click();
-  });
+function showExplore() {
+  paneExplore.hidden = false;
+  paneQuiz.hidden = true;
+  click();
+}
+function showQuiz() {
+  paneExplore.hidden = true;
+  paneQuiz.hidden = false;
+  click();
+  startQuiz();
+}
+document.getElementById("btnLaunchQuiz").addEventListener("click", showQuiz);
+document.getElementById("qBack").addEventListener("click", () => {
+  clearInterval(qInterval);
+  qActive = false;
+  showExplore();
 });
 
 // ---- Quiz mode ----
@@ -261,7 +268,6 @@ const qNum = document.getElementById("qNum");
 const qTotal = document.getElementById("qTotal");
 const qScore = document.getElementById("qScore");
 const qTime = document.getElementById("qTime");
-const qStart = document.getElementById("qStart");
 const qResult = document.getElementById("qResult");
 const qResultMsg = document.getElementById("qResultMsg");
 
@@ -300,7 +306,6 @@ function startQuiz() {
   qFeedback.textContent = "";
   qFeedback.className = "quiz-feedback";
   qResult.hidden = true;
-  qStart.hidden = true;
   buildGrid(qGrid, (e, div) => handleQuizPick(e, div));
   nextQuestion();
   clearInterval(qInterval);
@@ -364,14 +369,4 @@ function endQuiz() {
   if (qScoreVal >= 7) fanfare();
 }
 
-qStart.addEventListener("click", startQuiz);
 document.getElementById("qPlayAgain").addEventListener("click", startQuiz);
-document.getElementById("qReset").addEventListener("click", () => {
-  clearInterval(qInterval);
-  qActive = false;
-  qResult.hidden = true;
-  qStart.hidden = false;
-  qPrompt.innerHTML = `Click <strong>Start</strong> to begin the challenge.`;
-  qFeedback.textContent = "";
-  qNum.textContent = "1"; qScore.textContent = "0"; qTime.textContent = `${QUIZ_TIME} s`;
-});

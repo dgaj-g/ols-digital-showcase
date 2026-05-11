@@ -288,6 +288,113 @@ body {
   color: var(--lab-ink);
 }
 
+.rt-extras {
+  text-align: left;
+  margin: 0.8rem 0;
+  background: #F1F5F9;
+  border: 1px solid var(--lab-line);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+}
+.rt-extras summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--lab-accent);
+}
+.scatter-wrap { margin-top: 0.7rem; }
+.scatter { width: 100%; height: auto; background: white; border-radius: 6px; }
+.scatter-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-top: 0.6rem;
+  align-items: center;
+}
+.legend-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 0.35rem;
+  vertical-align: middle;
+}
+.legend-line {
+  display: inline-block;
+  width: 18px; height: 2px;
+  background: #475569;
+  margin-right: 0.35rem;
+  vertical-align: middle;
+}
+
+.compare-bar { margin-top: 0.7rem; }
+.compare-track {
+  position: relative;
+  height: 60px;
+  background: linear-gradient(90deg, #B3D7F2 0%, #B3D7F2 25%, #B3E5C5 25%, #B3E5C5 50%, #FFE19C 50%, #FFE19C 75%, #FFB1B1 75%, #FFB1B1 100%);
+  border: 1px solid var(--lab-line);
+  border-radius: 6px;
+  margin: 0 1rem 1.8rem;
+}
+.compare-band {
+  position: absolute;
+  top: 0; bottom: 0;
+  background: rgba(42,159,79,0.0);
+  border-left: 2px dashed rgba(42,159,79,0.5);
+  border-right: 2px dashed rgba(42,159,79,0.5);
+}
+.compare-tick {
+  position: absolute;
+  top: 100%;
+  transform: translateX(-50%);
+  font-family: var(--lab-mono);
+  font-size: 0.72rem;
+  color: var(--lab-muted);
+  padding-top: 4px;
+}
+.compare-tick::before {
+  content: "";
+  display: block;
+  width: 1px; height: 6px;
+  background: var(--lab-line);
+  margin: -10px auto 4px;
+}
+.compare-you {
+  position: absolute;
+  top: -12px;
+  transform: translateX(-50%);
+  width: 0;
+}
+.compare-you::before {
+  content: "▼";
+  display: block;
+  color: var(--lab-ink);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 24px;
+  margin-left: -12px;
+}
+.compare-you span {
+  display: block;
+  background: var(--lab-ink);
+  color: white;
+  font-family: var(--lab-mono);
+  font-size: 0.74rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  margin: -2px auto 0;
+  text-align: center;
+  width: max-content;
+  transform: translateX(-50%);
+  margin-left: 12px;
+}
+.compare-help {
+  margin: 0.6rem 0 0;
+  font-size: 0.88rem;
+  color: var(--lab-muted);
+  font-style: italic;
+}
+
 .rt-explain {
   text-align: left;
   margin: 1rem 0 1.4rem;

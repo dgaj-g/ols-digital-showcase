@@ -299,3 +299,22 @@ body {
   cursor: pointer;
 }
 .biz-go:hover { background: var(--biz-teal); }
+.biz-go-secondary {
+  background: transparent;
+  color: var(--biz-navy);
+  border: 1.5px solid var(--biz-navy);
+  border-radius: 999px;
+  padding: 0.6rem 1.3rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.biz-go-secondary:hover { background: var(--biz-navy); color: white; }
+.biz-actions {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.biz-hero-r2 { margin-top: 1.4rem; }
+.biz-round2 { margin-top: 1rem; }

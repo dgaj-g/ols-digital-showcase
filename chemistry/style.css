@@ -56,29 +56,20 @@ body {
 }
 .chem-hero p { margin: 0; opacity: 0.92; max-width: 60ch; }
 
-.chem-tabs {
-  display: flex;
-  gap: 0.4rem;
-  margin-bottom: 0.8rem;
-  border-bottom: 2px solid var(--chem-accent);
-}
-.chem-tab {
-  background: transparent;
-  border: 2px solid var(--chem-accent);
-  border-bottom: none;
-  border-radius: 10px 10px 0 0;
-  padding: 0.55rem 1.1rem;
+.chem-launch {
+  margin-top: 0.8rem;
+  background: var(--chem-accent-deep);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  color: var(--chem-accent);
-  margin-bottom: -2px;
+  width: 100%;
+  transition: background 0.12s, transform 0.1s;
 }
-.chem-tab:hover { background: rgba(14,116,144,0.08); }
-.chem-tab.active {
-  background: var(--chem-accent);
-  color: white;
-}
+.chem-launch:hover { background: var(--chem-accent); transform: translateY(-1px); }
 
 /* ---- Explore layout ---- */
 .chem-explore {

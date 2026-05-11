@@ -1,87 +1,189 @@
-// Home Economics — Food Safety hazard hunter
-// Click on hazards in the kitchen scene before the timer runs out.
+// Home Economics — Kitchen Inspector
+// 10 scenarios. Each: a single-subject icon, a scenario description, and four
+// multi-choice options drawn from the seven hazard categories.
 
-const HAZARDS = [
+const CATS = {
+  cross:    { label: "Cross-contamination",    colour: "#C72E2E" },
+  temp:     { label: "Temperature control",    colour: "#1F6FA8" },
+  hygiene:  { label: "Personal hygiene",       colour: "#C76838" },
+  chemical: { label: "Chemical contamination", colour: "#7C3F9E" },
+  date:     { label: "Out of date",            colour: "#B68515" },
+  physical: { label: "Physical hazard",        colour: "#3A4555" },
+  safe:     { label: "Safe practice",          colour: "#3F7D34" },
+};
+
+// Single-subject line-art icons, drawn cleanly. Each ~76px stroke-only on
+// a coloured background circle (set via .round-icon[data-cat=...]).
+const ICONS = {
+  thermometer: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 8c-5 0-9 4-9 9v44a14 14 0 1 0 18 0V17c0-5-4-9-9-9z"/>
+    <line x1="48" y1="22" x2="48" y2="50"/>
+    <circle cx="48" cy="72" r="9" stroke-width="3.5" fill="#fff" fill-opacity="0.15"/>
+    <line x1="40" y1="30" x2="44" y2="30"/>
+    <line x1="40" y1="42" x2="44" y2="42"/>
+  </svg>`,
+  fridge: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="22" y="10" width="52" height="76" rx="4"/>
+    <line x1="22" y1="40" x2="74" y2="40"/>
+    <line x1="36" y1="22" x2="36" y2="32"/>
+    <line x1="36" y1="52" x2="36" y2="68"/>
+    <path d="M52 20h12M52 26h8"/>
+  </svg>`,
+  chicken: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 56c0-14 12-26 26-26 12 0 20 8 18 20-1 8-7 14-15 16l-2 12-12 4-4-12c-7-2-11-7-11-14z"/>
+    <line x1="22" y1="78" x2="36" y2="68"/>
+    <circle cx="56" cy="40" r="2" fill="#fff"/>
+  </svg>`,
+  egg: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 12c-14 0-26 18-26 38a26 26 0 1 0 52 0c0-20-12-38-26-38z"/>
+    <path d="M40 36l4 4-3 4 4 3-3 4 4 3"/>
+  </svg>`,
+  board: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="12" y="22" width="72" height="58" rx="6"/>
+    <circle cx="34" cy="48" r="9"/>
+    <circle cx="60" cy="50" r="10"/>
+    <path d="M30 42l1 2M34 40l1 2"/>
+    <path d="M56 46l2 2M60 44l2 2M64 46l2 2"/>
+  </svg>`,
+  spray: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="36" y="32" width="26" height="46" rx="4"/>
+    <path d="M36 42l-12 6 12 6"/>
+    <path d="M42 20h14v12H42z"/>
+    <line x1="18" y1="38" x2="14" y2="34"/>
+    <line x1="18" y1="48" x2="12" y2="48"/>
+    <line x1="18" y1="58" x2="14" y2="62"/>
+  </svg>`,
+  hair: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="48" cy="40" r="18"/>
+    <path d="M36 32c-4-12 8-22 12-22s16 10 12 22"/>
+    <path d="M32 44c-6 6-8 16-4 26M64 44c6 6 8 16 4 26"/>
+    <circle cx="42" cy="42" r="1.5" fill="#fff"/>
+    <circle cx="54" cy="42" r="1.5" fill="#fff"/>
+    <path d="M42 50c2 2 8 2 10 0"/>
+  </svg>`,
+  calendar: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="16" y="22" width="64" height="58" rx="4"/>
+    <line x1="16" y1="36" x2="80" y2="36"/>
+    <line x1="32" y1="14" x2="32" y2="28"/>
+    <line x1="64" y1="14" x2="64" y2="28"/>
+    <path d="M34 56l28 14M34 70l28-14"/>
+  </svg>`,
+  knife: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 56l44-32c4-3 10 0 8 5l-12 30z"/>
+    <rect x="62" y="58" width="20" height="8" rx="2"/>
+    <line x1="68" y1="60" x2="68" y2="64"/>
+    <line x1="74" y1="60" x2="74" y2="64"/>
+  </svg>`,
+  rice: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="48" cy="62" rx="32" ry="10"/>
+    <path d="M16 62c0 8 14 14 32 14s32-6 32-14"/>
+    <path d="M22 56c8-10 22-14 26-14s18 4 26 14"/>
+    <path d="M34 36c-2-6 0-12 0-12M48 32c-2-8 0-14 0-14M62 36c2-6 0-12 0-12"/>
+  </svg>`,
+  hands: `<svg viewBox="0 0 96 96" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 64c0-6 4-12 10-14M66 64c0-6-4-12-10-14"/>
+    <path d="M30 46c-4 0-8 4-8 10v14a6 6 0 0 0 6 6h40a6 6 0 0 0 6-6V56c0-6-4-10-8-10"/>
+    <path d="M30 46v-8a4 4 0 0 1 8 0v8M58 46v-8a4 4 0 0 1 8 0v8M44 36c0-4 2-6 4-6s4 2 4 6v10M40 18l-4 4M56 18l4 4M48 12v6"/>
+  </svg>`,
+};
+
+const SCENARIOS = [
   {
-    id: "fridgeTemp",
-    title: "Fridge too warm",
-    detail: "The fridge is at 12°C. Food fridges should be below 5°C — above this, harmful bacteria multiply rapidly.",
+    icon: "thermometer",
+    scenario: "The fridge thermometer reads 12 °C.",
+    detail: "A fridge should run below 5 °C. Above that, bacteria like <strong>Listeria</strong> and <strong>E. coli</strong> can multiply quickly on stored food.",
+    answer: "temp",
+    options: ["temp", "physical", "chemical", "safe"],
   },
   {
-    id: "fridgeStack",
-    title: "Raw next to cooked in the fridge",
-    detail: "Raw chicken is stored next to cooked rice — risk of cross-contamination. Raw meat should be below cooked food, in a sealed container.",
+    icon: "fridge",
+    scenario: "Raw chicken is on the top shelf of the fridge, right above a tray of cooked ham.",
+    detail: "Juices from raw meat can drip down onto cooked food and contaminate it. Always store raw meat on the bottom shelf, in a sealed container, below ready-to-eat foods.",
+    answer: "cross",
+    options: ["cross", "temp", "date", "physical"],
   },
   {
-    id: "milkExpired",
-    title: "Milk past its use-by date",
-    detail: "The carton says 'Use by 04 May' — use-by dates are about safety, not quality. After that date, the product should not be consumed.",
+    icon: "egg",
+    scenario: "The cook reaches for an egg and notices a fine crack in the shell — they use it anyway.",
+    detail: "A cracked shell lets bacteria like <strong>Salmonella</strong> reach the egg contents. Discard cracked eggs — never use them, even in baking.",
+    answer: "cross",
+    options: ["cross", "physical", "hygiene", "safe"],
   },
   {
-    id: "sameBoard",
-    title: "Raw meat on the same board as salad",
-    detail: "Raw chicken and lettuce share the cutting board. Use separate boards (often colour-coded) for raw meat and ready-to-eat foods to prevent cross-contamination.",
+    icon: "board",
+    scenario: "The same wooden chopping board is used for raw chicken and then, without washing, for chopping salad.",
+    detail: "This is textbook cross-contamination. Use separate colour-coded boards for raw meat and ready-to-eat foods, or wash thoroughly with hot soapy water in between.",
+    answer: "cross",
+    options: ["cross", "hygiene", "physical", "chemical"],
   },
   {
-    id: "crackedEgg",
-    title: "Cracked egg",
-    detail: "A cracked eggshell lets bacteria like Salmonella in. Discard cracked eggs — never use them.",
+    icon: "spray",
+    scenario: "A bottle of bleach spray is on the worktop, right next to an open bag of flour.",
+    detail: "Cleaning chemicals must never be stored alongside food — droplets or accidental spray contaminate the food. Keep chemicals in a separate, clearly labelled cupboard.",
+    answer: "chemical",
+    options: ["chemical", "physical", "cross", "safe"],
   },
   {
-    id: "chemicalNearFood",
-    title: "Cleaning spray near food prep",
-    detail: "Cleaning chemicals belong in a separate cupboard — never on the worktop next to food, where droplets could contaminate.",
+    icon: "hair",
+    scenario: "A staff member is preparing food with their long hair loose and uncovered.",
+    detail: "Hair can fall into food and carries bacteria. Tie hair back and wear a hat or hairnet when preparing food.",
+    answer: "hygiene",
+    options: ["hygiene", "physical", "cross", "safe"],
   },
   {
-    id: "knivesInSink",
-    title: "Knives hidden in soapy water",
-    detail: "Sharp knives submerged in soapy water are a serious cut hazard for anyone reaching in. Wash and put knives away immediately.",
+    icon: "calendar",
+    scenario: "A pint of milk shows a use-by date that passed three days ago.",
+    detail: "<strong>Use-by</strong> dates are about safety — after this date, the product should not be consumed even if it looks fine. (Compare with <em>best-before</em>, which is about quality.)",
+    answer: "date",
+    options: ["date", "temp", "hygiene", "safe"],
   },
   {
-    id: "binOverflow",
-    title: "Bin overflowing",
-    detail: "An overflowing bin attracts pests and spreads bacteria. Empty bins regularly and keep the lid closed.",
+    icon: "knife",
+    scenario: "Sharp knives have been left in the sink, submerged in soapy water.",
+    detail: "Hidden under suds, a sharp blade is a serious cut hazard for anyone reaching into the sink. Wash and put knives away immediately.",
+    answer: "physical",
+    options: ["physical", "hygiene", "chemical", "safe"],
   },
   {
-    id: "wetFloor",
-    title: "Spill on the floor",
-    detail: "An unmarked wet floor is a slip hazard. Clean up spills immediately and use a warning sign if the floor is being mopped.",
+    icon: "rice",
+    scenario: "A pan of cooked rice has been sitting on the counter at room temperature for four hours.",
+    detail: "Cooked rice held in the danger zone (5–63 °C) allows <strong>Bacillus cereus</strong> spores to multiply. Cool quickly and refrigerate within an hour.",
+    answer: "temp",
+    options: ["temp", "date", "physical", "safe"],
   },
   {
-    id: "hair",
-    title: "Hair not tied back",
-    detail: "Loose hair can fall into food and is a hygiene risk. Tie hair back and ideally wear a hat or hairnet.",
-  },
-  {
-    id: "leftOut",
-    title: "Cooked food left out at room temperature",
-    detail: "Cooked rice left out for more than two hours is a serious risk for Bacillus cereus, which causes food poisoning. Cool quickly and refrigerate.",
+    icon: "hands",
+    scenario: "The cook washes their hands with soap and warm water for 20 seconds before handling raw meat.",
+    detail: "This is a textbook safe practice. Thorough hand-washing before, between and after food tasks is one of the single most important controls.",
+    answer: "safe",
+    options: ["safe", "hygiene", "physical", "chemical"],
   },
 ];
 
-const TOTAL = HAZARDS.length;
-const TIME_LIMIT = 75; // seconds
+// ---- DOM ----
+const screenIntro   = document.getElementById("screenIntro");
+const screenRound   = document.getElementById("screenRound");
+const screenResults = document.getElementById("screenResults");
+const btnStart   = document.getElementById("btnStart");
+const btnNext    = document.getElementById("btnNext");
+const btnAgain   = document.getElementById("btnAgain");
+const btnQuit    = document.getElementById("btnQuit");
+const rNum       = document.getElementById("rNum");
+const rTotal     = document.getElementById("rTotal");
+const rScore     = document.getElementById("rScore");
+const roundIcon  = document.getElementById("roundIcon");
+const roundScenario = document.getElementById("roundScenario");
+const roundDetail   = document.getElementById("roundDetail");
+const roundOptions  = document.getElementById("roundOptions");
+const roundFeedback = document.getElementById("roundFeedback");
+const resultTitle   = document.getElementById("resultTitle");
+const resultMsg     = document.getElementById("resultMsg");
+const catGrid       = document.getElementById("catGrid");
 
-const svg = document.getElementById("kitchenSvg");
-const markers = document.getElementById("hitMarkers");
-const checklist = document.getElementById("checklist");
-const foundEl = document.getElementById("foundCount");
-const totalEl = document.getElementById("totalCount");
-const missEl  = document.getElementById("missCount");
-const timeEl  = document.getElementById("timeLeft");
-const feedback = document.getElementById("hecFeedback");
-const btnStart = document.getElementById("btnStart");
-const btnReset = document.getElementById("btnReset");
-const btnAgain = document.getElementById("btnPlayAgain");
-const result = document.getElementById("hecResult");
-const resultMsg = document.getElementById("hecResultMsg");
-const resultTitle = document.getElementById("hecResultTitle");
-
-let active = false;
-let timeLeft = TIME_LIMIT;
-let timerInterval = null;
-let found = new Set();
-let misses = 0;
+let order = []; // shuffled scenario indices
+let idx = 0;
+let score = 0;
+let catTally = {}; // {catId: {hit: 0, total: 0}}
 
 // audio
 let actx;
@@ -95,140 +197,128 @@ function tone(freq, ms, type="sine", gain=0.05) {
     o.stop(actx.currentTime + ms/1000 + 0.02);
   } catch {}
 }
-function ding()    { tone(720, 80, "triangle", 0.05); setTimeout(()=>tone(1080,100,"triangle",0.05), 70); }
-function buzz()    { tone(180, 220, "sawtooth", 0.05); }
+function ding() { tone(720, 80, "triangle", 0.05); setTimeout(()=>tone(1080,100,"triangle",0.05), 70); }
+function buzz() { tone(180, 220, "sawtooth", 0.05); }
 function fanfare() { [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,200,"triangle",0.05), i*110)); }
 
-totalEl.textContent = TOTAL;
-
-function renderChecklist() {
-  checklist.innerHTML = "";
-  HAZARDS.forEach(h => {
-    const li = document.createElement("li");
-    li.className = "check-item" + (found.has(h.id) ? " done" : "");
-    li.innerHTML = `<span class="box"></span><span>${found.has(h.id) ? h.title : "—"}</span>`;
-    checklist.appendChild(li);
-  });
+function shuffle(a) {
+  const arr = a.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 function start() {
-  active = true;
-  timeLeft = TIME_LIMIT;
-  found = new Set();
-  misses = 0;
-  foundEl.textContent = "0";
-  missEl.textContent = "0";
-  timeEl.textContent = `${TIME_LIMIT} s`;
-  feedback.innerHTML = "Hunt for hazards. Tap on anything in the scene that looks unsafe.";
-  feedback.className = "hec-feedback";
-  result.hidden = true;
-  btnStart.hidden = true;
-  document.querySelectorAll(".hz").forEach(g => g.classList.remove("found"));
-  markers.innerHTML = "";
-  renderChecklist();
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    timeEl.textContent = `${timeLeft} s`;
-    if (timeLeft <= 0) end();
-  }, 1000);
+  order = shuffle(SCENARIOS.map((_, i) => i));
+  idx = 0; score = 0; catTally = {};
+  Object.keys(CATS).forEach(c => catTally[c] = { hit: 0, total: 0 });
+  rTotal.textContent = SCENARIOS.length;
+  rScore.textContent = "0";
+  screenIntro.hidden = true;
+  screenResults.hidden = true;
+  screenRound.hidden = false;
+  renderRound();
 }
 
-function end() {
-  active = false;
-  clearInterval(timerInterval);
-  btnStart.hidden = false;
-  btnStart.textContent = "Start again";
-  result.hidden = false;
+function renderRound() {
+  const s = SCENARIOS[order[idx]];
+  rNum.textContent = idx + 1;
+  roundIcon.dataset.cat = s.answer;
+  roundIcon.innerHTML = ICONS[s.icon];
+  roundScenario.textContent = s.scenario;
+  roundDetail.innerHTML = "";
+  roundFeedback.textContent = "";
+  roundFeedback.classList.remove("shown", "ok", "bad");
+  btnNext.hidden = true;
 
-  let title, msg;
-  if (found.size === TOTAL && misses <= 1) {
-    title = "Perfect.";
-    msg = `You found every hazard — ${TOTAL} / ${TOTAL} — with only ${misses} miss${misses === 1 ? "" : "es"}. Kitchen inspector material.`;
-    fanfare();
-  } else if (found.size === TOTAL) {
-    title = "All hazards found.";
-    msg = `${TOTAL} / ${TOTAL} — but with ${misses} miss${misses === 1 ? "" : "es"}. Tighten up the guesses next time.`;
-    fanfare();
-  } else if (found.size >= TOTAL - 2) {
-    title = "So close.";
-    msg = `You found ${found.size} of ${TOTAL}. Have another go — the checklist shows what you got.`;
-  } else if (found.size >= 5) {
-    title = "Good progress.";
-    msg = `You spotted ${found.size} of ${TOTAL} hazards. Play again to push past 8.`;
+  // shuffle options so the correct answer isn't always in the same place
+  const opts = shuffle(s.options.slice());
+  roundOptions.innerHTML = "";
+  opts.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "opt-btn";
+    b.type = "button";
+    b.dataset.cat = c;
+    b.innerHTML = `<span class="opt-dot" style="background:${CATS[c].colour}"></span>${CATS[c].label}`;
+    b.addEventListener("click", () => answer(c, b));
+    roundOptions.appendChild(b);
+  });
+}
+
+function answer(picked, btn) {
+  const s = SCENARIOS[order[idx]];
+  document.querySelectorAll(".opt-btn").forEach(x => x.disabled = true);
+  catTally[s.answer].total++;
+  const ok = picked === s.answer;
+  if (ok) {
+    score++;
+    rScore.textContent = score;
+    btn.classList.add("correct");
+    catTally[s.answer].hit++;
+    roundFeedback.innerHTML = `<strong>Correct.</strong> ${s.detail}`;
+    roundFeedback.classList.add("shown", "ok");
+    ding();
   } else {
-    title = "Round over.";
-    msg = `You spotted ${found.size} of ${TOTAL} hazards. Plenty of risks still in the kitchen — try again.`;
+    btn.classList.add("wrong");
+    // also highlight the right answer
+    document.querySelector(`.opt-btn[data-cat="${s.answer}"]`)?.classList.add("correct");
+    roundFeedback.innerHTML = `<strong>Not quite.</strong> The category here is <strong>${CATS[s.answer].label}</strong>. ${s.detail}`;
+    roundFeedback.classList.add("shown", "bad");
+    buzz();
+  }
+  // show "next" or "finish"
+  btnNext.hidden = false;
+  btnNext.textContent = (idx === SCENARIOS.length - 1) ? "Finish inspection →" : "Next inspection →";
+}
+
+function nextOrFinish() {
+  idx++;
+  if (idx >= SCENARIOS.length) { finish(); return; }
+  renderRound();
+}
+
+function finish() {
+  screenRound.hidden = true;
+  screenResults.hidden = false;
+  let title, msg;
+  if (score === SCENARIOS.length) {
+    title = "Perfect — pass with flying colours.";
+    msg = `${score} / ${SCENARIOS.length}. You'd close that kitchen and reopen it the same day.`;
+    fanfare();
+  } else if (score >= 8) {
+    title = "Strong inspection.";
+    msg = `${score} / ${SCENARIOS.length}. Sharp eye — a couple of categories to review.`;
+    fanfare();
+  } else if (score >= 5) {
+    title = "Decent attempt.";
+    msg = `${score} / ${SCENARIOS.length}. Check the categories below where you struggled, then have another go.`;
+  } else {
+    title = "Worth another inspection.";
+    msg = `${score} / ${SCENARIOS.length}. The category breakdown below shows what to revise.`;
   }
   resultTitle.textContent = title;
   resultMsg.textContent = msg;
-}
 
-document.querySelectorAll(".hz").forEach(g => {
-  g.addEventListener("click", () => {
-    if (!active) {
-      feedback.innerHTML = "Press <strong>Start</strong> first.";
-      return;
-    }
-    const id = g.dataset.hz;
-    if (found.has(id)) return;
-    found.add(id);
-    g.classList.add("found");
-    const h = HAZARDS.find(x => x.id === id);
-    feedback.innerHTML = `<strong>${h.title}.</strong> ${h.detail}`;
-    feedback.className = "hec-feedback ok";
-    foundEl.textContent = found.size;
-    ding();
-    addMarker(g, "good");
-    renderChecklist();
-    if (found.size === TOTAL) end();
+  catGrid.innerHTML = "";
+  Object.entries(catTally).forEach(([c, t]) => {
+    if (t.total === 0) return;
+    const row = document.createElement("div");
+    row.className = "cat-row " + (t.hit === t.total ? "hit" : "miss");
+    row.innerHTML = `
+      <span class="cat-dot" style="background:${CATS[c].colour}"></span>
+      <span>${CATS[c].label}</span>
+      <span class="cat-score">${t.hit} / ${t.total}</span>
+    `;
+    catGrid.appendChild(row);
   });
-});
-
-// click on empty area = miss
-svg.addEventListener("click", e => {
-  if (!active) return;
-  if (e.target.closest(".hz")) return;
-  misses++;
-  missEl.textContent = misses;
-  buzz();
-  feedback.innerHTML = `Nothing wrong there. Look more carefully.`;
-  feedback.className = "hec-feedback bad";
-});
-
-function addMarker(g, type) {
-  // get bbox in SVG coords for the hazard group
-  const bbox = g.getBBox();
-  const cx = bbox.x + bbox.width / 2;
-  const cy = bbox.y + bbox.height / 2;
-  const r = Math.max(bbox.width, bbox.height) / 2 + 6;
-  const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  ring.setAttribute("cx", cx);
-  ring.setAttribute("cy", cy);
-  ring.setAttribute("r", r);
-  ring.setAttribute("class", "hit-ring" + (type === "miss" ? " miss" : ""));
-  markers.appendChild(ring);
 }
 
 btnStart.addEventListener("click", start);
 btnAgain.addEventListener("click", start);
-btnReset.addEventListener("click", () => {
-  clearInterval(timerInterval);
-  active = false;
-  btnStart.hidden = false;
-  btnStart.textContent = "Start the timer";
-  timeLeft = TIME_LIMIT;
-  timeEl.textContent = `${TIME_LIMIT} s`;
-  found = new Set();
-  misses = 0;
-  foundEl.textContent = "0";
-  missEl.textContent = "0";
-  feedback.innerHTML = "Click <strong>Start</strong> to begin the timer.";
-  feedback.className = "hec-feedback";
-  document.querySelectorAll(".hz").forEach(g => g.classList.remove("found"));
-  markers.innerHTML = "";
-  result.hidden = true;
-  renderChecklist();
+btnNext.addEventListener("click", nextOrFinish);
+btnQuit.addEventListener("click", () => {
+  screenRound.hidden = true;
+  screenIntro.hidden = false;
 });
-
-renderChecklist();

@@ -186,7 +186,74 @@ function finishExperiment() {
   }
   document.getElementById("rtVerdict").textContent = verdict;
   document.getElementById("resultLead").innerHTML = lead;
+
+  // Practice effect — first half vs second half of correct trials
+  const correctRTs = trials.filter(t => t.correct).map(t => t.rt);
+  if (correctRTs.length >= 6) {
+    const half = Math.floor(correctRTs.length / 2);
+    const first  = correctRTs.slice(0, half).reduce((s, x) => s + x, 0) / half;
+    const second = correctRTs.slice(half).reduce((s, x) => s + x, 0) / (correctRTs.length - half);
+    const delta = first - second;
+    let txt;
+    if (delta > 30) txt = `−${Math.round(delta)} ms`;       // got faster
+    else if (delta < -30) txt = `+${Math.round(-delta)} ms`; // got slower
+    else txt = `≈ flat`;
+    document.getElementById("rtPractice").textContent = txt;
+  } else {
+    document.getElementById("rtPractice").textContent = "—";
+  }
+
+  // Scatter plot of every trial
+  drawScatter(trials, cMean, iMean);
+
+  // Comparison marker — 0ms maps to left, 400+ maps to right (clamped)
+  const pct = Math.max(0, Math.min(100, (interference / 400) * 100));
+  const youEl = document.getElementById("compareYou");
+  if (youEl) youEl.style.left = `${pct}%`;
+
   complete();
+}
+
+function drawScatter(trials, cMean, iMean) {
+  const svg = document.getElementById("rtScatter");
+  if (!svg) return;
+  svg.innerHTML = "";
+  const W = 660, H = 220;
+  const pad = { l: 50, r: 16, t: 16, b: 30 };
+  const innerW = W - pad.l - pad.r;
+  const innerH = H - pad.t - pad.b;
+  const maxRT = Math.max(...trials.filter(t => t.correct).map(t => t.rt), 1500);
+  const yMax = Math.ceil(maxRT / 500) * 500;
+  // axes
+  svg.innerHTML += `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t + innerH}" stroke="#94A3B8" stroke-width="1"/>`;
+  svg.innerHTML += `<line x1="${pad.l}" y1="${pad.t + innerH}" x2="${pad.l + innerW}" y2="${pad.t + innerH}" stroke="#94A3B8" stroke-width="1"/>`;
+  // y gridlines + labels (every 500 ms)
+  for (let y = 0; y <= yMax; y += 500) {
+    const yp = pad.t + innerH - (y / yMax) * innerH;
+    svg.innerHTML += `<line x1="${pad.l}" y1="${yp}" x2="${pad.l + innerW}" y2="${yp}" stroke="#E2E8F0" stroke-width="1"/>`;
+    svg.innerHTML += `<text x="${pad.l - 6}" y="${yp + 3}" text-anchor="end" font-family="SF Mono, Menlo, monospace" font-size="10" fill="#64748B">${y}</text>`;
+  }
+  // x labels
+  svg.innerHTML += `<text x="${pad.l}" y="${H - 8}" font-family="SF Mono, Menlo, monospace" font-size="10" fill="#64748B">Trial 1</text>`;
+  svg.innerHTML += `<text x="${pad.l + innerW}" y="${H - 8}" text-anchor="end" font-family="SF Mono, Menlo, monospace" font-size="10" fill="#64748B">${trials.length}</text>`;
+  svg.innerHTML += `<text x="${pad.l - 38}" y="${pad.t - 4}" font-family="SF Mono, Menlo, monospace" font-size="10" fill="#64748B">ms</text>`;
+  // mean lines
+  if (cMean > 0) {
+    const yp = pad.t + innerH - (cMean / yMax) * innerH;
+    svg.innerHTML += `<line x1="${pad.l}" y1="${yp}" x2="${pad.l + innerW}" y2="${yp}" stroke="#2A9F4F" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  }
+  if (iMean > 0) {
+    const yp = pad.t + innerH - (iMean / yMax) * innerH;
+    svg.innerHTML += `<line x1="${pad.l}" y1="${yp}" x2="${pad.l + innerW}" y2="${yp}" stroke="#D03030" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  }
+  // dots
+  trials.forEach((t, i) => {
+    const x = pad.l + (i / (trials.length - 1)) * innerW;
+    const y = pad.t + innerH - (Math.min(t.rt, yMax) / yMax) * innerH;
+    const colour = t.type === "congruent" ? "#2A9F4F" : "#D03030";
+    const opacity = t.correct ? 1 : 0.35;
+    svg.innerHTML += `<circle cx="${x}" cy="${y}" r="5" fill="${colour}" opacity="${opacity}" stroke="white" stroke-width="1.5"><title>Trial ${i + 1}: ${t.type}, ${Math.round(t.rt)} ms${t.correct ? "" : " (wrong)"}</title></circle>`;
+  });
 }
 
 btnStart.addEventListener("click", startExperiment);

@@ -206,3 +206,158 @@ btnReset.addEventListener("click", reset);
 btnAgain.addEventListener("click", reset);
 
 reset();
+
+// ============================================================================
+// Round 2 — characteristic matching
+// ============================================================================
+const CHARACTERISTICS = [
+  { id: "c1", text: "Funded mainly by taxation",                              sector: "public" },
+  { id: "c2", text: "Owned by shareholders",                                  sector: "private" },
+  { id: "c3", text: "Main aim is to make a profit",                           sector: "private" },
+  { id: "c4", text: "Main aim is to provide essential services to citizens",  sector: "public" },
+  { id: "c5", text: "Funded by sales revenue and investors",                  sector: "private" },
+  { id: "c6", text: "Run by central or local government",                     sector: "public" },
+  { id: "c7", text: "Free at the point of use (e.g. healthcare, schools)",    sector: "public" },
+  { id: "c8", text: "Responsible to shareholders rather than to taxpayers",   sector: "private" },
+];
+
+const round2El   = document.getElementById("round2");
+const r2Pool     = document.getElementById("r2PoolCards");
+const r2DropPub  = document.querySelector('[data-drop-r2="public"]');
+const r2DropPri  = document.querySelector('[data-drop-r2="private"]');
+const r2Feedback = document.getElementById("r2Feedback");
+const r2Sorted   = document.getElementById("r2Sorted");
+const r2Correct  = document.getElementById("r2Correct");
+const r2Wrong    = document.getElementById("r2Wrong");
+const r2Score    = document.getElementById("r2Score");
+const r2Result   = document.getElementById("r2Result");
+const r2Title    = document.getElementById("r2Title");
+const r2Msg      = document.getElementById("r2Msg");
+const btnRound2  = document.getElementById("btnRound2");
+const btnR2Reset = document.getElementById("btnR2Reset");
+const btnR2Again = document.getElementById("btnR2Again");
+const btnBackR1  = document.getElementById("btnBackR1");
+
+let r2CorrectN = 0, r2WrongN = 0, r2SortedN = 0;
+let r2SelectedId = null;
+
+function makeCharCard(c) {
+  const div = document.createElement("div");
+  div.className = "biz-card";
+  div.draggable = true;
+  div.dataset.id = c.id;
+  div.innerHTML = `<div><div class="card-name">${c.text}</div></div>`;
+  div.addEventListener("dragstart", e => {
+    div.classList.add("dragging");
+    e.dataTransfer.setData("text/plain", c.id);
+    e.dataTransfer.effectAllowed = "move";
+  });
+  div.addEventListener("dragend", () => div.classList.remove("dragging"));
+  div.addEventListener("click", () => selectChar(c.id));
+  return div;
+}
+
+function selectChar(id) {
+  const card = document.querySelector(`#r2PoolCards .biz-card[data-id="${id}"]`);
+  if (!card || card.classList.contains("placed-correct") || card.classList.contains("placed-wrong")) return;
+  document.querySelectorAll("#r2PoolCards .biz-card.selected").forEach(c => c.classList.remove("selected"));
+  if (r2SelectedId === id) { r2SelectedId = null; r2Feedback.textContent = "Selection cleared."; r2Feedback.className = "biz-feedback"; return; }
+  r2SelectedId = id;
+  card.classList.add("selected");
+  r2Feedback.innerHTML = `Selected. Tap the <strong>Public</strong> or <strong>Private</strong> column to place it.`;
+  r2Feedback.className = "biz-feedback";
+}
+
+function placeChar(id, sector) {
+  const c = CHARACTERISTICS.find(x => x.id === id);
+  if (!c) return;
+  const card = document.querySelector(`#r2PoolCards .biz-card[data-id="${id}"]`);
+  if (!card || card.classList.contains("placed-correct") || card.classList.contains("placed-wrong")) return;
+  card.classList.remove("selected");
+  r2SelectedId = null;
+  r2SortedN++;
+  r2Sorted.textContent = r2SortedN;
+
+  const drop = sector === "public" ? r2DropPub : r2DropPri;
+  drop.appendChild(card);
+  card.draggable = false;
+
+  const isCorrect = c.sector === sector;
+  if (isCorrect) {
+    r2CorrectN++;
+    r2Correct.textContent = r2CorrectN;
+    card.classList.add("placed-correct");
+    r2Feedback.innerHTML = `<strong>Correct.</strong> "${c.text}" — typical of the ${sector} sector.`;
+    r2Feedback.className = "biz-feedback ok";
+    ding();
+  } else {
+    r2WrongN++;
+    r2Wrong.textContent = r2WrongN;
+    card.classList.add("placed-wrong");
+    r2Feedback.innerHTML = `<strong>Not quite.</strong> "${c.text}" describes the <em>${c.sector}</em> sector, not <em>${sector}</em>.`;
+    r2Feedback.className = "biz-feedback bad";
+    buzz();
+  }
+  r2Score.textContent = `${Math.round((r2CorrectN / r2SortedN) * 100)} %`;
+
+  if (r2SortedN === CHARACTERISTICS.length) {
+    setTimeout(() => {
+      r2Result.hidden = false;
+      let title, msg;
+      if (r2CorrectN === CHARACTERISTICS.length) { title = "Round 2 — perfect."; msg = `${r2CorrectN} / ${CHARACTERISTICS.length}. Strong grasp of the definitions.`; fanfare(); }
+      else if (r2CorrectN >= 6) { title = "Round 2 — strong."; msg = `${r2CorrectN} / ${CHARACTERISTICS.length}. Review the ${r2WrongN} you got wrong.`; fanfare(); }
+      else { title = "Round 2 complete."; msg = `${r2CorrectN} / ${CHARACTERISTICS.length}. Take another look at the column descriptions and try again.`; }
+      r2Title.textContent = title;
+      r2Msg.textContent = msg;
+    }, 350);
+  }
+}
+
+function resetRound2() {
+  r2CorrectN = 0; r2WrongN = 0; r2SortedN = 0; r2SelectedId = null;
+  r2Sorted.textContent = "0"; r2Correct.textContent = "0"; r2Wrong.textContent = "0"; r2Score.textContent = "0 %";
+  r2DropPub.innerHTML = "";
+  r2DropPri.innerHTML = "";
+  r2Result.hidden = true;
+  r2Pool.innerHTML = "";
+  shuffle(CHARACTERISTICS).forEach(c => r2Pool.appendChild(makeCharCard(c)));
+  r2Feedback.innerHTML = "Drag a characteristic into the <strong>Public</strong> or <strong>Private</strong> column — or tap to choose.";
+  r2Feedback.className = "biz-feedback";
+}
+
+// drag/drop for round 2
+[r2DropPub, r2DropPri].forEach(drop => {
+  drop.addEventListener("dragover", e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    drop.classList.add("over");
+  });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", e => {
+    e.preventDefault();
+    drop.classList.remove("over");
+    const id = e.dataTransfer.getData("text/plain");
+    if (!id || !CHARACTERISTICS.find(c => c.id === id)) return;
+    placeChar(id, drop.dataset.dropR2);
+  });
+});
+
+document.querySelectorAll("#round2 .biz-col").forEach(col => {
+  col.addEventListener("click", () => {
+    if (!r2SelectedId) return;
+    placeChar(r2SelectedId, col.dataset.sector);
+  });
+});
+
+btnRound2.addEventListener("click", () => {
+  round2El.hidden = false;
+  resetRound2();
+  // scroll to round 2
+  round2El.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+btnR2Reset.addEventListener("click", resetRound2);
+btnR2Again.addEventListener("click", resetRound2);
+btnBackR1.addEventListener("click", () => {
+  round2El.hidden = true;
+  document.body.scrollIntoView({ behavior: "smooth", block: "start" });
+});
