@@ -50,9 +50,15 @@ let order = []; // [{fr, en, price, icon, qty}]
 let useJeVoudrais = true;
 
 // ---- speech ----
+// We wait for the browser's voices list to load before speaking. Some browsers
+// (notably Chrome) populate voices asynchronously, so the first speak() call
+// can otherwise fall back to a default English voice. queueSpeak() defers the
+// call until voices are ready; later calls go straight through.
 let voices = [];
+let voicesReady = false;
 function loadVoices() {
   voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  if (voices.length > 0) voicesReady = true;
 }
 if (window.speechSynthesis) {
   loadVoices();
@@ -63,8 +69,7 @@ function pickFrenchVoice() {
       || voices.find(v => v.name && /french/i.test(v.name))
       || null;
 }
-function speak(text, rate = 0.95) {
-  if (!window.speechSynthesis) return;
+function doSpeak(text, rate) {
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "fr-FR";
@@ -72,6 +77,25 @@ function speak(text, rate = 0.95) {
   if (v) u.voice = v;
   u.rate = rate;
   window.speechSynthesis.speak(u);
+}
+function speak(text, rate = 0.95) {
+  if (!window.speechSynthesis) return;
+  loadVoices();
+  if (voicesReady) {
+    doSpeak(text, rate);
+  } else {
+    // wait once for voices, then speak. 600ms fallback in case the event
+    // never fires on this browser (we'll speak with whatever's available).
+    let done = false;
+    const onReady = () => {
+      if (done) return;
+      done = true;
+      loadVoices();
+      doSpeak(text, rate);
+    };
+    window.speechSynthesis.addEventListener("voiceschanged", onReady, { once: true });
+    setTimeout(onReady, 600);
+  }
 }
 
 // fallback audio cue (small chime)
@@ -164,6 +188,8 @@ function redraw() {
   payBtn.disabled = order.length === 0;
   // phrase
   orderText.textContent = buildOrderText();
+  // mini tray (Défi mode only — but cheap to keep in sync)
+  if (typeof updateMiniTray === "function") updateMiniTray();
 }
 
 function setBarman(fr, en, options = {}) {
@@ -236,43 +262,47 @@ const defiFeedback = document.getElementById("defiFeedback");
 const defiListen  = document.getElementById("defiListen");
 
 // Missions progress in difficulty:
-// 1-2: read English instructions, build the matching order
-// 3:   price-constrained — pick yourself, must hit budget exactly
-// 4-5: listening — barman says it in French, you build it
+// 1-2: TRANSLATION — customer says it in English, pupil builds the matching
+//       French order from the menu (no French answer leaks in the prompt)
+// 3:   BUDGET — constraint puzzle: pick at least one drink + one snack to
+//       hit a target spend exactly
+// 4-5: LISTENING — barman speaks the order in French (TTS), pupil rebuilds
+//       it from the menu; Listen again button is available
 const MISSIONS = [
   {
     title: "Mission 1 — Le café",
-    type: "list",
-    instr: "Order: a coffee and a croissant.",
-    requireList: true,
+    kind: "TRANSLATION",
+    customerEn: "I'd like a coffee and a croissant, please.",
+    detail: "Two items — a hot drink and a pastry.",
     items: [{ fr: "un café", qty: 1 }, { fr: "un croissant", qty: 1 }],
   },
   {
     title: "Mission 2 — Le déjeuner",
-    type: "list",
-    instr: "Order: a sandwich, an orange juice and an ice cream.",
-    requireList: true,
+    kind: "TRANSLATION",
+    customerEn: "I'd like a sandwich, an orange juice and an ice cream, please.",
+    detail: "Three items — a snack, a drink and a dessert.",
     items: [{ fr: "un sandwich", qty: 1 }, { fr: "un jus d'orange", qty: 1 }, { fr: "une glace", qty: 1 }],
   },
   {
     title: "Mission 3 — Le budget",
-    type: "budget",
-    instr: "You have €6,00. Order at least one drink and one snack. Spend as close to €6,00 as you can.",
+    kind: "BUDGET",
+    customerEn: "Pick at least one drink and one snack — total spend must be exactly €6,00.",
+    detail: "Watch the running total in your tray. Adjust until it matches.",
     budget: 6.00,
-    needsDrink: true,
-    needsFood: true,
   },
   {
     title: "Mission 4 — À l'écoute",
-    type: "listen",
-    instr: "Listen to the barman. Build the order he says.",
+    kind: "LISTENING",
+    customerEn: "Listen to the barman. Build the order he speaks.",
+    detail: "Two items. Use ▶ Listen again if you need to hear it once more.",
     sayFr: "Je voudrais une limonade et un pain au chocolat, s'il vous plaît.",
     items: [{ fr: "une limonade", qty: 1 }, { fr: "un pain au chocolat", qty: 1 }],
   },
   {
     title: "Mission 5 — À l'écoute",
-    type: "listen",
-    instr: "Listen to the barman. He's a regular — three items this time.",
+    kind: "LISTENING",
+    customerEn: "Listen carefully — a longer order this time.",
+    detail: "Three items.",
     sayFr: "Je voudrais un thé, une crêpe et une part de tarte, s'il vous plaît.",
     items: [{ fr: "un thé", qty: 1 }, { fr: "une crêpe", qty: 1 }, { fr: "une part de tarte", qty: 1 }],
   },
@@ -296,33 +326,68 @@ function setMode(m) {
   }
 }
 
+const defiKind = document.getElementById("defiKind");
+const defiTask = document.getElementById("defiTask");
+
 function renderMission() {
   const m = MISSIONS[currentMission];
   defiIdx.textContent = currentMission + 1;
   defiTotal.textContent = MISSIONS.length;
   defiTitle.textContent = m.title;
-  defiInstr.textContent = m.instr;
+  defiKind.textContent = m.kind;
+  defiKind.dataset.kind = m.kind;
   defiFeedback.textContent = "";
   defiFeedback.className = "defi-feedback";
 
-  if (m.type === "list") {
-    defiTarget.innerHTML = `<strong>Target order:</strong><ul>${m.items.map(i => `<li>${i.fr}${i.qty > 1 ? ` (×${i.qty})` : ""}</li>`).join("")}</ul>`;
+  if (m.kind === "BUDGET") {
+    defiTask.innerHTML = `
+      <span class="task-tag">Customer puzzle</span>
+      <span class="task-customer">${m.customerEn.replace(/€6,00/g, '<span class="defi-budget">€6,00</span>')}</span>
+      <p class="task-detail">${m.detail}</p>
+    `;
     defiListen.hidden = true;
-  } else if (m.type === "budget") {
-    defiTarget.innerHTML = `<strong>Budget:</strong><span class="defi-budget">€${m.budget.toFixed(2).replace('.', ',')}</span> — your task: pick at least one <em>drink</em> and one <em>snack</em>, total spend must be exactly €${m.budget.toFixed(2).replace('.', ',')}.`;
-    defiListen.hidden = true;
-  } else if (m.type === "listen") {
-    defiTarget.innerHTML = `<strong>Listen:</strong> the barman has spoken his order. Use the menu on the left to build exactly what he asked for. (Tap <em>Listen again</em> to repeat.)`;
+  } else if (m.kind === "LISTENING") {
+    defiTask.innerHTML = `
+      <span class="task-tag">Listening · the barman is speaking…</span>
+      <span class="task-customer">${m.customerEn}</span>
+      <p class="task-detail">${m.detail}</p>
+    `;
     defiListen.hidden = false;
-    setTimeout(() => { setBarman(m.sayFr, "(Listen — and try to recreate the order)"); speak(m.sayFr, 0.92); }, 200);
+    setTimeout(() => { setBarman(m.sayFr, "(Listen — then build the order from the menu)"); speak(m.sayFr, 0.92); }, 250);
+  } else {
+    // TRANSLATION
+    defiTask.innerHTML = `
+      <span class="task-tag">The customer says (in English):</span>
+      <span class="task-customer">&ldquo;<em>${m.customerEn}</em>&rdquo;</span>
+      <p class="task-detail">${m.detail}</p>
+    `;
+    defiListen.hidden = true;
   }
   // clear tray for each new mission
   order = []; redraw();
+  updateMiniTray();
+}
+
+function updateMiniTray() {
+  // queried lazily because redraw() can fire before the Défi DOM is wired up
+  const c = document.getElementById("defiTrayContent");
+  const t = document.getElementById("defiTrayTotal");
+  if (!c || !t) return;
+  if (order.length === 0) {
+    c.textContent = "empty — tap menu items below";
+    c.classList.add("empty");
+    t.textContent = "";
+    return;
+  }
+  c.classList.remove("empty");
+  c.textContent = order.map(o => `${o.fr}${o.qty > 1 ? ` ×${o.qty}` : ""}`).join(", ");
+  const total = order.reduce((tot, o) => tot + o.price * o.qty, 0);
+  t.textContent = `${total.toFixed(2).replace('.', ',')} €`;
 }
 
 defiListen.addEventListener("click", () => {
   const m = MISSIONS[currentMission];
-  if (m.type === "listen") { speak(m.sayFr, 0.92); setBarman(m.sayFr, "(Listening mission)"); }
+  if (m.kind === "LISTENING") { speak(m.sayFr, 0.92); setBarman(m.sayFr, "(Listening mission)"); }
 });
 
 function countOrderByFr() {
@@ -333,7 +398,7 @@ function countOrderByFr() {
 
 function checkMission() {
   const m = MISSIONS[currentMission];
-  if (m.type === "list" || m.type === "listen") {
+  if (m.kind === "TRANSLATION" || m.kind === "LISTENING") {
     const placed = countOrderByFr();
     const required = new Map(m.items.map(i => [i.fr, i.qty]));
     let ok = placed.size === required.size;
@@ -355,7 +420,7 @@ function checkMission() {
       defiFeedback.className = "defi-feedback bad";
       setBarman("Hmm…", "(Not quite — try again)", { shake: true });
     }
-  } else if (m.type === "budget") {
+  } else if (m.kind === "BUDGET") {
     const drinkFrs = new Set(MENU.drinks.map(d => d.fr));
     const foodFrs  = new Set(MENU.food.map(d => d.fr));
     const hasDrink = order.some(o => drinkFrs.has(o.fr));
@@ -390,11 +455,11 @@ function advance() {
       currentMission++;
       renderMission();
     } else {
-      defiTarget.innerHTML = "";
-      defiFeedback.textContent = `All five missions complete. Final score: ${score} / ${MISSIONS.length}. Bravo !`;
-      defiFeedback.className = "defi-feedback done";
+      defiTask.innerHTML = `<span class="task-tag">Final score</span><span class="task-customer">${score} / ${MISSIONS.length} — Bravo !</span><p class="task-detail">Switch back to Explore the menu, or click the Défi tab again to play a second time.</p>`;
+      defiFeedback.textContent = "";
       defiTitle.textContent = "Mission accomplie !";
-      defiInstr.textContent = "Switch back to Explore the menu, or reset by clicking the Défi tab again.";
+      defiKind.textContent = "DONE";
+      defiKind.dataset.kind = "DONE";
       defiListen.hidden = true;
     }
   }, 1100);

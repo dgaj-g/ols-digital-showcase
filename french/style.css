@@ -404,6 +404,7 @@ body {
   padding-bottom: 0.7rem;
   margin-bottom: 0.9rem;
 }
+.defi-pillrow { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 .defi-num {
   font-size: 0.75rem;
   letter-spacing: 0.18em;
@@ -411,6 +412,17 @@ body {
   color: var(--fr-gold);
   font-weight: 700;
 }
+.defi-kind {
+  background: var(--fr-burgundy);
+  color: var(--fr-paper);
+  padding: 0.18rem 0.55rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  border-radius: 3px;
+}
+.defi-kind[data-kind="LISTENING"] { background: var(--fr-leaf); }
+.defi-kind[data-kind="BUDGET"]    { background: var(--fr-gold); color: var(--fr-deep); }
 .defi-title {
   font-family: "Didot", Georgia, serif;
   font-style: italic;
@@ -461,21 +473,32 @@ body {
 .defi-listen:hover { background: #B0832A; color: var(--fr-paper); }
 .defi-listen .ico { font-size: 0.85rem; }
 
-.defi-target {
+.defi-task {
   background: white;
-  border: 1px dashed #C8AC8D;
-  border-radius: 10px;
-  padding: 0.9rem 1rem;
+  border: 1px solid var(--fr-gold);
+  border-left: 6px solid var(--fr-gold);
+  border-radius: 6px;
+  padding: 0.95rem 1.1rem;
   margin-bottom: 0.9rem;
-  font-size: 1.02rem;
-  line-height: 1.55;
+  font-size: 1.05rem;
+  line-height: 1.5;
 }
-.defi-target strong { color: var(--fr-burgundy); }
-.defi-target ul {
-  margin: 0.5rem 0 0;
-  padding-left: 1.3rem;
+.defi-task .task-tag {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fr-burgundy);
+  font-weight: 700;
+  margin-bottom: 0.35rem;
 }
-.defi-target li { margin: 0.15rem 0; }
+.defi-task .task-customer {
+  font-size: 1.12rem;
+  font-style: italic;
+  color: var(--fr-deep);
+}
+.defi-task .task-customer em { font-style: normal; font-weight: 700; color: var(--fr-burgundy); }
+.defi-task .task-detail { margin: 0.4rem 0 0; color: #5C4838; font-size: 0.95rem; }
 .defi-budget {
   display: inline-block;
   background: var(--fr-burgundy);
@@ -484,7 +507,61 @@ body {
   border-radius: 4px;
   font-family: "Didot", Georgia, serif;
   font-weight: 700;
-  margin-left: 0.4rem;
+  margin: 0 0.2rem;
+}
+
+.defi-howto {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.8rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(201,150,43,0.13);
+  border: 1px dashed var(--fr-gold);
+  border-radius: 6px;
+  font-size: 0.92rem;
+  color: var(--fr-bistro);
+}
+.defi-howto strong { color: var(--fr-burgundy); }
+.defi-howto em { font-style: italic; color: var(--fr-burgundy); font-weight: 700; }
+.defi-arrow {
+  font-size: 1.5rem;
+  color: var(--fr-burgundy);
+  font-weight: 900;
+  line-height: 1;
+  animation: arrow-bob 1.6s ease-in-out infinite;
+}
+@keyframes arrow-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+.defi-tray-mini {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--fr-paper);
+  border: 1px solid #D8C1A5;
+  border-radius: 6px;
+  padding: 0.55rem 0.85rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+.tray-mini-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fr-faded, #8B7B62);
+  font-weight: 700;
+}
+.tray-mini-content {
+  flex: 1;
+  font-style: italic;
+  color: var(--fr-bistro);
+}
+.tray-mini-content.empty { color: #A07E5C; }
+.tray-mini-total {
+  font-family: "Didot", Georgia, serif;
+  font-weight: 700;
+  color: var(--fr-burgundy);
 }
 
 .defi-actions {

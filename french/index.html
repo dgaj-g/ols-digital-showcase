@@ -35,10 +35,12 @@
 
     <section class="defi-pane" id="defiPane" hidden>
       <header class="defi-head">
-        <div>
-          <span class="defi-num"><span id="defiIdx">1</span> / <span id="defiTotal">5</span></span>
+        <div class="defi-head-text">
+          <div class="defi-pillrow">
+            <span class="defi-num">Mission <span id="defiIdx">1</span> / <span id="defiTotal">5</span></span>
+            <span class="defi-kind" id="defiKind">TRANSLATION</span>
+          </div>
           <h2 class="defi-title" id="defiTitle">Mission</h2>
-          <p class="defi-instr" id="defiInstr"></p>
         </div>
         <div class="defi-stats">
           <div class="defi-stat"><span class="stat-label">Score</span><span class="stat-value" id="defiScore">0</span></div>
@@ -47,7 +49,20 @@
           </button>
         </div>
       </header>
-      <div class="defi-target" id="defiTarget"></div>
+
+      <div class="defi-task" id="defiTask"></div>
+
+      <p class="defi-howto">
+        <span class="defi-arrow" aria-hidden="true">↓</span>
+        <span><strong>How to play:</strong> tap items in the menu below to add them to your tray. When the tray matches what's needed, press <em>Vérifier</em>.</span>
+      </p>
+
+      <div class="defi-tray-mini" id="defiTrayMini">
+        <span class="tray-mini-label">Your tray:</span>
+        <span class="tray-mini-content" id="defiTrayContent">empty — tap menu items below</span>
+        <span class="tray-mini-total" id="defiTrayTotal"></span>
+      </div>
+
       <div class="defi-actions">
         <button class="defi-check" id="defiCheck" type="button">Vérifier — Check my order</button>
         <button class="defi-clear" id="defiClear" type="button">Clear tray</button>
