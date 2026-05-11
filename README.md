@@ -1,8 +1,41 @@
 # OLS Digital Showcase
 
-Twenty-six small interactive activities — one per department — built for the OLS staff digital skills training session in May 2026.
+Twenty-six small interactive activities — one per department — built for the OLS staff digital skills training session, Monday 18 May 2026.
 
 **Live site:** https://dgaj-g.github.io/ols-digital-showcase/
+
+## What's in here (v1.0)
+
+All 26 department demos are live. Each is a self-contained interactive activity built around a real exam-spec topic for that subject, with a scoring/feedback mechanic and its own distinctive visual style.
+
+| Department | Activity |
+|---|---|
+| Art and Design | Watercolour technique simulator + spot-the-technique quiz |
+| Biology | Recombinant plasmid lab — 5-stage gene-tech walkthrough |
+| Business Studies | Public-vs-private sector sorter + characteristic matching |
+| Careers | Café shift decision tree across 6 scenarios |
+| Chemistry | Interactive periodic table + 60-second element-find challenge |
+| Digital Technology | 8×8 binary image editor + 5 target images to recreate |
+| Drama and Theatre Studies | Draggable stage lighting designer + 5 mood challenges |
+| English | Rhetorical-device identifier on 3 famous speeches |
+| French | Au café simulator + 5 Défi missions with TTS listening |
+| Geography | Rivers source-to-mouth explorer + label challenge |
+| Government and Politics | US Presidency timeline + match-the-moment quiz |
+| Health and Social Care | Build a balanced day vs 6 RDA bars |
+| History | New Tensions 1991-2003 timeline + chronological-ordering quiz |
+| Home Economics | Kitchen Inspector — 10 food-safety scenarios |
+| Irish | Vocab match (with TTS) + Tá vs Is grammar quiz |
+| Junior Science | Animal/plant cell explorer + specialised cells match |
+| Mathematics | Live fractions/decimals/percentages converter + problems |
+| Music | Tone.js-synthesised tin whistle / fiddle / bodhrán + dance quiz |
+| Physical Education | Build a training session vs goal + muscle map |
+| Physics | Hubble's Law slider with red-shift spectrum + Doppler audio |
+| Psychology | Stroop Effect — 20-trial in-browser experiment + scatter plot |
+| Religious Education | Sacraments side-by-side + tradition matching quiz |
+| Sociology | UK attainment bar chart filterable by class/gender/ethnicity |
+| Spanish | Family tree with TTS + Build-the-sentence challenge |
+| Sports Science | Match the plate to the sport — endurance / strength / team |
+| Technology and Design | Block-based robot programming, 6 missions on a 5×5 grid |
 
 ## How this works
 
