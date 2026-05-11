@@ -235,6 +235,44 @@ main { max-width: 1280px; margin: 0 auto; padding: 1.6rem 1.5rem 3rem; }
   border-radius: 12px;
 }
 
+/* QR panel */
+.qr-panel {
+  margin-top: 2rem;
+  background: white;
+  border: 1px solid var(--ols-border);
+  border-radius: 14px;
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.qr-left { flex: 1; min-width: 240px; }
+.qr-left h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.2rem;
+  color: var(--ols-blue-deep);
+}
+.qr-left p { margin: 0 0 0.5rem; color: #444; line-height: 1.5; }
+.qr-url {
+  font-family: "SF Mono", Menlo, Consolas, monospace !important;
+  background: var(--ols-bg);
+  border: 1px solid var(--ols-border-soft);
+  border-radius: 6px;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.88rem;
+  color: var(--ols-blue);
+  display: inline-block;
+  word-break: break-all;
+}
+.qr-img {
+  width: 180px; height: 180px;
+  border: 4px solid var(--ols-gold);
+  border-radius: 8px;
+  background: white;
+  flex-shrink: 0;
+}
+
 /* ---- Footer ---- */
 footer {
   text-align: center;
