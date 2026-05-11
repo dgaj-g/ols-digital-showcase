@@ -1,0 +1,238 @@
+/* Drama — black box theatre. Deep black background, gel-coloured spots */
+:root {
+  --stg-bg:       #0A0A0F;
+  --stg-deep:     #14141C;
+  --stg-velvet:   #3E0E1A;
+  --stg-velvet-deep:#1F0710;
+  --stg-gold:     #D4B14A;
+  --stg-cream:    #F4E9C7;
+  --stg-line:     #595959;
+  --stg-text:     #E8E5DE;
+  --stg-muted:    #8C8A86;
+  --stg-good:     #6FE08F;
+}
+
+body {
+  background:
+    radial-gradient(circle at 50% 0%, #1A1A24 0%, var(--stg-bg) 60%);
+  color: var(--stg-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.stage-page { max-width: 1280px; margin: 0 auto; padding: 1.2rem 1rem 3rem; }
+
+.stage-hero {
+  border: 1px solid var(--stg-velvet);
+  border-radius: 12px;
+  padding: 1rem 1.3rem;
+  margin-bottom: 0.9rem;
+  background:
+    linear-gradient(180deg, rgba(62,14,26,0.2) 0%, rgba(0,0,0,0) 100%),
+    var(--stg-deep);
+}
+.kicker {
+  display: inline-block;
+  background: var(--stg-gold);
+  color: var(--stg-bg);
+  padding: 0.25rem 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 800;
+  border-radius: 999px;
+}
+.stage-hero h1 {
+  margin: 0.55rem 0 0.35rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  color: var(--stg-cream);
+}
+.stage-hero p {
+  margin: 0;
+  max-width: 70ch;
+  color: var(--stg-muted);
+}
+
+.stage-bar {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--stg-deep);
+  border: 1px solid var(--stg-velvet);
+  border-radius: 10px;
+  padding: 0.55rem 0.95rem;
+  margin-bottom: 0.7rem;
+}
+.stage-stat {
+  display: flex; flex-direction: column;
+  min-width: 80px;
+}
+.bar-label {
+  font-size: 0.7rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--stg-muted); font-weight: 700;
+}
+.bar-val { font-weight: 800; font-size: 1.1rem; color: var(--stg-gold); font-family: Georgia, serif; }
+.stage-go {
+  margin-left: auto;
+  background: var(--stg-gold);
+  color: var(--stg-bg);
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font: inherit; font-weight: 800; cursor: pointer;
+  letter-spacing: 0.02em;
+}
+.stage-go:hover { background: #F2CE6A; }
+.stage-secondary {
+  background: transparent;
+  color: var(--stg-cream);
+  border: 1.5px solid var(--stg-cream);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.stage-secondary:hover { background: var(--stg-cream); color: var(--stg-bg); }
+
+.stage-row {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 0.9rem;
+}
+@media (max-width: 880px) { .stage-row { grid-template-columns: 1fr; } }
+
+.stage-frame {
+  background: #000;
+  border: 2px solid var(--stg-velvet);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+}
+.stage-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: crosshair;
+}
+
+/* Lamp control panel */
+.lamp-panel {
+  background: var(--stg-deep);
+  border: 1px solid var(--stg-velvet);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+.lamp-panel h2 {
+  margin: 0 0 0.7rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--stg-gold);
+  font-weight: 800;
+}
+.lamp-row {
+  background: var(--stg-bg);
+  border: 1px solid var(--stg-velvet);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.55rem;
+}
+.lamp-row-head {
+  display: flex; gap: 0.5rem; align-items: center;
+  margin-bottom: 0.45rem;
+}
+.lamp-pin {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  flex-shrink: 0;
+}
+.lamp-name { font-weight: 700; color: var(--stg-text); font-size: 0.92rem; }
+.lamp-pos  { margin-left: auto; font-family: "SF Mono", Menlo, monospace; font-size: 0.74rem; color: var(--stg-muted); }
+.gel-row {
+  display: flex; gap: 0.3rem; flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+.gel-swatch {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+.gel-swatch:hover { transform: scale(1.1); }
+.gel-swatch.active { border-color: var(--stg-gold); transform: scale(1.1); }
+.lamp-intensity {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--stg-muted);
+}
+.lamp-intensity input[type=range] {
+  flex: 1;
+  accent-color: var(--stg-gold);
+}
+.lamp-intensity .val {
+  font-family: "SF Mono", Menlo, monospace;
+  color: var(--stg-gold);
+  font-weight: 800;
+  width: 36px;
+  text-align: right;
+}
+
+.panel-note {
+  margin-top: 0.8rem;
+  padding: 0.6rem 0.7rem;
+  background: var(--stg-bg);
+  border: 1px dashed var(--stg-velvet);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: var(--stg-muted);
+  line-height: 1.45;
+}
+.panel-note em { color: var(--stg-gold); font-style: italic; }
+
+.stage-feedback {
+  margin: 0.8rem 0;
+  min-height: 1.5em;
+}
+.stage-feedback .fb-card {
+  background: var(--stg-deep);
+  border-left: 6px solid var(--stg-gold);
+  padding: 0.7rem 0.9rem;
+  border-radius: 4px;
+  border-top: 1px solid var(--stg-velvet);
+  border-right: 1px solid var(--stg-velvet);
+  border-bottom: 1px solid var(--stg-velvet);
+  color: var(--stg-text);
+  line-height: 1.5;
+}
+.fb-card.ok  { border-left-color: var(--stg-good); }
+.fb-card.bad { border-left-color: #E26A6A; }
+.fb-card strong { color: var(--stg-gold); }
+
+.stage-result {
+  margin-top: 1rem;
+  background: var(--stg-deep);
+  border: 2px solid var(--stg-gold);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+.stage-result h3 {
+  margin: 0 0 0.4rem;
+  font-family: Georgia, serif;
+  font-style: italic;
+  color: var(--stg-cream);
+  font-size: 1.5rem;
+}
+.stage-result p { margin: 0 0 0.9rem; color: var(--stg-text); }
+.stage-result .stage-go { margin: 0 0.4rem; }
+.stage-result .stage-secondary { margin: 0 0.4rem; }
+
+/* SVG lamp visuals — handled inline; this just helps when dragging */
+.lamp-head { cursor: grab; }
+.lamp-head.dragging { cursor: grabbing; }
+.lamp-head circle { transition: filter 0.15s; }
+.lamp-head:hover circle.fixture { filter: drop-shadow(0 0 6px white); }

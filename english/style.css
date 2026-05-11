@@ -1,0 +1,249 @@
+/* English — literary parchment + ink red highlights */
+:root {
+  --eng-paper: #F8F0DC;
+  --eng-paper-deep: #ECDFB7;
+  --eng-ink: #1F1A14;
+  --eng-rust: #8E2C1F;
+  --eng-rust-deep:#6B1F14;
+  --eng-faded: #6E5E3F;
+  --eng-line: #595959;
+  --eng-gold: #B89656;
+  --eng-good: #2A7D34;
+  --eng-warn: #C72E2E;
+}
+
+body {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(110,94,63,0.06) 28px 29px),
+    var(--eng-paper);
+  color: var(--eng-ink);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.rhet { max-width: 980px; margin: 0 auto; padding: 1.3rem 1.1rem 3rem; }
+
+.rhet-hero {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%),
+    var(--eng-paper-deep);
+  border: 2px solid var(--eng-line);
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+.kicker {
+  display: inline-block;
+  background: var(--eng-rust);
+  color: var(--eng-paper);
+  padding: 0.25rem 0.8rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.rhet-hero h1 {
+  margin: 0.55rem 0 0.35rem;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+.rhet-hero p {
+  margin: 0;
+  max-width: 60ch;
+  font-size: 1.04rem;
+  color: #443728;
+}
+
+.rhet-bar {
+  display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;
+  border-top: 1px solid var(--eng-line);
+  border-bottom: 1px solid var(--eng-line);
+  padding: 0.5rem 0; margin-bottom: 0.8rem;
+}
+.rhet-stat { display: flex; flex-direction: column; min-width: 78px; }
+.bar-label {
+  font-size: 0.7rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--eng-faded);
+  font-family: -apple-system, sans-serif; font-weight: 700;
+}
+.bar-val { font-weight: 800; font-size: 1.05rem; color: var(--eng-rust); }
+.rhet-go {
+  margin-left: auto;
+  background: var(--eng-rust); color: var(--eng-paper);
+  border: none; border-radius: 0;
+  padding: 0.45rem 1rem;
+  font: inherit; font-weight: 800; cursor: pointer;
+  letter-spacing: 0.04em;
+}
+.rhet-go:hover { background: var(--eng-rust-deep); }
+.rhet-secondary {
+  background: transparent;
+  color: var(--eng-ink);
+  border: 1.5px solid var(--eng-line);
+  border-radius: 0;
+  padding: 0.4rem 0.9rem;
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.rhet-secondary:hover { background: rgba(110,94,63,0.12); }
+
+.speech-card {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(110,94,63,0.06) 28px 29px),
+    #FBF6E3;
+  border: 1px solid var(--eng-line);
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 0.8rem;
+  position: relative;
+}
+.speech-card::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--eng-gold);
+  pointer-events: none;
+}
+.speech-tag {
+  font-size: 0.72rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--eng-faded);
+  font-family: -apple-system, sans-serif;
+  font-weight: 700;
+}
+.speech-card h2 {
+  margin: 0.2rem 0 0.2rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+.speech-speaker {
+  margin: 0 0 0.8rem;
+  color: var(--eng-faded); font-style: italic;
+  font-size: 0.9rem;
+}
+.speech-body {
+  margin: 0; padding: 0 0 0.4rem;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+.speech-body p { margin: 0 0 0.7rem; text-indent: 1.2em; }
+
+.device-zone {
+  background: rgba(142,44,31,0.12);
+  border-bottom: 2px solid var(--eng-rust);
+  padding: 0 2px;
+  cursor: pointer;
+  transition: background 0.12s;
+  font-style: italic;
+  font-weight: 600;
+}
+.device-zone:hover { background: rgba(142,44,31,0.25); }
+.device-zone.done {
+  background: rgba(42,125,52,0.18);
+  border-bottom-color: var(--eng-good);
+  cursor: default;
+}
+.device-zone.done::after {
+  content: " ✓";
+  color: var(--eng-good);
+  font-weight: 900;
+  font-style: normal;
+}
+.device-zone.wrong {
+  background: rgba(199,46,46,0.2);
+  border-bottom-color: var(--eng-warn);
+}
+
+.ask-card {
+  background: #FBF6E3;
+  border: 2px solid var(--eng-rust);
+  border-radius: 4px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.8rem;
+}
+.ask-prompt {
+  margin: 0 0 0.6rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--eng-rust);
+}
+.ask-prompt em {
+  background: rgba(142,44,31,0.18);
+  padding: 0.05rem 0.4rem;
+  font-style: italic;
+}
+.ask-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.4rem;
+}
+.ask-opt {
+  background: var(--eng-paper);
+  border: 1.5px solid var(--eng-line);
+  border-radius: 0;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  font-family: Georgia, serif;
+}
+.ask-opt:hover { background: rgba(110,94,63,0.12); }
+.ask-opt.correct { background: rgba(42,125,52,0.2); border-color: var(--eng-good); color: var(--eng-good); }
+.ask-opt.wrong { background: rgba(199,46,46,0.2); border-color: var(--eng-warn); color: var(--eng-warn); }
+
+.rhet-feedback {
+  margin: 0 0 0.8rem;
+  padding: 0.6rem 0.9rem;
+  background: #FBF6E3;
+  border-left: 6px solid var(--eng-gold);
+  border-top: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;
+  min-height: 1.3em;
+  font-style: italic;
+}
+.rhet-feedback strong { color: var(--eng-rust); font-style: normal; }
+.rhet-feedback.ok  { border-left-color: var(--eng-good); }
+.rhet-feedback.bad { border-left-color: var(--eng-warn); }
+
+.rhet-glossary {
+  background: #FBF6E3;
+  border: 1px solid var(--eng-line);
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+}
+.rhet-glossary summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--eng-rust);
+  font-style: italic;
+}
+.gloss-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+.gloss-grid > div {
+  padding: 0.55rem 0.7rem;
+  background: var(--eng-paper);
+  border-left: 4px solid var(--eng-gold);
+  font-size: 0.92rem;
+}
+.gloss-grid strong { display: block; color: var(--eng-rust); margin-bottom: 0.2rem; }
+
+.rhet-result {
+  background: #FBF6E3;
+  border: 2px solid var(--eng-rust);
+  padding: 1rem 1.2rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+.rhet-result h3 {
+  margin: 0 0 0.3rem;
+  color: var(--eng-rust);
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 900;
+}
+.rhet-result p { margin: 0 0 0.8rem; font-size: 1rem; }

@@ -3,34 +3,66 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Geography · OLS Showcase (coming soon)</title>
+  <title>Geography — Rivers: Source to Mouth · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Geography</span>
-    <span class="meta">GCSE · Rivers — source to mouth</span>
+    <span class="meta">GCSE CCEA · Unit 1 — Rivers: source to mouth</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Geography</h1>
-    <p class="meta">GCSE · Rivers — source to mouth</p>
-    <span class="ph-act">Cross-section explorer</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="geo">
+    <header class="geo-hero">
+      <span class="kicker">A river's journey</span>
+      <h1>From Source to Mouth</h1>
+      <p>Trace a river from upland source to coastal delta. Tap a landform to learn how it forms — then switch to Label mode and test yourself.</p>
+    </header>
+
+    <nav class="geo-tabs">
+      <button class="geo-tab active" data-tab="explore" id="tabExplore">Explore the river</button>
+      <button class="geo-tab" data-tab="label" id="tabLabel">Label challenge</button>
+    </nav>
+
+    <section class="geo-pane" id="paneExplore">
+      <div class="geo-stage">
+        <svg viewBox="0 0 1000 460" id="riverSvg" class="river-svg" aria-label="River from source to mouth"></svg>
+      </div>
+
+      <article class="geo-detail" id="explainPanel">
+        <p class="explain-cue">Tap any numbered landform on the river above to read about how it forms.</p>
+      </article>
+    </section>
+
+    <section class="geo-pane" id="paneLabel" hidden>
+      <header class="geo-quiz-bar">
+        <div class="geo-stat"><span class="bar-label">Placed</span><span class="bar-val"><span id="placedN">0</span> / <span id="totalN">8</span></span></div>
+        <div class="geo-stat"><span class="bar-label">Correct</span><span class="bar-val" id="correctN">0</span></div>
+        <div class="geo-stat"><span class="bar-label">Wrong</span><span class="bar-val" id="wrongN">0</span></div>
+        <button class="geo-reset" id="labelReset" type="button">Reset</button>
+      </header>
+
+      <p class="geo-feedback" id="labelFeedback" aria-live="polite">Pick a label tile below — then tap the matching number on the river.</p>
+
+      <div class="geo-stage">
+        <svg viewBox="0 0 1000 460" id="riverSvgLabel" class="river-svg" aria-label="Label the river"></svg>
+      </div>
+
+      <div class="label-bank" id="labelBank"></div>
+
+      <div class="geo-result" id="labelResult" hidden>
+        <h3 id="resultTitle">Round complete</h3>
+        <p id="resultMsg"></p>
+        <button class="geo-go" id="labelAgain" type="button">Try again</button>
+      </div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

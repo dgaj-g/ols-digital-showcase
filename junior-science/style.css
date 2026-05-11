@@ -1,0 +1,341 @@
+/* Junior Science — bio-illustrative: micro greens, purples, soft tissue tones */
+:root {
+  --bio-bg: #F0F7F1;
+  --bio-panel: #FFFFFF;
+  --bio-line: #595959;
+  --bio-leaf: #4A8C4A;
+  --bio-leaf-deep: #2E6633;
+  --bio-membrane: #A88BC7;
+  --bio-nucleus: #5E3B85;
+  --bio-cyto: #FFF1D6;
+  --bio-cyto-deep: #E8B864;
+  --bio-mito: #E26A6A;
+  --bio-chloro: #6FBA6F;
+  --bio-vacuole: #8AC8E8;
+  --bio-text: #1F2A1B;
+  --bio-muted: #5C6F5C;
+  --bio-warn: #C72E2E;
+  --bio-good: #2A8F44;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 0%, #DCEEDD 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, #E5DBEF 0%, transparent 50%),
+    var(--bio-bg);
+  color: var(--bio-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.bio { max-width: 1240px; margin: 0 auto; padding: 1.3rem 1.1rem 3rem; }
+
+.bio-hero {
+  background: linear-gradient(135deg, var(--bio-leaf-deep) 0%, var(--bio-nucleus) 100%);
+  color: white;
+  border-radius: 14px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1rem;
+}
+.kicker {
+  display: inline-block;
+  background: rgba(255,255,255,0.18);
+  color: #FFF1D6;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 999px;
+}
+.bio-hero h1 {
+  margin: 0.5rem 0 0.35rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+.bio-hero p { margin: 0; opacity: 0.95; max-width: 60ch; }
+
+.bio-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid var(--bio-leaf-deep);
+  flex-wrap: wrap;
+}
+.bio-tab {
+  background: transparent;
+  border: 2px solid var(--bio-leaf-deep);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--bio-leaf-deep);
+  margin-bottom: -2px;
+}
+.bio-tab:hover { background: rgba(46,102,51,0.08); }
+.bio-tab.active { background: var(--bio-leaf-deep); color: white; }
+
+.cells-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+@media (max-width: 720px) { .cells-row { grid-template-columns: 1fr; } }
+
+.cell-card {
+  margin: 0;
+  background: var(--bio-panel);
+  border: 2px solid var(--bio-line);
+  border-radius: 12px;
+  padding: 0.5rem 0.6rem 0.8rem;
+}
+.cell-card figcaption {
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bio-leaf-deep);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px dashed var(--bio-leaf);
+  margin-bottom: 0.4rem;
+}
+.cell-svg {
+  width: 100%; height: auto; display: block;
+}
+
+.organelle {
+  cursor: pointer;
+  transition: filter 0.12s;
+}
+.organelle:hover { filter: brightness(1.05) drop-shadow(0 0 6px rgba(94,59,133,0.45)); }
+.organelle.active { filter: brightness(1.1) drop-shadow(0 0 8px var(--bio-nucleus)); }
+
+.organelle-label {
+  font-size: 11px;
+  font-weight: 800;
+  fill: var(--bio-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  pointer-events: none;
+}
+.organelle-pin circle {
+  fill: white;
+  stroke: var(--bio-nucleus);
+  stroke-width: 2;
+}
+.organelle-pin text {
+  fill: var(--bio-nucleus);
+  font-weight: 900;
+  font-size: 13px;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.organelle-detail {
+  background: var(--bio-panel);
+  border: 1px solid var(--bio-leaf);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.7rem;
+}
+.detail-cue {
+  margin: 0.5rem 0;
+  text-align: center;
+  color: var(--bio-muted);
+  font-style: italic;
+}
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.detail-title {
+  margin: 0;
+  color: var(--bio-nucleus);
+  font-size: 1.3rem;
+}
+.detail-where {
+  background: var(--bio-leaf);
+  color: white;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.detail-where.plant-only { background: var(--bio-leaf-deep); }
+.detail-body { margin: 0; line-height: 1.55; }
+
+.cell-compare {
+  background: var(--bio-panel);
+  border-left: 6px solid var(--bio-leaf);
+  border-top: 1px solid var(--bio-leaf);
+  border-right: 1px solid var(--bio-leaf);
+  border-bottom: 1px solid var(--bio-leaf);
+  padding: 0.7rem 0.9rem;
+  border-radius: 4px;
+  color: var(--bio-text);
+  margin-bottom: 1rem;
+}
+.cell-compare em { color: var(--bio-leaf-deep); font-style: italic; font-weight: 700; }
+.cell-compare strong { color: var(--bio-nucleus); }
+
+/* --- Label challenge --- */
+.bio-bar {
+  display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;
+  background: var(--bio-panel); border: 1px solid var(--bio-leaf);
+  border-radius: 10px; padding: 0.55rem 0.95rem; margin-bottom: 0.7rem;
+}
+.bio-stat { display: flex; flex-direction: column; min-width: 80px; }
+.bar-label {
+  font-size: 0.7rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--bio-muted); font-weight: 700;
+}
+.bar-val { font-weight: 800; font-size: 1.05rem; color: var(--bio-nucleus); }
+.bio-reset {
+  margin-left: auto;
+  background: transparent;
+  border: 1.5px solid var(--bio-line);
+  border-radius: 8px;
+  padding: 0.35rem 0.85rem;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.bio-reset:hover { background: var(--bio-bg); }
+
+.bio-feedback {
+  margin: 0 0 0.7rem;
+  background: var(--bio-panel);
+  border-left: 6px solid var(--bio-membrane);
+  border-top: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;
+  padding: 0.6rem 0.9rem; border-radius: 4px;
+}
+.bio-feedback strong { color: var(--bio-nucleus); }
+.bio-feedback.ok  { border-left-color: var(--bio-good); background: #F0F8EF; }
+.bio-feedback.bad { border-left-color: var(--bio-warn); background: #FFEBEB; }
+
+.label-bank {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.label-tile {
+  background: white;
+  border: 1.5px solid var(--bio-line);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font: inherit; font-weight: 700;
+  color: var(--bio-text);
+  cursor: pointer;
+  text-align: left;
+}
+.label-tile:hover { background: #F4ECFD; }
+.label-tile.selected {
+  background: var(--bio-nucleus);
+  color: white;
+  border-color: var(--bio-nucleus);
+  box-shadow: 0 4px 12px rgba(94,59,133,0.35);
+}
+.label-tile.done {
+  background: var(--bio-good);
+  color: white;
+  border-color: var(--bio-good);
+  cursor: default;
+  opacity: 0.85;
+}
+.label-tile.done::after { content: " ✓"; }
+
+.bio-result {
+  margin-top: 1rem;
+  background: var(--bio-panel);
+  border: 2px solid var(--bio-nucleus);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+.bio-result h3 {
+  margin: 0 0 0.3rem;
+  color: var(--bio-nucleus);
+  font-size: 1.4rem;
+}
+.bio-result p { margin: 0 0 0.7rem; }
+.bio-go {
+  background: var(--bio-nucleus);
+  color: white; border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.3rem;
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.bio-go:hover { background: var(--bio-leaf-deep); }
+
+/* --- Specialised cells --- */
+.spec-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+@media (max-width: 720px) { .spec-board { grid-template-columns: 1fr; } }
+.spec-cells {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.spec-cell {
+  background: var(--bio-panel);
+  border: 2px solid var(--bio-line);
+  border-radius: 12px;
+  padding: 0.5rem;
+  text-align: center;
+  position: relative;
+  transition: border-color 0.12s, background 0.12s;
+}
+.spec-cell.targeted { background: #FFF1D6; }
+.spec-cell.done {
+  border-color: var(--bio-good);
+  background: #ECFAE9;
+}
+.spec-cell svg { width: 100%; height: 90px; }
+.spec-cell h4 {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bio-leaf-deep);
+}
+.spec-cell .placed-desc {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--bio-text);
+  text-align: left;
+  background: white;
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--bio-line);
+}
+
+.spec-bank {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.spec-tile {
+  background: var(--bio-panel);
+  border: 1.5px solid var(--bio-line);
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.spec-tile:hover { background: #F4ECFD; }
+.spec-tile.selected {
+  background: var(--bio-nucleus);
+  color: white;
+  border-color: var(--bio-nucleus);
+}
+.spec-tile.placed { opacity: 0.4; cursor: default; }

@@ -3,34 +3,109 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Junior Science · OLS Showcase (coming soon)</title>
+  <title>Junior Science — Cells · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Junior Science</span>
-    <span class="meta">KS3 · Cells and specialised cells</span>
+    <span class="meta">KS3 · Cells, organisation and specialised cells</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Junior Science</h1>
-    <p class="meta">KS3 · Cells and specialised cells</p>
-    <span class="ph-act">Cell explorer</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="bio">
+
+    <header class="bio-hero">
+      <span class="kicker">Under the microscope</span>
+      <h1>Animal &amp; Plant Cells</h1>
+      <p>Click each organelle to see what it does. Switch to Label mode to test yourself — and then meet four specialised cells.</p>
+    </header>
+
+    <nav class="bio-tabs">
+      <button class="bio-tab active" data-tab="explore" id="tabExplore">Explore the cells</button>
+      <button class="bio-tab" data-tab="label" id="tabLabel">Label challenge</button>
+      <button class="bio-tab" data-tab="spec" id="tabSpec">Specialised cells</button>
+    </nav>
+
+    <!-- Explore mode -->
+    <section class="bio-pane" id="paneExplore">
+      <div class="cells-row">
+        <figure class="cell-card cell-animal">
+          <figcaption>Animal cell</figcaption>
+          <svg viewBox="0 0 400 320" id="animalSvg" class="cell-svg" aria-label="Animal cell"></svg>
+        </figure>
+        <figure class="cell-card cell-plant">
+          <figcaption>Plant cell</figcaption>
+          <svg viewBox="0 0 400 320" id="plantSvg" class="cell-svg" aria-label="Plant cell"></svg>
+        </figure>
+      </div>
+
+      <article class="organelle-detail" id="organelleDetail">
+        <p class="detail-cue">Tap any labelled part of either cell to learn its function.</p>
+      </article>
+
+      <div class="cell-compare">
+        <strong>Plant cells have everything an animal cell has</strong>, plus three things animal cells don't: a <em>cell wall</em>, <em>chloroplasts</em>, and a large permanent <em>vacuole</em>.
+      </div>
+    </section>
+
+    <!-- Label challenge -->
+    <section class="bio-pane" id="paneLabel" hidden>
+      <header class="bio-bar">
+        <div class="bio-stat"><span class="bar-label">Placed</span><span class="bar-val"><span id="placedN">0</span> / <span id="totalN">7</span></span></div>
+        <div class="bio-stat"><span class="bar-label">Correct</span><span class="bar-val" id="correctN">0</span></div>
+        <div class="bio-stat"><span class="bar-label">Wrong</span><span class="bar-val" id="wrongN">0</span></div>
+        <button class="bio-reset" id="labelReset" type="button">Reset</button>
+      </header>
+
+      <p class="bio-feedback" id="labelFb" aria-live="polite">Pick a label below, then tap the matching organelle in either cell.</p>
+
+      <div class="cells-row">
+        <figure class="cell-card">
+          <figcaption>Animal cell</figcaption>
+          <svg viewBox="0 0 400 320" id="animalSvgQ" class="cell-svg" aria-label="Animal cell to label"></svg>
+        </figure>
+        <figure class="cell-card">
+          <figcaption>Plant cell</figcaption>
+          <svg viewBox="0 0 400 320" id="plantSvgQ" class="cell-svg" aria-label="Plant cell to label"></svg>
+        </figure>
+      </div>
+
+      <div class="label-bank" id="labelBank"></div>
+
+      <div class="bio-result" id="labelResult" hidden>
+        <h3 id="resultTitle">Round complete</h3>
+        <p id="resultMsg"></p>
+        <button class="bio-go" id="labelAgain" type="button">Try again</button>
+      </div>
+    </section>
+
+    <!-- Specialised cells -->
+    <section class="bio-pane" id="paneSpec" hidden>
+      <header class="bio-bar">
+        <div class="bio-stat"><span class="bar-label">Matched</span><span class="bar-val"><span id="specMatched">0</span> / 4</span></div>
+        <button class="bio-reset" id="specReset" type="button">Reset</button>
+      </header>
+
+      <p class="bio-feedback" id="specFb" aria-live="polite">Each card describes a cell adaptation. Drag the description onto the right cell — or tap to pair.</p>
+
+      <div class="spec-board">
+        <div class="spec-cells" id="specCells"></div>
+        <div class="spec-bank" id="specBank"></div>
+      </div>
+
+      <div class="bio-result" id="specResult" hidden>
+        <h3>All four matched.</h3>
+        <p id="specResultMsg"></p>
+        <button class="bio-go" id="specAgain" type="button">Try again</button>
+      </div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
