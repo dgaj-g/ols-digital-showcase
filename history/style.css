@@ -1,0 +1,308 @@
+/* History — newsprint aesthetic: sepia, serif, double rules */
+:root {
+  --hist-paper: #F4ECD8;
+  --hist-paper-deep: #E8DEC4;
+  --hist-ink: #1F1A14;
+  --hist-rust: #8E2C1F;
+  --hist-faded: #6E5E3F;
+  --hist-rule: #2C231A;
+}
+
+body {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(110,94,63,0.06) 28px 29px),
+    var(--hist-paper);
+  color: var(--hist-ink);
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.news-page { max-width: 1280px; margin: 0 auto; padding: 1.3rem 1.2rem 3rem; }
+
+/* ---- Masthead ---- */
+.news-masthead {
+  border: 2px solid var(--hist-rule);
+  padding: 0.8rem 1.2rem 1rem;
+  background: rgba(255,255,255,0.45);
+  position: relative;
+  margin-bottom: 1.4rem;
+}
+.masthead-rule {
+  border-top: 1px solid var(--hist-rule);
+  margin: 0.2rem 0;
+}
+.masthead-rule.double {
+  border-top: 4px double var(--hist-rule);
+  margin-top: 0.6rem;
+}
+.masthead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.masthead-vol, .masthead-date {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--hist-faded);
+  font-variant: small-caps;
+}
+.masthead-title {
+  margin: 0;
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  text-align: center;
+  flex: 1;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.masthead-stand {
+  margin: 0.6rem 0 0;
+  font-style: italic;
+  text-align: center;
+  font-size: 1.05rem;
+  color: #443728;
+}
+
+/* ---- Filters ---- */
+.news-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.2rem;
+  border-bottom: 1px solid var(--hist-rule);
+}
+.filter-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hist-faded);
+  margin-right: 0.3rem;
+}
+.news-pill {
+  background: transparent;
+  border: 1.5px solid var(--hist-rule);
+  border-radius: 0;
+  padding: 0.32rem 0.85rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-family: Georgia, serif;
+  cursor: pointer;
+  color: var(--hist-ink);
+  letter-spacing: 0.02em;
+  transition: background 0.12s;
+}
+.news-pill:hover { background: rgba(110,94,63,0.15); }
+.news-pill.active {
+  background: var(--hist-ink);
+  color: var(--hist-paper);
+}
+
+/* ---- Timeline ---- */
+.timeline-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-top: 1px solid var(--hist-rule);
+  border-bottom: 1px solid var(--hist-rule);
+  padding: 1.3rem 0 1.6rem;
+  margin-bottom: 1.4rem;
+  background: rgba(255,255,255,0.3);
+  scrollbar-width: thin;
+}
+.timeline-rail {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1.4rem;
+  min-width: 100%;
+  width: max-content;
+}
+.timeline-rail::before {
+  content: "";
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  top: 80px;
+  height: 4px;
+  background: var(--hist-rule);
+  z-index: 0;
+}
+.tl-event {
+  position: relative;
+  z-index: 1;
+  width: 200px;
+  flex-shrink: 0;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-family: Georgia, serif;
+  color: var(--hist-ink);
+}
+.tl-event.hidden { display: none; }
+.tl-year {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-weight: 900;
+  font-size: 1.55rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.tl-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--hist-paper);
+  border: 4px solid var(--hist-rule);
+  margin: 0 auto -16px;
+  position: relative;
+  z-index: 2;
+  transition: background 0.15s, transform 0.15s;
+}
+.tl-event:hover .tl-dot,
+.tl-event.active .tl-dot {
+  background: var(--hist-rust);
+  transform: scale(1.15);
+}
+.tl-card {
+  margin-top: 24px;
+  border: 1px solid var(--hist-rule);
+  background: var(--hist-paper);
+  padding: 0.7rem 0.8rem 0.8rem;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  min-height: 110px;
+}
+.tl-event:hover .tl-card,
+.tl-event.active .tl-card {
+  background: white;
+  transform: translateY(-3px);
+  border-color: var(--hist-rust);
+  box-shadow: 0 8px 18px rgba(31,26,20,0.18);
+}
+.tl-headline {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.2;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.tl-strap {
+  font-size: 0.84rem;
+  color: #443728;
+  line-height: 1.4;
+  margin: 0;
+  font-style: italic;
+}
+.tl-theme {
+  margin-top: 0.45rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hist-faded);
+  font-variant: small-caps;
+}
+
+/* ---- Spotlight (full report) ---- */
+.event-spotlight {
+  border: 2px solid var(--hist-rule);
+  background: rgba(255,255,255,0.55);
+  padding: 1.4rem 1.6rem 1.6rem;
+  min-height: 220px;
+}
+.spotlight-cue {
+  text-align: center;
+  font-style: italic;
+  color: var(--hist-faded);
+  font-size: 1.05rem;
+  padding: 2.5rem 0;
+  margin: 0;
+}
+.spot-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hist-faded);
+  border-bottom: 1px solid var(--hist-rule);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
+  font-variant: small-caps;
+}
+.spot-headline {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-weight: 900;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1.1;
+  margin: 0 0 0.4rem;
+}
+.spot-strap {
+  font-style: italic;
+  color: var(--hist-faded);
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+.spot-body {
+  column-count: 2;
+  column-gap: 1.6rem;
+  column-rule: 1px solid var(--hist-rule);
+  font-size: 0.97rem;
+  line-height: 1.55;
+}
+@media (max-width: 700px) {
+  .spot-body { column-count: 1; }
+}
+.spot-body p { margin: 0 0 0.6rem; }
+.spot-body p:first-child::first-letter {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-size: 3rem;
+  font-weight: 900;
+  float: left;
+  line-height: 1;
+  padding: 0.05em 0.1em 0 0;
+  color: var(--hist-rust);
+}
+.spot-impact {
+  margin-top: 0.8rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px dashed var(--hist-rule);
+  background: rgba(142,44,31,0.06);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  break-inside: avoid;
+}
+.spot-impact strong {
+  display: block;
+  font-size: 0.74rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--hist-rust);
+  margin-bottom: 0.25rem;
+  font-variant: small-caps;
+}
+
+.news-footer {
+  margin-top: 1.4rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--hist-faded);
+  font-style: italic;
+  border-top: 1px solid var(--hist-rule);
+  padding-top: 0.7rem;
+}
+
+/* Playfair fallback — use system serif if it doesn't load.
+   We pull it from Google Fonts only because it markedly improves the newsprint feel. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800;900&display=swap');

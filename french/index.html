@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>French — Au café · OLS Showcase</title>
+  <link rel="icon" href="../assets/favicon-32.png" type="image/png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="demo-strip">
+    <a class="back" href="../">← Back to showcase</a>
+    <img class="crest-small" src="../assets/crest-64.png" alt="">
+    <span class="title">French</span>
+    <span class="meta">KS3 · Au café — Ordering food and drink</span>
+  </div>
+
+  <main class="cafe">
+    <header class="cafe-hero">
+      <div class="cafe-hero-text">
+        <span class="kicker">Au Café Étoile</span>
+        <h1>Ordering in French</h1>
+        <p>Build an order. Hear each word in French. Use polite phrases. Pay in euros.</p>
+      </div>
+      <div class="cafe-hero-ribbon" aria-hidden="true">
+        <span>Bonjour</span><span>·</span><span>Merci</span><span>·</span><span>S'il vous plaît</span>
+      </div>
+    </header>
+
+    <section class="cafe-stage">
+      <aside class="menu-panel">
+        <h2 class="menu-title">La Carte</h2>
+        <p class="menu-sub">Tap an item to add it. Tap the speaker to hear it.</p>
+
+        <h3 class="menu-section">Boissons <span>· Drinks</span></h3>
+        <ul class="menu-list" id="drinksList"></ul>
+
+        <h3 class="menu-section">À manger <span>· To eat</span></h3>
+        <ul class="menu-list" id="foodList"></ul>
+      </aside>
+
+      <section class="order-panel">
+        <h2 class="order-title">Votre commande</h2>
+
+        <div class="phrase-builder">
+          <div class="phrase-line">
+            <button class="phrase-toggle" id="phrasePolite" data-on="true">Je voudrais</button>
+            <span id="orderText" class="order-line">…</span>
+          </div>
+          <button class="speak-order" id="speakOrder" type="button">
+            <span class="ico">▶</span> Speak the whole order
+          </button>
+        </div>
+
+        <ul class="tray" id="tray" aria-live="polite">
+          <li class="tray-empty">Your tray is empty. Tap a menu item to start.</li>
+        </ul>
+
+        <div class="totals">
+          <div>
+            <span class="total-label">Total</span>
+            <span class="total-value" id="totalValue">0,00 €</span>
+          </div>
+          <button class="pay-btn" id="payBtn" disabled>Payer · Pay</button>
+        </div>
+
+        <div class="barman" id="barman">
+          <div class="barman-avatar" aria-hidden="true">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="22" r="11" fill="#F2D6B3"/><rect x="14" y="33" width="32" height="20" rx="6" fill="#1A3A6B"/><path d="M 19 19 Q 30 11 41 19 L 41 24 L 19 24 Z" fill="#222"/><circle cx="26" cy="22" r="1.4" fill="#222"/><circle cx="34" cy="22" r="1.4" fill="#222"/><path d="M 26 28 Q 30 30 34 28" stroke="#A04444" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <div class="barman-bubble" id="barmanBubble">
+            <p class="bubble-fr">Bonjour ! Que désirez-vous ?</p>
+            <p class="bubble-en">Hello! What would you like?</p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <details class="vocab-help">
+      <summary>Polite phrases &amp; tips</summary>
+      <div class="vocab-grid">
+        <div><strong>Je voudrais…</strong><br><em>I would like…</em></div>
+        <div><strong>S'il vous plaît</strong><br><em>Please</em></div>
+        <div><strong>Merci</strong><br><em>Thank you</em></div>
+        <div><strong>Combien ça coûte ?</strong><br><em>How much is it?</em></div>
+        <div><strong>L'addition, s'il vous plaît</strong><br><em>The bill, please</em></div>
+        <div><strong>Au revoir</strong><br><em>Goodbye</em></div>
+      </div>
+    </details>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OLS Digital Showcase</title>
+  <meta name="description" content="Department demo activities for the OLS Digital Skills staff session, May 2026.">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <img class="hero-crest" src="assets/crest-256.png" alt="Our Lady's Grammar School crest">
+      <div class="hero-text">
+        <h1>OLS Digital Showcase</h1>
+        <p>Twenty-six small interactive activities — one per department — built for the May 2026 staff training session at Our Lady's Grammar School, Newry.</p>
+        <div class="hero-meta">
+          <span class="pill">26 departments</span>
+          <span class="pill">CCEA · WJEC · KS3</span>
+          <span class="pill">May 2026</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Filters">
+      <div class="controls-row" style="flex: 1; min-width: 220px;">
+        <input type="search" id="search" placeholder="Search department, topic or activity…" aria-label="Search">
+      </div>
+      <div class="controls-row">
+        <label>Level</label>
+        <button class="btn-filter filter-level active" data-value="all">All</button>
+        <button class="btn-filter filter-level" data-value="KS3">KS3</button>
+        <button class="btn-filter filter-level" data-value="GCSE">GCSE</button>
+        <button class="btn-filter filter-level" data-value="A-Level">A-Level</button>
+      </div>
+      <div class="controls-row">
+        <label>Board</label>
+        <button class="btn-filter filter-board active" data-value="all">All</button>
+        <button class="btn-filter filter-board" data-value="CCEA">CCEA</button>
+        <button class="btn-filter filter-board" data-value="WJEC">WJEC</button>
+      </div>
+    </section>
+
+    <p class="result-line"><span id="result-count">26 of 26</span> departments shown</p>
+
+    <div class="grid" id="dept-grid"></div>
+    <div class="empty-state" id="empty-state" hidden>No departments match those filters.</div>
+  </main>
+
+  <footer>
+    <p>Built by Damien Gartland, Director of ICT — Our Lady's Grammar School, Newry — May 2026.</p>
+    <p><a href="https://github.com/dgaj-g/ols-digital-showcase">View source on GitHub</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

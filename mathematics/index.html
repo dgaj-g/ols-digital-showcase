@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mathematics — Fractions, Decimals and Percentages · OLS Showcase</title>
+  <link rel="icon" href="../assets/favicon-32.png" type="image/png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body>
+  <div class="demo-strip">
+    <a class="back" href="../">← Back to showcase</a>
+    <img class="crest-small" src="../assets/crest-64.png" alt="">
+    <span class="title">Mathematics</span>
+    <span class="meta">KS3 · Fractions, decimals and percentages</span>
+  </div>
+
+  <main class="maths-page">
+    <header class="maths-hero">
+      <h1>Fractions, Decimals &amp; Percentages</h1>
+      <p>Drag the slider. Watch the same value change shape. Then try the real-life problems.</p>
+    </header>
+
+    <section class="explorer" aria-label="Equivalence explorer">
+      <div class="explorer-controls">
+        <label for="numInput">Numerator</label>
+        <input type="number" id="numInput" min="0" max="100" value="1" inputmode="numeric">
+        <span class="bar-glyph">/</span>
+        <label for="denInput" class="sr-only">Denominator</label>
+        <input type="number" id="denInput" min="1" max="100" value="2" inputmode="numeric">
+        <button class="qbtn" data-num="1" data-den="4">¼</button>
+        <button class="qbtn" data-num="1" data-den="2">½</button>
+        <button class="qbtn" data-num="3" data-den="4">¾</button>
+        <button class="qbtn" data-num="2" data-den="5">2/5</button>
+        <button class="qbtn" data-num="7" data-den="10">7/10</button>
+        <button class="qbtn" data-num="3" data-den="8">3/8</button>
+      </div>
+
+      <div class="readout">
+        <div class="readout-cell">
+          <div class="readout-label">Fraction</div>
+          <div class="readout-value" id="readFrac"></div>
+        </div>
+        <div class="readout-cell">
+          <div class="readout-label">Decimal</div>
+          <div class="readout-value" id="readDec">0.5</div>
+        </div>
+        <div class="readout-cell">
+          <div class="readout-label">Percentage</div>
+          <div class="readout-value" id="readPct">50%</div>
+        </div>
+        <div class="readout-cell readout-simplified">
+          <div class="readout-label">Simplified</div>
+          <div class="readout-value" id="readSimp"></div>
+        </div>
+      </div>
+
+      <div class="visuals">
+        <figure class="viz">
+          <figcaption>Pizza</figcaption>
+          <svg viewBox="-110 -110 220 220" id="pizzaSvg" aria-label="Pizza visual"></svg>
+        </figure>
+        <figure class="viz">
+          <figcaption>Bar</figcaption>
+          <svg viewBox="0 0 240 60" id="barSvg" aria-label="Bar visual"></svg>
+        </figure>
+        <figure class="viz">
+          <figcaption>10 × 10 grid</figcaption>
+          <svg viewBox="0 0 220 220" id="gridSvg" aria-label="Hundredths grid"></svg>
+        </figure>
+      </div>
+    </section>
+
+    <section class="problems" aria-label="Real-life problems">
+      <h2>Real-life problems</h2>
+      <p class="hint">Tap a problem. Type your answer. The visualiser will reset to match.</p>
+      <div class="problem-grid" id="problemGrid"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
