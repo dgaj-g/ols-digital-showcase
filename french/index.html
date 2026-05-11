@@ -28,6 +28,33 @@
       </div>
     </header>
 
+    <nav class="mode-tabs" aria-label="Mode">
+      <button class="mode-tab active" data-mode="explore" id="modeExplore">Explore the menu</button>
+      <button class="mode-tab" data-mode="defi" id="modeDefi">Défi — 5 missions</button>
+    </nav>
+
+    <section class="defi-pane" id="defiPane" hidden>
+      <header class="defi-head">
+        <div>
+          <span class="defi-num"><span id="defiIdx">1</span> / <span id="defiTotal">5</span></span>
+          <h2 class="defi-title" id="defiTitle">Mission</h2>
+          <p class="defi-instr" id="defiInstr"></p>
+        </div>
+        <div class="defi-stats">
+          <div class="defi-stat"><span class="stat-label">Score</span><span class="stat-value" id="defiScore">0</span></div>
+          <button class="defi-listen" id="defiListen" type="button" hidden>
+            <span class="ico">▶</span> Listen again
+          </button>
+        </div>
+      </header>
+      <div class="defi-target" id="defiTarget"></div>
+      <div class="defi-actions">
+        <button class="defi-check" id="defiCheck" type="button">Vérifier — Check my order</button>
+        <button class="defi-clear" id="defiClear" type="button">Clear tray</button>
+      </div>
+      <div class="defi-feedback" id="defiFeedback" aria-live="polite"></div>
+    </section>
+
     <section class="cafe-stage">
       <aside class="menu-panel">
         <h2 class="menu-title">La Carte</h2>

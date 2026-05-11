@@ -28,7 +28,22 @@
       <p class="masthead-stand">The end of the Cold War did not bring lasting peace. Twelve years, four continents, and a new kind of conflict.</p>
     </header>
 
-    <section class="news-filters" aria-label="Filter events">
+    <section class="mode-switch" aria-label="Mode">
+      <button class="mode-btn active" data-mode="read" id="modeRead">
+        <span class="mode-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h7a3 3 0 0 1 3 3v12a3 3 0 0 0-3-3H4z"/><path d="M20 5h-7a3 3 0 0 0-3 3v12a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        Read the timeline
+      </button>
+      <button class="mode-btn" data-mode="quiz" id="modeQuiz">
+        <span class="mode-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+        Test yourself
+      </button>
+    </section>
+
+    <section class="news-filters" id="newsFilters" aria-label="Filter events">
       <span class="filter-label">Filter by theme:</span>
       <button class="news-pill active" data-theme="all">All events</button>
       <button class="news-pill" data-theme="europe">Post-Cold War Europe</button>
@@ -37,13 +52,46 @@
       <button class="news-pill" data-theme="terror">Terror &amp; response</button>
     </section>
 
-    <section class="timeline-scroller" aria-label="Timeline">
+    <section class="timeline-scroller" id="readMode" aria-label="Timeline">
       <div class="timeline-rail" id="timelineRail"></div>
     </section>
 
     <article class="event-spotlight" id="spotlight">
       <p class="spotlight-cue">Tap any year above to open the full report.</p>
     </article>
+
+    <section class="quiz-pane" id="quizMode" hidden>
+      <header class="quiz-head">
+        <div>
+          <h2 class="quiz-title">Order the events chronologically</h2>
+          <p class="quiz-sub">Click each headline in the order it happened — earliest first.</p>
+        </div>
+        <div class="quiz-stats">
+          <div class="stat">
+            <span class="stat-label">Placed</span>
+            <span class="stat-value" id="quizPlaced">0 / 8</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Mistakes</span>
+            <span class="stat-value" id="quizMistakes">0</span>
+          </div>
+          <button class="quiz-reset" id="quizReset" type="button">Reset</button>
+        </div>
+      </header>
+
+      <div class="quiz-stage">
+        <div class="quiz-pool" id="quizPool" aria-label="Shuffled events"></div>
+        <div class="quiz-track" id="quizTrack" aria-label="Placed events">
+          <p class="track-empty">Your timeline appears here — earliest at the top.</p>
+        </div>
+      </div>
+
+      <div class="quiz-result" id="quizResult" hidden>
+        <h3>Well done.</h3>
+        <p id="quizResultMsg"></p>
+        <button class="quiz-reset" type="button" id="quizPlayAgain">Play again</button>
+      </div>
+    </section>
 
     <footer class="news-footer">
       <p>Based on CCEA GCSE History · Unit 2 · "New Tensions Emerge 1991–2003" factfile.</p>

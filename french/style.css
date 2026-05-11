@@ -359,6 +359,173 @@ body {
 }
 .bubble-en { margin: 0.15rem 0 0; color: #8B7B62; font-size: 0.78rem; font-style: italic; }
 
+/* ---- Mode tabs + Défi pane ---- */
+.mode-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--fr-burgundy);
+}
+.mode-tab {
+  background: transparent;
+  border: 2px solid var(--fr-burgundy);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--fr-burgundy);
+  margin-bottom: -2px;
+  transition: background 0.15s;
+}
+.mode-tab:hover { background: rgba(111,29,46,0.08); }
+.mode-tab.active {
+  background: var(--fr-burgundy);
+  color: var(--fr-paper);
+}
+
+.defi-pane {
+  background: var(--fr-paper);
+  border: 2px solid var(--fr-burgundy);
+  border-radius: 0 14px 14px 14px;
+  padding: 1.2rem 1.3rem 1.4rem;
+  margin-bottom: 1.4rem;
+}
+.defi-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px dashed var(--fr-gold);
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+.defi-num {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fr-gold);
+  font-weight: 700;
+}
+.defi-title {
+  font-family: "Didot", Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--fr-burgundy);
+  font-size: 1.5rem;
+  margin: 0.25rem 0 0.3rem;
+}
+.defi-instr {
+  margin: 0;
+  font-style: italic;
+  color: var(--fr-bistro);
+  font-size: 1rem;
+  max-width: 60ch;
+}
+.defi-stats {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+}
+.defi-stat { text-align: center; }
+.stat-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8B7B62;
+}
+.stat-value {
+  font-family: "Didot", Georgia, serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--fr-burgundy);
+}
+.defi-listen {
+  background: var(--fr-gold);
+  color: var(--fr-deep);
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.defi-listen:hover { background: #B0832A; color: var(--fr-paper); }
+.defi-listen .ico { font-size: 0.85rem; }
+
+.defi-target {
+  background: white;
+  border: 1px dashed #C8AC8D;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.9rem;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+.defi-target strong { color: var(--fr-burgundy); }
+.defi-target ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.3rem;
+}
+.defi-target li { margin: 0.15rem 0; }
+.defi-budget {
+  display: inline-block;
+  background: var(--fr-burgundy);
+  color: var(--fr-paper);
+  padding: 0.15rem 0.6rem;
+  border-radius: 4px;
+  font-family: "Didot", Georgia, serif;
+  font-weight: 700;
+  margin-left: 0.4rem;
+}
+
+.defi-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.defi-check {
+  background: var(--fr-leaf);
+  color: var(--fr-paper);
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.defi-check:hover { background: #466619; }
+.defi-clear {
+  background: transparent;
+  color: var(--fr-burgundy);
+  border: 1.5px solid var(--fr-burgundy);
+  border-radius: 8px;
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.defi-clear:hover { background: var(--fr-burgundy); color: var(--fr-paper); }
+
+.defi-feedback {
+  min-height: 1.4em;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1rem;
+}
+.defi-feedback.ok   { color: var(--fr-leaf); }
+.defi-feedback.bad  { color: var(--fr-burgundy); }
+.defi-feedback.done { color: var(--fr-gold); font-size: 1.15rem; }
+
 .vocab-help {
   margin-top: 1.4rem;
   background: white;

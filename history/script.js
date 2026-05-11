@@ -76,23 +76,48 @@ const EVENTS = [
   },
 ];
 
+// indices below align with EVENTS array order, which is already chronological
+EVENTS.forEach((e, i) => { e._idx = i; });
+
 const rail = document.getElementById("timelineRail");
 const spot = document.getElementById("spotlight");
+const readPane  = document.getElementById("readMode");
+const quizPane  = document.getElementById("quizMode");
+const modeRead  = document.getElementById("modeRead");
+const modeQuiz  = document.getElementById("modeQuiz");
+const filters   = document.getElementById("newsFilters");
+const quizPool  = document.getElementById("quizPool");
+const quizTrack = document.getElementById("quizTrack");
+const quizPlaced = document.getElementById("quizPlaced");
+const quizMistakes = document.getElementById("quizMistakes");
+const quizResult = document.getElementById("quizResult");
+const quizResultMsg = document.getElementById("quizResultMsg");
+const quizResetBtn = document.getElementById("quizReset");
+const quizPlayAgain = document.getElementById("quizPlayAgain");
+
 let activeIdx = null;
 let activeTheme = "all";
+let mode = "read";
+let expected = 0;  // next correct index expected
+let mistakes = 0;
+let placedCount = 0;
 
 // click sounds
 let actx;
-function click() {
+function tone(freq, ms, type = "square", gain = 0.04) {
   try {
     actx = actx || new (window.AudioContext || window.webkitAudioContext)();
     const o = actx.createOscillator(); const g = actx.createGain();
-    o.type = "square"; o.frequency.value = 380;
-    g.gain.value = 0.04; o.connect(g); g.connect(actx.destination);
-    o.start(); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.07);
-    o.stop(actx.currentTime + 0.1);
+    o.type = type; o.frequency.value = freq;
+    g.gain.value = gain; o.connect(g); g.connect(actx.destination);
+    o.start(); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + ms / 1000);
+    o.stop(actx.currentTime + ms / 1000 + 0.02);
   } catch {}
 }
+function click()   { tone(380, 70); }
+function correct() { tone(660, 90, "triangle", 0.05); setTimeout(() => tone(990, 110, "triangle", 0.05), 80); }
+function wrong()   { tone(180, 200, "sawtooth", 0.05); }
+function fanfare() { [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,200,"triangle",0.05),i*110)); }
 
 function renderTimeline() {
   rail.innerHTML = "";
@@ -149,5 +174,95 @@ document.querySelectorAll(".news-pill").forEach(b => {
     click();
   });
 });
+
+// ---- mode switching ----
+function setMode(m) {
+  mode = m;
+  modeRead.classList.toggle("active", m === "read");
+  modeQuiz.classList.toggle("active", m === "quiz");
+  readPane.hidden = m !== "read";
+  spot.hidden     = m !== "read";
+  filters.hidden  = m !== "read";
+  quizPane.hidden = m !== "quiz";
+  if (m === "quiz") initQuiz();
+  click();
+}
+modeRead.addEventListener("click", () => setMode("read"));
+modeQuiz.addEventListener("click", () => setMode("quiz"));
+
+// ---- quiz logic ----
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initQuiz() {
+  expected = 0; mistakes = 0; placedCount = 0;
+  quizPool.innerHTML = "";
+  quizTrack.innerHTML = `<p class="track-empty">Your timeline appears here — earliest at the top.</p>`;
+  quizResult.hidden = true;
+  quizPlaced.textContent = `0 / ${EVENTS.length}`;
+  quizMistakes.textContent = "0";
+  const shuffled = shuffle(EVENTS);
+  shuffled.forEach(e => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "quiz-card";
+    btn.dataset.idx = e._idx;
+    btn.innerHTML = `
+      <div class="qc-head">${e.headline}</div>
+      <div class="qc-strap">${e.strap}</div>
+    `;
+    btn.addEventListener("click", () => handleQuizPick(btn, e));
+    quizPool.appendChild(btn);
+  });
+}
+
+function handleQuizPick(btn, e) {
+  if (btn.classList.contains("placed")) return;
+  const idx = parseInt(btn.dataset.idx, 10);
+  if (idx === expected) {
+    // correct — move into the track
+    btn.classList.add("placed");
+    btn.dataset.rank = `#${placedCount + 1}`;
+    // remove from pool DOM and re-append to track in placed order
+    btn.parentElement.removeChild(btn);
+    if (placedCount === 0) quizTrack.innerHTML = "";
+    btn.innerHTML = `
+      <div class="qc-head"><span class="qc-year-revealed">${e.year}</span>${e.headline}</div>
+      <div class="qc-strap">${e.strap}</div>
+    `;
+    quizTrack.appendChild(btn);
+    placedCount++;
+    expected++;
+    quizPlaced.textContent = `${placedCount} / ${EVENTS.length}`;
+    correct();
+    if (placedCount === EVENTS.length) {
+      setTimeout(() => {
+        quizResult.hidden = false;
+        const msg = mistakes === 0
+          ? "Perfect — first try on every event."
+          : `You ordered all ${EVENTS.length} correctly with ${mistakes} mistake${mistakes === 1 ? "" : "s"}.`;
+        quizResultMsg.textContent = msg;
+        fanfare();
+      }, 250);
+    }
+  } else {
+    btn.classList.remove("wrong");
+    void btn.offsetWidth;
+    btn.classList.add("wrong");
+    mistakes++;
+    quizMistakes.textContent = mistakes;
+    wrong();
+    setTimeout(() => btn.classList.remove("wrong"), 350);
+  }
+}
+
+quizResetBtn.addEventListener("click", initQuiz);
+quizPlayAgain.addEventListener("click", initQuiz);
 
 renderTimeline();
