@@ -3,34 +3,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Spanish · OLS Showcase (coming soon)</title>
+  <title>Spanish — Myself and My Family · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Spanish</span>
-    <span class="meta">GCSE · Myself, family and relationships</span>
+    <span class="meta">GCSE CCEA · Myself, my family, relationships</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Spanish</h1>
-    <p class="meta">GCSE · Myself, family and relationships</p>
-    <span class="ph-act">Vocab dialogue</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="esp">
+
+    <header class="esp-hero">
+      <span class="kicker">Mi familia y yo</span>
+      <h1>Meet the Family</h1>
+      <p>Click family members to hear their Spanish names — then build sentences from word tiles to describe them.</p>
+    </header>
+
+    <nav class="esp-tabs">
+      <button class="esp-tab active" data-tab="tree" id="tabTree">Family tree</button>
+      <button class="esp-tab" data-tab="build" id="tabBuild">Build the sentence</button>
+    </nav>
+
+    <!-- Tree mode -->
+    <section class="esp-pane" id="paneTree">
+      <p class="esp-feedback" id="treeFb">Tap a family member to hear the Spanish word and a short sentence. Listening to native pronunciation matters more than reading it.</p>
+      <div class="tree-frame">
+        <svg viewBox="0 0 900 500" id="treeSvg" class="tree-svg" aria-label="Family tree"></svg>
+      </div>
+      <article class="word-panel" id="wordPanel">
+        <p class="word-cue">Tap a family member above to begin.</p>
+      </article>
+    </section>
+
+    <!-- Build mode -->
+    <section class="esp-pane" id="paneBuild" hidden>
+      <header class="esp-bar">
+        <div class="esp-stat"><span class="bar-label">Question</span><span class="bar-val"><span id="qIdx">1</span> / <span id="qTotal">8</span></span></div>
+        <div class="esp-stat"><span class="bar-label">Score</span><span class="bar-val" id="qScore">0</span></div>
+        <button class="esp-secondary" id="qReset" type="button">Reset</button>
+      </header>
+
+      <p class="esp-feedback" id="qFeedback">An English sentence — build it in Spanish by tapping the word tiles in the right order.</p>
+
+      <article class="build-card">
+        <div class="english-prompt" id="englishPrompt"></div>
+        <div class="build-line" id="buildLine"></div>
+        <div class="word-bank" id="wordBank"></div>
+        <div class="build-actions">
+          <button class="esp-go" id="btnCheck" type="button">Vérifier — Check</button>
+          <button class="esp-secondary" id="btnUndo" type="button">Undo last word</button>
+          <button class="esp-secondary" id="btnHear" type="button">▶ Hear my answer</button>
+        </div>
+      </article>
+
+      <div class="esp-result" id="espResult" hidden>
+        <h3 id="resultTitle">Set complete</h3>
+        <p id="resultMsg"></p>
+        <button class="esp-go" id="qAgain" type="button">Play again</button>
+      </div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

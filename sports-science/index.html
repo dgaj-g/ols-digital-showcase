@@ -3,34 +3,62 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sports Science · OLS Showcase (coming soon)</title>
+  <title>Sports Science — Nutrition for Performance · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Sports Science</span>
-    <span class="meta">A-Level · Nutrition for performance</span>
+    <span class="meta">A-Level CCEA · Nutrition for health and exercise</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Sports Science</h1>
-    <p class="meta">A-Level · Nutrition for performance</p>
-    <span class="ph-act">Performance calculator</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="ss">
+
+    <header class="ss-hero">
+      <span class="kicker">Fuel the athlete</span>
+      <h1>Match the Plate to the Sport</h1>
+      <p>Pick an athlete. Build a daily nutrition plan. The macro chart shows how your plan compares to the recommended carb / protein / fat split for that sport.</p>
+    </header>
+
+    <section class="athlete-row" id="athleteRow"></section>
+
+    <section class="ss-bar">
+      <div class="ss-stat"><span class="bar-label">Athlete</span><span class="bar-val" id="athleteName">— pick above —</span></div>
+      <div class="ss-stat"><span class="bar-label">Total energy</span><span class="bar-val" id="totalE">0 kcal</span></div>
+      <div class="ss-stat"><span class="bar-label">Match score</span><span class="bar-val" id="matchN">— %</span></div>
+      <button class="ss-secondary" id="btnClear" type="button">Clear plan</button>
+    </section>
+
+    <div class="ss-stage">
+      <!-- Plan -->
+      <section class="ss-plan">
+        <h2>Today's plan</h2>
+        <p class="plan-help">Tap a food card to add it. Tap a placed item to remove it.</p>
+        <div class="plan-list" id="planList">
+          <p class="plan-empty">Empty plan — tap a food card.</p>
+        </div>
+      </section>
+
+      <!-- Macro chart -->
+      <aside class="ss-chart">
+        <h2>Macro split — your plan vs target</h2>
+        <div class="macro-rows" id="macroRows"></div>
+        <p class="chart-note" id="chartNote">Pick an athlete and add some food to see the comparison.</p>
+      </aside>
+    </div>
+
+    <!-- Food bank -->
+    <section class="ss-foods">
+      <h2>Foods — tap to add</h2>
+      <div class="food-grid" id="foodGrid"></div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

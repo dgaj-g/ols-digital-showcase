@@ -3,34 +3,68 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Technology and Design · OLS Showcase (coming soon)</title>
+  <title>Technology and Design — Robot Programming · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Technology and Design</span>
-    <span class="meta">GCSE · Robotics</span>
+    <span class="meta">GCSE CCEA · 2.35 Robotics — sensors, actuators, control</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Technology and Design</h1>
-    <p class="meta">GCSE · Robotics</p>
-    <span class="ph-act">Mechanism simulator</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="td">
+
+    <header class="td-hero">
+      <span class="kicker">Mission control</span>
+      <h1>Program the Robot</h1>
+      <p>Build a short program of command blocks. Press Run — watch your robot navigate. Six missions of increasing difficulty.</p>
+    </header>
+
+    <section class="td-bar">
+      <div class="td-stat"><span class="bar-label">Mission</span><span class="bar-val"><span id="mIdx">1</span> / <span id="mTotal">6</span></span></div>
+      <div class="td-stat"><span class="bar-label">Blocks used</span><span class="bar-val" id="blockCount">0</span></div>
+      <div class="td-stat"><span class="bar-label">Score</span><span class="bar-val" id="missionScore">0</span></div>
+      <button class="td-secondary" id="btnReset" type="button">Reset blocks</button>
+    </section>
+
+    <article class="mission-card" id="missionCard">
+      <span class="mission-tag">Mission brief</span>
+      <p class="mission-brief" id="missionBrief"></p>
+    </article>
+
+    <div class="td-stage">
+      <!-- Robot grid -->
+      <div class="grid-frame">
+        <svg viewBox="0 0 500 500" id="gridSvg" class="grid-svg" aria-label="Robot grid"></svg>
+      </div>
+
+      <!-- Program -->
+      <aside class="program">
+        <h2>Block palette</h2>
+        <div class="palette" id="palette"></div>
+        <h2>Your program <span class="prog-cap">(max 12 blocks)</span></h2>
+        <ol class="program-list" id="programList"></ol>
+        <div class="prog-actions">
+          <button class="td-go" id="btnRun" type="button">▶ Run program</button>
+          <button class="td-secondary" id="btnStep" type="button">Step</button>
+        </div>
+        <p class="td-feedback" id="tdFb" aria-live="polite">Drag a block to the program panel — or just tap.</p>
+      </aside>
+    </div>
+
+    <div class="td-result" id="tdResult" hidden>
+      <h3 id="resultTitle">Mission complete</h3>
+      <p id="resultMsg"></p>
+      <button class="td-go" id="btnNext" type="button">Next mission →</button>
+      <button class="td-secondary" id="btnRetry" type="button">Retry this mission</button>
+    </div>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

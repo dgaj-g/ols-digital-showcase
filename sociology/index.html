@@ -3,34 +3,80 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sociology · OLS Showcase (coming soon)</title>
+  <title>Sociology — Differential Educational Achievement · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Sociology</span>
-    <span class="meta">A-Level · Differential educational achievement</span>
+    <span class="meta">A-Level WJEC · Differential educational achievement</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Sociology</h1>
-    <p class="meta">A-Level · Differential educational achievement</p>
-    <span class="ph-act">Data explorer</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="soc">
+
+    <header class="soc-hero">
+      <span class="kicker">Education · attainment gaps</span>
+      <h1>Who Achieves at School?</h1>
+      <p>Filter UK GCSE attainment by class, gender or ethnicity. Watch the gaps emerge — then take the pattern-recognition challenge.</p>
+    </header>
+
+    <section class="soc-bar">
+      <div class="soc-stat"><span class="bar-label">Grouping</span><span class="bar-val" id="groupName">All pupils</span></div>
+      <div class="soc-stat"><span class="bar-label">Gap (highest − lowest)</span><span class="bar-val" id="gapVal">— pp</span></div>
+      <div class="soc-stat"><span class="bar-label">Source</span><span class="bar-val source">DfE-style figures (representative)</span></div>
+    </section>
+
+    <nav class="soc-tabs">
+      <button class="soc-tab active" data-tab="explore" id="tabExplore">Explore the data</button>
+      <button class="soc-tab" data-tab="quiz" id="tabQuiz">Spot the pattern</button>
+    </nav>
+
+    <!-- Explore -->
+    <section class="soc-pane" id="paneExplore">
+      <div class="grouping-row">
+        <span class="ctrl-label">Group pupils by</span>
+        <button class="group-btn active" data-group="overall">Overall</button>
+        <button class="group-btn" data-group="gender">Gender</button>
+        <button class="group-btn" data-group="fsm">Free school meals</button>
+        <button class="group-btn" data-group="ethnicity">Ethnicity</button>
+        <button class="group-btn" data-group="genderFsm">Gender × FSM</button>
+      </div>
+
+      <article class="chart-card">
+        <h2>% of pupils achieving 5 GCSEs at grade 5 or above (incl. English &amp; Maths)</h2>
+        <svg viewBox="0 0 720 380" id="chartSvg" class="chart-svg" aria-label="Attainment bar chart"></svg>
+        <p class="chart-narrative" id="chartNarrative"></p>
+      </article>
+    </section>
+
+    <!-- Quiz -->
+    <section class="soc-pane" id="paneQuiz" hidden>
+      <header class="soc-bar">
+        <div class="soc-stat"><span class="bar-label">Question</span><span class="bar-val"><span id="qIdx">1</span> / <span id="qTotal">6</span></span></div>
+        <div class="soc-stat"><span class="bar-label">Score</span><span class="bar-val" id="qScore">0</span></div>
+        <button class="soc-secondary" id="qReset" type="button">Reset</button>
+      </header>
+
+      <p class="soc-feedback" id="qFeedback">Read the question. Use what you saw in Explore mode to pick the right answer.</p>
+
+      <article class="quiz-card">
+        <p class="q-prompt" id="qPrompt"></p>
+        <div class="q-options" id="qOptions"></div>
+      </article>
+
+      <div class="soc-result" id="socResult" hidden>
+        <h3 id="resultTitle">Set complete</h3>
+        <p id="resultMsg"></p>
+        <button class="soc-go" id="qAgain" type="button">Play again</button>
+      </div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
