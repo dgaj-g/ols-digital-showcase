@@ -3,34 +3,85 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Physics · OLS Showcase (coming soon)</title>
+  <title>Physics — Hubble's Law and Red Shift · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Physics</span>
-    <span class="meta">A-Level · Astronomy</span>
+    <span class="meta">A-Level CCEA · Astronomy — Hubble's Law &amp; the Doppler Effect</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Physics</h1>
-    <p class="meta">A-Level · Astronomy</p>
-    <span class="ph-act">3D scene</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="phys">
+
+    <header class="phys-hero">
+      <span class="kicker">Cosmology · expanding universe</span>
+      <h1>How Fast Are They Running Away?</h1>
+      <p>Slide a galaxy further from us. Watch its spectrum slide red. Hear the Doppler shift. Then identify the most distant galaxy from its red shift.</p>
+    </header>
+
+    <section class="phys-bar">
+      <div class="phys-stat"><span class="bar-label">Distance d</span><span class="bar-val"><span id="distVal">100</span> Mpc</span></div>
+      <div class="phys-stat"><span class="bar-label">Velocity v</span><span class="bar-val"><span id="velVal">7000</span> km/s</span></div>
+      <div class="phys-stat"><span class="bar-label">Red shift z</span><span class="bar-val" id="zVal">0.023</span></div>
+      <div class="phys-stat"><span class="bar-label">H₀</span><span class="bar-val">70 km/s/Mpc</span></div>
+    </section>
+
+    <nav class="phys-tabs">
+      <button class="phys-tab active" data-tab="explore" id="tabExplore">Explore Hubble's Law</button>
+      <button class="phys-tab" data-tab="quiz" id="tabQuiz">Rank by red shift</button>
+    </nav>
+
+    <!-- Explore mode -->
+    <section class="phys-pane" id="paneExplore">
+      <div class="phys-stage">
+        <!-- Sky canvas -->
+        <div class="sky-frame">
+          <canvas id="skyCanvas" width="900" height="320"></canvas>
+        </div>
+        <!-- Slider + audio -->
+        <div class="slider-bar">
+          <label>Distance to galaxy:
+            <input type="range" id="dist" min="10" max="500" step="5" value="100">
+          </label>
+          <button class="phys-go" id="btnDoppler" type="button">▶ Hear the Doppler shift</button>
+        </div>
+        <!-- Spectrum -->
+        <div class="spectrum-frame">
+          <h2>Hα absorption line — laboratory <span class="rest-mark">·</span> vs galaxy <span class="shifted-mark">·</span></h2>
+          <svg viewBox="0 0 700 100" id="specSvg" class="spec-svg" aria-label="Spectrum showing Hα line"></svg>
+          <p class="spec-formula">
+            v = H<sub>0</sub> &times; d &nbsp;·&nbsp; z = v/c = Δλ/λ &nbsp;·&nbsp; (Hα rest = 656.3 nm)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz mode -->
+    <section class="phys-pane" id="paneQuiz" hidden>
+      <header class="phys-bar">
+        <div class="phys-stat"><span class="bar-label">Round</span><span class="bar-val"><span id="qIdx">1</span> / <span id="qTotal">6</span></span></div>
+        <div class="phys-stat"><span class="bar-label">Score</span><span class="bar-val" id="qScore">0</span></div>
+        <button class="phys-secondary" id="qReset" type="button">Reset</button>
+      </header>
+
+      <p class="phys-feedback" id="qFeedback">Four galaxies. Their spectra are below. Pick the one that is moving away from us the fastest.</p>
+
+      <div class="quiz-row" id="quizRow"></div>
+
+      <div class="phys-result" id="physResult" hidden>
+        <h3 id="resultTitle">Set complete</h3>
+        <p id="resultMsg"></p>
+        <button class="phys-go" id="qAgain" type="button">Play again</button>
+      </div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

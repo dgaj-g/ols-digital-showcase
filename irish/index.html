@@ -3,34 +3,94 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Irish / Gaeilge · OLS Showcase (coming soon)</title>
+  <title>Irish — Vocab and Grammar · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Irish / Gaeilge</span>
-    <span class="meta">KS3 · Introductions, family</span>
+    <span class="meta">KS3 · Introductions, family, tá vs is</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Irish / Gaeilge</h1>
-    <p class="meta">KS3 · Introductions, family</p>
-    <span class="ph-act">Vocab + grammar game</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="gae">
+
+    <header class="gae-hero">
+      <span class="kicker">Gaeilge · KS3</span>
+      <h1>Dia dhuit — Beginning Irish</h1>
+      <p>Match the phrases, listen to each in Irish, then take the tá vs is grammar challenge. Score points in both modes.</p>
+    </header>
+
+    <nav class="gae-tabs">
+      <button class="gae-tab active" data-tab="vocab" id="tabVocab">Match the phrases</button>
+      <button class="gae-tab" data-tab="grammar" id="tabGrammar">Tá or Is?</button>
+    </nav>
+
+    <!-- Vocab match -->
+    <section class="gae-pane" id="paneVocab">
+      <header class="gae-bar">
+        <div class="gae-stat"><span class="bar-label">Round</span><span class="bar-val"><span id="rNum">1</span> / <span id="rTotal">3</span></span></div>
+        <div class="gae-stat"><span class="bar-label">Matched</span><span class="bar-val" id="matched">0 / 6</span></div>
+        <div class="gae-stat"><span class="bar-label">Mistakes</span><span class="bar-val" id="mistakes">0</span></div>
+        <button class="gae-secondary" id="vocabReset" type="button">Reset</button>
+      </header>
+      <p class="gae-feedback" id="vFeedback" aria-live="polite">Tap an Irish phrase to hear it, then tap its English meaning.</p>
+
+      <div class="match-grid">
+        <div class="match-col">
+          <h3>As Gaeilge — tap to hear</h3>
+          <div class="match-list" id="irishList"></div>
+        </div>
+        <div class="match-col">
+          <h3>In English</h3>
+          <div class="match-list" id="englishList"></div>
+        </div>
+      </div>
+
+      <div class="gae-result" id="vocabResult" hidden>
+        <h3 id="vTitle">Round complete</h3>
+        <p id="vMsg"></p>
+        <button class="gae-go" id="vNext" type="button">Next round →</button>
+      </div>
+    </section>
+
+    <!-- Tá vs Is grammar -->
+    <section class="gae-pane" id="paneGrammar" hidden>
+      <header class="gae-bar">
+        <div class="gae-stat"><span class="bar-label">Question</span><span class="bar-val"><span id="gIdx">1</span> / <span id="gTotal">8</span></span></div>
+        <div class="gae-stat"><span class="bar-label">Score</span><span class="bar-val" id="gScore">0</span></div>
+        <button class="gae-secondary" id="grammarReset" type="button">Reset</button>
+      </header>
+
+      <article class="gae-rules">
+        <div class="rule"><span class="rule-tag">Tá</span><p>used for <strong>temporary</strong> states, location, feelings, age, and how you are.</p></div>
+        <div class="rule"><span class="rule-tag is">Is</span><p>used for <strong>identity</strong> — saying who or what someone is.</p></div>
+      </article>
+
+      <p class="gae-feedback" id="gFeedback" aria-live="polite">Read the English sentence below and choose the right verb form.</p>
+
+      <article class="grammar-card">
+        <span class="g-tag">Translate to Irish — which verb?</span>
+        <p class="g-prompt" id="gPrompt"></p>
+        <div class="g-options">
+          <button class="g-opt" id="gOptTa" type="button"><span class="rule-tag">Tá</span> for a temporary state</button>
+          <button class="g-opt" id="gOptIs" type="button"><span class="rule-tag is">Is</span> for an identity</button>
+        </div>
+        <p class="g-answer" id="gAnswer" hidden></p>
+      </article>
+
+      <div class="gae-result" id="grammarResult" hidden>
+        <h3 id="gTitle">Round complete</h3>
+        <p id="gMsg"></p>
+        <button class="gae-go" id="gAgain" type="button">Play again</button>
+      </div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

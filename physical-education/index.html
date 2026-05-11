@@ -3,34 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Physical Education · OLS Showcase (coming soon)</title>
+  <title>Physical Education — Muscular Fitness Builder · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Physical Education</span>
-    <span class="meta">GCSE · Developing muscular fitness</span>
+    <span class="meta">GCSE CCEA · Developing muscular fitness</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Physical Education</h1>
-    <p class="meta">GCSE · Developing muscular fitness</p>
-    <span class="ph-act">Training builder</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="pe">
+
+    <header class="pe-hero">
+      <span class="kicker">Build a training session</span>
+      <h1>Plan for the Goal</h1>
+      <p>Pick a fitness goal, then build a session that matches. The body diagram lights up the muscle groups you're hitting, and the match meter scores how well the plan suits the goal.</p>
+    </header>
+
+    <section class="pe-bar">
+      <div class="pe-stat"><span class="bar-label">Goal</span><span class="bar-val" id="goalName">— pick below —</span></div>
+      <div class="pe-stat"><span class="bar-label">Exercises chosen</span><span class="bar-val"><span id="exCount">0</span> / 6</span></div>
+      <div class="pe-stat"><span class="bar-label">Match</span><span class="bar-val" id="matchPct">— %</span></div>
+      <button class="pe-secondary" id="btnClear" type="button">Clear plan</button>
+    </section>
+
+    <section class="goal-row" id="goalRow">
+      <button class="goal-card" data-goal="strength"><div class="g-title">Strength</div><div class="g-desc">Max force. Heavy weight, low reps, long rest.</div></button>
+      <button class="goal-card" data-goal="endurance"><div class="g-title">Muscular endurance</div><div class="g-desc">Sustained effort. Light–medium weight, high reps, short rest.</div></button>
+      <button class="goal-card" data-goal="power"><div class="g-title">Power</div><div class="g-desc">Explosive force. Medium weight, low reps, fast tempo.</div></button>
+    </section>
+
+    <div class="pe-stage">
+      <!-- left: body diagram -->
+      <aside class="pe-body">
+        <h2>Muscle map</h2>
+        <svg viewBox="0 0 200 320" id="bodySvg" class="body-svg" aria-label="Human body diagram"></svg>
+        <p class="body-key" id="bodyKey">No exercises yet.</p>
+      </aside>
+
+      <!-- middle: exercise bank -->
+      <section class="pe-bank">
+        <h2>Exercises — tap to add (or remove)</h2>
+        <div class="ex-grid" id="exGrid"></div>
+      </section>
+
+      <!-- right: prescription -->
+      <aside class="pe-script">
+        <h2>Prescription</h2>
+        <p class="script-cue" id="scriptCue">Pick a goal first.</p>
+        <div class="script-rows" id="scriptRows" hidden>
+          <div class="script-row">
+            <span class="sr-label">Sets</span>
+            <input type="range" min="1" max="6" value="3" id="sets">
+            <span class="sr-val" id="setsVal">3</span>
+          </div>
+          <div class="script-row">
+            <span class="sr-label">Reps</span>
+            <input type="range" min="1" max="25" value="10" id="reps">
+            <span class="sr-val" id="repsVal">10</span>
+          </div>
+          <div class="script-row">
+            <span class="sr-label">Intensity</span>
+            <input type="range" min="40" max="100" step="5" value="70" id="intensity">
+            <span class="sr-val"><span id="intensityVal">70</span>% 1RM</span>
+          </div>
+        </div>
+        <p class="pe-feedback" id="peFb" aria-live="polite">Build a plan that matches your goal.</p>
+      </aside>
+    </div>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
