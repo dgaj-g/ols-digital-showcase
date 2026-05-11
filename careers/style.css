@@ -1,0 +1,235 @@
+/* Careers — modern app aesthetic, mint + navy */
+:root {
+  --job-bg: #F4F8FA;
+  --job-panel: #FFFFFF;
+  --job-line: #595959;
+  --job-soft: #DBE5EE;
+  --job-navy: #1E3A5F;
+  --job-navy-deep: #142B47;
+  --job-mint: #3FB28D;
+  --job-mint-deep: #2A7D63;
+  --job-amber: #E69B2A;
+  --job-text: #1A2231;
+  --job-muted: #6E7C8C;
+  --job-warn: #C72E2E;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(63,178,141,0.12) 0%, transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(30,58,95,0.1) 0%, transparent 40%),
+    var(--job-bg);
+  color: var(--job-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.job { max-width: 1200px; margin: 0 auto; padding: 1.3rem 1.1rem 3rem;
+  display: grid; grid-template-columns: 1fr 280px; gap: 1rem; }
+.job > .job-hero, .job > .job-bar, .job > .scene-card, .job > .job-result { grid-column: 1; }
+.job-skills { grid-column: 2; grid-row: 3; }
+@media (max-width: 900px) {
+  .job { grid-template-columns: 1fr; }
+  .job-skills { grid-column: 1; grid-row: auto; }
+}
+
+.job-hero {
+  background: linear-gradient(135deg, var(--job-navy) 0%, var(--job-mint-deep) 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 1.1rem 1.4rem;
+  grid-column: 1 / -1 !important;
+}
+.kicker {
+  display: inline-block;
+  background: var(--job-amber);
+  color: var(--job-navy-deep);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  border-radius: 999px;
+}
+.job-hero h1 { margin: 0.55rem 0 0.35rem; font-size: clamp(1.5rem,3vw,2rem); }
+.job-hero p { margin: 0; opacity: 0.95; max-width: 60ch; }
+.job-hero em { font-style: italic; color: #FFE7BC; }
+
+.job-bar {
+  display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;
+  background: var(--job-panel); border: 1px solid var(--job-soft);
+  border-radius: 12px; padding: 0.55rem 0.95rem;
+  grid-column: 1 / -1 !important;
+}
+.job-stat { display: flex; flex-direction: column; min-width: 100px; }
+.bar-label {
+  font-size: 0.7rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--job-muted); font-weight: 700;
+}
+.bar-val { font-weight: 800; font-size: 1.05rem; color: var(--job-navy); }
+.job-secondary {
+  margin-left: auto;
+  background: transparent;
+  border: 1.5px solid var(--job-line);
+  border-radius: 8px;
+  padding: 0.35rem 0.85rem;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.job-secondary:hover { background: var(--job-bg); }
+
+.scene-card {
+  background: var(--job-panel);
+  border: 1px solid var(--job-soft);
+  border-radius: 14px;
+  padding: 1.3rem 1.5rem;
+  box-shadow: 0 10px 26px rgba(30,58,95,0.08);
+}
+.scene-clock {
+  display: inline-block;
+  font-family: "SF Mono", Menlo, monospace;
+  background: var(--job-navy);
+  color: white;
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.6rem;
+}
+.scene-card h2 {
+  margin: 0 0 0.4rem;
+  color: var(--job-navy-deep);
+  font-size: 1.4rem;
+}
+.scene-card p {
+  margin: 0 0 1rem;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #2A3548;
+}
+.scene-options { display: flex; flex-direction: column; gap: 0.45rem; }
+.scene-opt {
+  background: var(--job-bg);
+  border: 1.5px solid var(--job-soft);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--job-text);
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+.scene-opt:hover { background: white; border-color: var(--job-mint); }
+.scene-opt .opt-letter {
+  background: var(--job-navy);
+  color: white;
+  font-weight: 800;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.88rem;
+}
+.scene-opt.picked.good { border-color: var(--job-mint-deep); background: rgba(63,178,141,0.12); }
+.scene-opt.picked.bad { border-color: var(--job-warn); background: rgba(199,46,46,0.08); }
+.scene-opt:disabled { cursor: default; }
+
+.scene-outcome {
+  margin-top: 1rem;
+  background: var(--job-bg);
+  border-left: 6px solid var(--job-mint);
+  border-top: 1px solid var(--job-soft);
+  border-right: 1px solid var(--job-soft);
+  border-bottom: 1px solid var(--job-soft);
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+}
+.scene-outcome.bad { border-left-color: var(--job-warn); }
+.scene-outcome h3 { margin: 0 0 0.3rem; font-size: 1.08rem; color: var(--job-navy-deep); }
+.scene-outcome p { margin: 0 0 0.6rem; font-size: 0.96rem; }
+.skills-earned {
+  display: flex; flex-wrap: wrap; gap: 0.35rem;
+  margin: 0.4rem 0 0.6rem;
+}
+.skill-chip {
+  background: var(--job-mint);
+  color: white;
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.skill-chip.lost { background: var(--job-warn); }
+
+.job-go {
+  background: var(--job-mint-deep);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.job-go:hover { background: var(--job-navy); }
+
+.job-skills {
+  background: var(--job-panel);
+  border: 1px solid var(--job-soft);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  height: fit-content;
+  position: sticky;
+  top: 1rem;
+}
+.job-skills h3 {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--job-muted);
+  font-weight: 800;
+}
+.skill-list { list-style: none; padding: 0; margin: 0; }
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--job-soft);
+}
+.skill-row:last-child { border-bottom: none; }
+.skill-name { font-weight: 600; color: var(--job-text); font-size: 0.92rem; flex: 1; }
+.skill-pips { display: flex; gap: 3px; }
+.skill-pip {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--job-soft);
+}
+.skill-pip.on { background: var(--job-mint); }
+.skill-pip.lost { background: var(--job-warn); }
+
+.job-result {
+  background: var(--job-panel);
+  border: 2px solid var(--job-navy);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  text-align: center;
+}
+.job-result h2 {
+  margin: 0 0 0.4rem;
+  color: var(--job-navy-deep);
+  font-size: 1.6rem;
+}
+.job-result p { margin: 0 0 0.9rem; }
+.result-skills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}

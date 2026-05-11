@@ -3,34 +3,96 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Art and Design · OLS Showcase (coming soon)</title>
+  <title>Art and Design — Watercolour Techniques · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Art and Design</span>
-    <span class="meta">GCSE · Watercolour techniques</span>
+    <span class="meta">GCSE CCEA · Watercolour techniques</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Art and Design</h1>
-    <p class="meta">GCSE · Watercolour techniques</p>
-    <span class="ph-act">Brush simulator</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="art">
+
+    <header class="art-hero">
+      <span class="kicker">Brush, water, paper</span>
+      <h1>Painting in Watercolour</h1>
+      <p>Pick a technique, mix a colour, and paint on the canvas. Switch to Spot-the-technique mode and try to identify which technique was used to make each swatch.</p>
+    </header>
+
+    <nav class="art-tabs">
+      <button class="art-tab active" data-tab="paint" id="tabPaint">Paint freely</button>
+      <button class="art-tab" data-tab="quiz" id="tabQuiz">Spot the technique</button>
+    </nav>
+
+    <!-- Paint mode -->
+    <section class="art-pane" id="panePaint">
+      <div class="paint-stage">
+        <aside class="paint-tools">
+          <div class="tool-block">
+            <span class="tool-label">Technique</span>
+            <div class="technique-row">
+              <button class="tech-btn active" data-tech="wet-wet"  data-title="Wet-on-wet"  data-desc="Apply pigment onto an already-wet area. Colours bleed and blend into soft edges and clouds.">Wet-on-wet</button>
+              <button class="tech-btn"        data-tech="wet-dry"  data-title="Wet-on-dry"  data-desc="Apply pigment onto dry paper. Edges stay crisp — good for details, leaves and figures.">Wet-on-dry</button>
+              <button class="tech-btn"        data-tech="dry"      data-title="Dry brush"   data-desc="Use very little water. The brush skips across paper texture, leaving broken lines — ideal for grass and fur.">Dry brush</button>
+              <button class="tech-btn"        data-tech="layer"    data-title="Layering"    data-desc="Build up depth by adding fresh layers only after the previous layer has dried. Each layer deepens tone.">Layering</button>
+            </div>
+            <p class="tool-help" id="techHelp">Apply pigment onto an already-wet area. Colours bleed and blend into soft edges and clouds.</p>
+          </div>
+
+          <div class="tool-block">
+            <span class="tool-label">Colour</span>
+            <div class="colour-row" id="colourRow"></div>
+          </div>
+
+          <div class="tool-block">
+            <span class="tool-label">Brush size</span>
+            <label class="slider-row">
+              <input type="range" min="4" max="48" step="1" value="22" id="brushSize">
+              <span class="slider-val" id="brushSizeVal">22</span>
+            </label>
+          </div>
+
+          <div class="tool-block tool-actions">
+            <button class="art-btn" id="btnClear" type="button">Fresh paper</button>
+            <button class="art-btn art-secondary" id="btnDry" type="button" title="Marks the current paint as 'dry' for the layering technique">Let it dry</button>
+          </div>
+        </aside>
+
+        <div class="paint-frame">
+          <canvas id="paintCanvas" width="640" height="440"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz mode -->
+    <section class="art-pane" id="paneQuiz" hidden>
+      <header class="art-bar">
+        <div class="art-stat"><span class="bar-label">Swatch</span><span class="bar-val"><span id="qIdx">1</span> / <span id="qTotal">6</span></span></div>
+        <div class="art-stat"><span class="bar-label">Score</span><span class="bar-val" id="qScore">0</span></div>
+        <button class="art-secondary" id="qReset" type="button">Reset</button>
+      </header>
+
+      <p class="art-feedback" id="qFeedback" aria-live="polite">Look at the swatch below. Which watercolour technique made it?</p>
+
+      <div class="quiz-stage">
+        <canvas id="quizCanvas" width="320" height="200" class="quiz-canvas"></canvas>
+        <div class="quiz-options" id="quizOptions"></div>
+      </div>
+
+      <div class="art-result" id="artResult" hidden>
+        <h3 id="resultTitle">Round complete</h3>
+        <p id="resultMsg"></p>
+        <button class="art-btn" id="btnAgain" type="button">Try again</button>
+      </div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

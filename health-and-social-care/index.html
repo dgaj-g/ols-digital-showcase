@@ -3,34 +3,61 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Health and Social Care · OLS Showcase (coming soon)</title>
+  <title>Health and Social Care — Dietary Intake · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Health and Social Care</span>
-    <span class="meta">A-Level · Human nutrition</span>
+    <span class="meta">A-Level CCEA · Human nutrition and health</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Health and Social Care</h1>
-    <p class="meta">A-Level · Human nutrition</p>
-    <span class="ph-act">Dietary analyser</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="diet">
+
+    <header class="diet-hero">
+      <span class="kicker">Daily intake</span>
+      <h1>Build a Balanced Day</h1>
+      <p>Plan a day's food for a 17-year-old woman. Add items to breakfast, lunch, dinner and snacks. Watch the live chart — try to land each nutrient in the green band.</p>
+    </header>
+
+    <section class="diet-bar">
+      <div class="diet-stat"><span class="bar-label">Items added</span><span class="bar-val" id="itemCount">0</span></div>
+      <div class="diet-stat"><span class="bar-label">Energy</span><span class="bar-val" id="energyVal">0 kcal</span></div>
+      <div class="diet-stat"><span class="bar-label">Balance score</span><span class="bar-val" id="balanceVal">— / 6</span></div>
+      <button class="diet-secondary" id="btnClear" type="button">Clear plan</button>
+    </section>
+
+    <div class="diet-stage">
+      <!-- Plate / Plan area -->
+      <section class="diet-plan">
+        <div class="meal-row" data-meal="breakfast"><h3>Breakfast</h3><div class="meal-slot" id="slot-breakfast"></div></div>
+        <div class="meal-row" data-meal="lunch"><h3>Lunch</h3><div class="meal-slot" id="slot-lunch"></div></div>
+        <div class="meal-row" data-meal="dinner"><h3>Dinner</h3><div class="meal-slot" id="slot-dinner"></div></div>
+        <div class="meal-row" data-meal="snack"><h3>Snacks</h3><div class="meal-slot" id="slot-snack"></div></div>
+      </section>
+
+      <!-- Chart -->
+      <aside class="diet-chart">
+        <h2>Daily intake vs RDA</h2>
+        <p class="chart-sub">RDA = recommended daily amount for a 14–18 year-old woman (UK NHS guidance).</p>
+        <div class="chart-rows" id="chartRows"></div>
+        <div class="chart-advice" id="chartAdvice">Start adding food to see your daily totals build up.</div>
+      </aside>
+    </div>
+
+    <!-- Food bank -->
+    <section class="diet-foods">
+      <h2>Foods — tap to add to a meal</h2>
+      <p class="bank-help">Tap a food card, then tap the meal you want to add it to. Tap an item already on the plan to remove it.</p>
+      <div class="food-grid" id="foodGrid"></div>
+    </section>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

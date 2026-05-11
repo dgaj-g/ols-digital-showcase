@@ -1,0 +1,205 @@
+/* Biology — clinical lab + neon green DNA */
+:root {
+  --bio-bg: #06121A;
+  --bio-panel: #0E1F2B;
+  --bio-line: #1B3344;
+  --bio-text: #DCEAF2;
+  --bio-muted: #5C7E92;
+  --bio-cyan: #4FD0E0;
+  --bio-green: #6FE08F;
+  --bio-warn: #E26A6A;
+  --bio-gold: #E0C46A;
+  --bio-mono: "SF Mono", Menlo, Consolas, monospace;
+}
+
+body {
+  background:
+    radial-gradient(circle at 50% 0%, #0E2230 0%, var(--bio-bg) 60%);
+  color: var(--bio-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.dna { max-width: 1280px; margin: 0 auto; padding: 1.3rem 1rem 3rem; }
+
+.dna-hero {
+  background: var(--bio-panel);
+  border: 1px solid var(--bio-line);
+  border-radius: 12px;
+  padding: 1rem 1.3rem;
+  margin-bottom: 0.8rem;
+}
+.kicker {
+  display: inline-block;
+  background: rgba(111,224,143,0.12);
+  color: var(--bio-green);
+  padding: 0.25rem 0.75rem;
+  font-family: var(--bio-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  border-radius: 3px;
+  border: 1px solid rgba(111,224,143,0.3);
+}
+.dna-hero h1 { margin: 0.55rem 0 0.35rem; font-size: clamp(1.5rem,3vw,2rem); color: var(--bio-text); }
+.dna-hero p { margin: 0; max-width: 70ch; color: var(--bio-muted); }
+
+.dna-bar {
+  display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;
+  background: var(--bio-panel); border: 1px solid var(--bio-line);
+  border-radius: 10px; padding: 0.55rem 0.95rem; margin-bottom: 0.7rem;
+}
+.dna-stat { display: flex; flex-direction: column; min-width: 90px; }
+.bar-label {
+  font-size: 0.7rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--bio-muted);
+  font-family: var(--bio-mono); font-weight: 700;
+}
+.bar-val {
+  font-family: var(--bio-mono); font-weight: 800;
+  font-size: 1.05rem; color: var(--bio-green);
+}
+.dna-secondary {
+  margin-left: auto;
+  background: transparent; color: var(--bio-text);
+  border: 1.5px solid var(--bio-line);
+  border-radius: 6px;
+  padding: 0.35rem 0.85rem;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.dna-secondary:hover { background: var(--bio-line); }
+
+.dna-stage {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 0.9rem;
+}
+@media (max-width: 880px) { .dna-stage { grid-template-columns: 1fr; } }
+
+.dna-bench {
+  background: var(--bio-panel); border: 1px solid var(--bio-line);
+  border-radius: 12px; padding: 1rem 1.1rem;
+}
+.dna-bench h2 {
+  margin: 0 0 0.3rem;
+  color: var(--bio-green);
+  font-family: var(--bio-mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+}
+.dna-bench p {
+  margin: 0 0 0.7rem;
+  color: var(--bio-text);
+  line-height: 1.5;
+}
+.dna-feedback {
+  margin: 0.6rem 0 0;
+  padding: 0.6rem 0.85rem;
+  background: var(--bio-bg);
+  border-left: 6px solid var(--bio-cyan);
+  border-radius: 4px;
+  font-family: var(--bio-mono);
+  font-size: 0.88rem;
+}
+.dna-feedback strong { color: var(--bio-green); }
+.dna-feedback.ok  { border-left-color: var(--bio-green); }
+.dna-feedback.bad { border-left-color: var(--bio-warn); }
+
+/* Action area generic styles */
+.dna-sequence {
+  font-family: var(--bio-mono);
+  background: var(--bio-bg);
+  border: 1px solid var(--bio-line);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  word-break: break-all;
+  line-height: 1.6;
+}
+.dna-base {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 1px;
+}
+.dna-base.A { color: #6FE08F; }
+.dna-base.T { color: #4FD0E0; }
+.dna-base.C { color: #E0C46A; }
+.dna-base.G { color: #E26A6A; }
+.dna-base.highlight { background: rgba(111,224,143,0.25); border-radius: 2px; }
+.dna-base.target    { box-shadow: inset 0 -2px 0 rgba(255,255,255,0.4); }
+
+.dna-choices {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.dna-choice {
+  background: var(--bio-bg);
+  border: 1.5px solid var(--bio-line);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: var(--bio-text);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--bio-mono);
+}
+.dna-choice:hover { border-color: var(--bio-cyan); }
+.dna-choice .ch-name { font-weight: 800; color: var(--bio-cyan); }
+.dna-choice .ch-cut  { color: var(--bio-muted); font-size: 0.85rem; margin-left: 0.5rem; }
+.dna-choice.correct { border-color: var(--bio-green); background: rgba(111,224,143,0.1); }
+.dna-choice.wrong   { border-color: var(--bio-warn); background: rgba(226,106,106,0.1); }
+
+.dna-action-row {
+  display: flex; gap: 0.5rem; margin-top: 0.7rem; flex-wrap: wrap;
+}
+.dna-go {
+  background: var(--bio-green);
+  color: var(--bio-bg);
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-family: var(--bio-mono);
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.84rem;
+}
+.dna-go:hover { background: var(--bio-cyan); }
+.dna-go:disabled { background: var(--bio-line); color: var(--bio-muted); cursor: not-allowed; }
+
+.dna-viz {
+  background: var(--bio-panel);
+  border: 1px solid var(--bio-line);
+  border-radius: 12px;
+  padding: 0.4rem;
+  overflow: hidden;
+}
+.dna-viz svg { width: 100%; height: auto; display: block; }
+
+.dna-result {
+  margin-top: 1rem;
+  background: var(--bio-panel);
+  border: 2px solid var(--bio-green);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+.dna-result h3 {
+  margin: 0 0 0.3rem;
+  color: var(--bio-green);
+  font-family: var(--bio-mono);
+  font-size: 1.3rem;
+}
+.dna-result p { margin: 0 0 0.8rem; }
+
+/* Bacterium draggable */
+.bact {
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.15s;
+}
+.bact:hover { transform: scale(1.08); filter: drop-shadow(0 0 6px var(--bio-cyan)); }
+.bact.taken { filter: drop-shadow(0 0 8px var(--bio-green)); }

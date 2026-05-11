@@ -1,0 +1,219 @@
+/* HSC — healthcare clean: mint, coral accent, soft whites */
+:root {
+  --hsc-bg: #F0F8F5;
+  --hsc-panel: #FFFFFF;
+  --hsc-line: #595959;
+  --hsc-soft: #D8E6DF;
+  --hsc-mint: #3FB28D;
+  --hsc-mint-deep: #2A7D63;
+  --hsc-coral: #E26A6A;
+  --hsc-amber: #E69B2A;
+  --hsc-text: #1A2231;
+  --hsc-muted: #6E8A7F;
+  --hsc-good: #2A8F44;
+  --hsc-warn: #C72E2E;
+}
+
+body {
+  background: var(--hsc-bg);
+  color: var(--hsc-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.diet { max-width: 1280px; margin: 0 auto; padding: 1.3rem 1.1rem 3rem; }
+
+.diet-hero {
+  background: linear-gradient(135deg, var(--hsc-mint-deep) 0%, var(--hsc-mint) 100%);
+  color: white;
+  border-radius: 14px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.8rem;
+}
+.kicker {
+  display: inline-block;
+  background: white;
+  color: var(--hsc-mint-deep);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 800;
+  border-radius: 999px;
+}
+.diet-hero h1 { margin: 0.5rem 0 0.35rem; font-size: clamp(1.5rem,3vw,2rem); }
+.diet-hero p  { margin: 0; max-width: 60ch; opacity: 0.95; }
+
+.diet-bar {
+  display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;
+  background: var(--hsc-panel); border: 1px solid var(--hsc-soft);
+  border-radius: 10px; padding: 0.55rem 0.95rem; margin-bottom: 0.7rem;
+}
+.diet-stat { display: flex; flex-direction: column; min-width: 100px; }
+.bar-label {
+  font-size: 0.7rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--hsc-muted); font-weight: 700;
+}
+.bar-val { font-weight: 800; font-size: 1.05rem; color: var(--hsc-mint-deep); }
+.diet-secondary {
+  margin-left: auto;
+  background: transparent;
+  border: 1.5px solid var(--hsc-line);
+  border-radius: 8px;
+  padding: 0.35rem 0.85rem;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.diet-secondary:hover { background: var(--hsc-bg); }
+
+.diet-stage {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+@media (max-width: 900px) { .diet-stage { grid-template-columns: 1fr; } }
+
+.diet-plan {
+  background: var(--hsc-panel);
+  border: 1px solid var(--hsc-soft);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+.meal-row {
+  border-bottom: 1px dashed var(--hsc-soft);
+  padding: 0.7rem 0;
+}
+.meal-row:last-child { border-bottom: none; }
+.meal-row h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.84rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hsc-mint-deep);
+  font-weight: 800;
+}
+.meal-slot {
+  min-height: 48px;
+  display: flex; flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.4rem;
+  background: var(--hsc-bg);
+  border: 1px dashed var(--hsc-soft);
+  border-radius: 8px;
+  transition: background 0.12s, border-color 0.12s;
+}
+.meal-slot.targeted { background: rgba(63,178,141,0.15); border-color: var(--hsc-mint); }
+.meal-empty {
+  width: 100%;
+  text-align: center;
+  color: var(--hsc-muted);
+  font-style: italic;
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
+}
+.placed {
+  background: var(--hsc-mint);
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.placed:hover { background: var(--hsc-coral); }
+.placed::after { content: " ×"; opacity: 0.8; margin-left: 0.2rem; }
+
+.diet-chart {
+  background: var(--hsc-panel);
+  border: 1px solid var(--hsc-soft);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.diet-chart h2 {
+  margin: 0 0 0.2rem;
+  font-size: 1.05rem;
+  color: var(--hsc-mint-deep);
+}
+.chart-sub { margin: 0 0 0.8rem; font-size: 0.84rem; color: var(--hsc-muted); }
+.chart-rows { display: flex; flex-direction: column; gap: 0.5rem; }
+.chart-row { }
+.chart-row-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+.chart-row-name { font-weight: 700; }
+.chart-row-val { font-family: "SF Mono", Menlo, monospace; }
+.chart-track {
+  position: relative;
+  height: 18px;
+  background: var(--hsc-bg);
+  border: 1px solid var(--hsc-soft);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.chart-fill {
+  height: 100%;
+  background: var(--hsc-coral);
+  transition: width 0.3s ease-out, background 0.3s;
+  border-radius: 4px;
+}
+.chart-fill.ok { background: var(--hsc-mint); }
+.chart-fill.high { background: var(--hsc-coral); }
+.chart-band {
+  position: absolute; top: 0; bottom: 0;
+  background: rgba(63,178,141,0.15);
+  border-left: 2px dashed rgba(63,178,141,0.5);
+  border-right: 2px dashed rgba(63,178,141,0.5);
+  pointer-events: none;
+}
+.chart-advice {
+  margin-top: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--hsc-bg);
+  border-left: 4px solid var(--hsc-amber);
+  border-radius: 4px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--hsc-text);
+}
+.chart-advice strong { color: var(--hsc-mint-deep); }
+.chart-advice.balanced { border-left-color: var(--hsc-mint); }
+.chart-advice.warn { border-left-color: var(--hsc-coral); }
+
+.diet-foods {
+  background: var(--hsc-panel);
+  border: 1px solid var(--hsc-soft);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+.diet-foods h2 { margin: 0 0 0.2rem; font-size: 1.05rem; color: var(--hsc-mint-deep); }
+.bank-help { margin: 0 0 0.7rem; font-size: 0.84rem; color: var(--hsc-muted); }
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+}
+.food-card {
+  background: var(--hsc-bg);
+  border: 1.5px solid var(--hsc-soft);
+  border-radius: 10px;
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  font: inherit;
+  text-align: left;
+}
+.food-card:hover { background: white; border-color: var(--hsc-mint); }
+.food-card.selected {
+  border-color: var(--hsc-coral);
+  background: rgba(226,106,106,0.12);
+  box-shadow: 0 4px 12px rgba(226,106,106,0.18);
+}
+.food-name { font-weight: 700; color: var(--hsc-text); font-size: 0.9rem; line-height: 1.2; }
+.food-macros {
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 0.74rem;
+  color: var(--hsc-muted);
+  margin-top: 0.2rem;
+}

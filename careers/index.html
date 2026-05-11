@@ -3,34 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Careers · OLS Showcase (coming soon)</title>
+  <title>Careers — A Day at Work · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    body { background: #F4F6FA; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
-    .ph-wrap { max-width: 760px; margin: 5rem auto; padding: 2.5rem 2rem; background: white; border-radius: 14px; border: 1px solid #595959; text-align: center; box-shadow: 0 10px 28px rgba(16,34,69,0.08); }
-    .ph-tag { display: inline-block; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; background: #E4B824; color: #6B4900; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: 700; }
-    .ph-wrap h1 { color: #1A3A6B; font-size: 2rem; margin: 1rem 0 0.4rem; }
-    .ph-wrap p.meta { color: #555; margin: 0 0 1.4rem; font-size: 1.05rem; }
-    .ph-wrap p.body { color: #444; font-size: 0.96rem; line-height: 1.55; max-width: 50ch; margin: 0 auto 1.6rem; }
-    .ph-act { background: #1A3A6B; color: #FFF6D0; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; display: inline-block; }
-    .ph-back { display: inline-block; margin-top: 1.6rem; color: #1A3A6B; font-weight: 600; text-decoration: none; border-bottom: 2px solid #E4B824; padding: 0 0.1rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Careers</span>
-    <span class="meta">KS3 · Workplace and employability</span>
+    <span class="meta">KS3 · Employability — workplace behaviour</span>
   </div>
-  <main class="ph-wrap">
-    <span class="ph-tag">Coming soon</span>
-    <h1>Careers</h1>
-    <p class="meta">KS3 · Workplace and employability</p>
-    <span class="ph-act">Decision tree</span>
-    <p class="body">This activity is being built for the May 2026 staff session. Three pilot demos (Mathematics, French and History) are already live — try them from the hub.</p>
-    <a class="ph-back" href="../">← Back to the showcase</a>
+
+  <main class="job">
+
+    <header class="job-hero">
+      <span class="kicker">Saturday job · first month</span>
+      <h1>A Day at the Café</h1>
+      <p>You've just started a Saturday job at <em>Café Newry</em>. Six scenarios will play out across the shift. Your choices show which employability skills you're building.</p>
+    </header>
+
+    <section class="job-bar">
+      <div class="job-stat"><span class="bar-label">Scene</span><span class="bar-val"><span id="sIdx">1</span> / <span id="sTotal">6</span></span></div>
+      <div class="job-stat"><span class="bar-label">Skills earned</span><span class="bar-val" id="skillsEarned">0 / 12</span></div>
+      <button class="job-secondary" id="btnRestart" type="button">Restart shift</button>
+    </section>
+
+    <section class="scene-card">
+      <div class="scene-clock" id="sceneClock">08:30</div>
+      <h2 id="sceneTitle"></h2>
+      <p id="sceneBody"></p>
+      <div class="scene-options" id="sceneOptions"></div>
+      <div class="scene-outcome" id="sceneOutcome" hidden>
+        <h3 id="outcomeTitle"></h3>
+        <p id="outcomeBody"></p>
+        <div class="skills-earned" id="skillsBadges"></div>
+        <button class="job-go" id="btnNext" type="button">Next scene →</button>
+      </div>
+    </section>
+
+    <aside class="job-skills">
+      <h3>Employability skills</h3>
+      <ul class="skill-list" id="skillList"></ul>
+    </aside>
+
+    <div class="job-result" id="jobResult" hidden>
+      <h2 id="resultTitle">Shift complete</h2>
+      <p id="resultMsg"></p>
+      <div class="result-skills" id="resultSkills"></div>
+      <button class="job-go" id="btnAgain" type="button">Try the shift again</button>
+    </div>
+
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
