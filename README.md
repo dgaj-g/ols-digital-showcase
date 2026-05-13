@@ -1,12 +1,12 @@
 # OLS Digital Showcase
 
-Twenty-six small interactive activities — one per department — built for the OLS staff digital skills training session, Monday 18 May 2026.
+Twenty-eight small interactive activities — one per department — built for the OLS staff digital skills training session, Monday 18 May 2026.
 
 **Live site:** https://dgaj-g.github.io/ols-digital-showcase/
 
-## What's in here (v1.0)
+## What's in here (v1.1)
 
-All 26 department demos are live. Each is a self-contained interactive activity built around a real exam-spec topic for that subject, with a scoring/feedback mechanic and its own distinctive visual style.
+All 28 department demos are live. Each is a self-contained interactive activity built around a real exam-spec topic for that subject, with a scoring/feedback mechanic and its own distinctive visual style.
 
 | Department | Activity |
 |---|---|
@@ -18,6 +18,7 @@ All 26 department demos are live. Each is a self-contained interactive activity 
 | Digital Technology | 8×8 binary image editor + 5 target images to recreate |
 | Drama and Theatre Studies | Draggable stage lighting designer + 5 mood challenges |
 | English | Rhetorical-device identifier on 3 famous speeches |
+| Environmental Technology | Solar PV system designer + 8-question knowledge check |
 | French | Au café simulator + 5 Défi missions with TTS listening |
 | Geography | Rivers source-to-mouth explorer + label challenge |
 | Government and Politics | US Presidency timeline + match-the-moment quiz |
@@ -26,6 +27,7 @@ All 26 department demos are live. Each is a self-contained interactive activity 
 | Home Economics | Kitchen Inspector — 10 food-safety scenarios |
 | Irish | Vocab match (with TTS) + Tá vs Is grammar quiz |
 | Junior Science | Animal/plant cell explorer + specialised cells match |
+| Leisure, Travel and Tourism | Tech-in-the-customer-journey + factors-of-change quiz |
 | Mathematics | Live fractions/decimals/percentages converter + problems |
 | Music | Tone.js-synthesised tin whistle / fiddle / bodhrán + dance quiz |
 | Physical Education | Build a training session vs goal + muscle map |

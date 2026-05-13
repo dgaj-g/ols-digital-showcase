@@ -1,0 +1,274 @@
+/* Environmental Technology — eco palette: leaf green, solar yellow, sky blue */
+:root {
+  --et-bg: #F0F8EE;
+  --et-panel: #FFFFFF;
+  --et-line: #595959;
+  --et-soft: #D5E5CE;
+  --et-leaf: #3F8E54;
+  --et-leaf-deep: #225F32;
+  --et-sun: #E8B43A;
+  --et-sun-deep: #A8801C;
+  --et-sky: #5BA6D8;
+  --et-text: #1A2C18;
+  --et-muted: #5C7E62;
+  --et-good: #2A8F44;
+  --et-warn: #C72E2E;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(232,180,58,0.18) 0%, transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(63,142,84,0.12) 0%, transparent 40%),
+    var(--et-bg);
+  color: var(--et-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.solar { max-width: 1280px; margin: 0 auto; padding: 1.3rem 1.1rem 3rem; }
+
+.solar-hero {
+  background: linear-gradient(135deg, var(--et-leaf-deep) 0%, var(--et-leaf) 100%);
+  color: white;
+  border-radius: 14px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.8rem;
+}
+.kicker {
+  display: inline-block;
+  background: var(--et-sun);
+  color: var(--et-leaf-deep);
+  padding: 0.25rem 0.8rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 800;
+  border-radius: 999px;
+}
+.solar-hero h1 { margin: 0.5rem 0 0.35rem; font-size: clamp(1.5rem,3vw,2rem); }
+.solar-hero p { margin: 0; max-width: 60ch; opacity: 0.94; }
+
+.solar-tabs {
+  display: flex; gap: 0.4rem; margin-bottom: 0.7rem;
+  border-bottom: 2px solid var(--et-leaf-deep);
+}
+.solar-tab {
+  background: transparent;
+  border: 2px solid var(--et-leaf-deep);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 0.5rem 1rem;
+  font: inherit; font-weight: 700; cursor: pointer;
+  color: var(--et-leaf-deep);
+  margin-bottom: -2px;
+}
+.solar-tab:hover { background: rgba(34,95,50,0.08); }
+.solar-tab.active { background: var(--et-leaf-deep); color: white; }
+
+.solar-stage {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+@media (max-width: 900px) { .solar-stage { grid-template-columns: 1fr; } }
+
+.house-frame {
+  background: var(--et-panel);
+  border: 1px solid var(--et-soft);
+  border-radius: 12px;
+  padding: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.house-svg { width: 100%; height: auto; display: block; }
+.energy-readout {
+  background: var(--et-bg);
+  border: 1px solid var(--et-soft);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem 1rem;
+}
+.readout-row { display: flex; justify-content: space-between; align-items: baseline; }
+.r-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--et-muted);
+  font-weight: 700;
+}
+.r-val {
+  font-family: "SF Mono", Menlo, monospace;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--et-leaf-deep);
+}
+
+.solar-controls {
+  background: var(--et-panel);
+  border: 1px solid var(--et-soft);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+.solar-controls h2 {
+  margin: 0.6rem 0 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--et-muted);
+  font-weight: 800;
+}
+.solar-controls h2:first-of-type { margin-top: 0; }
+
+.panel-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.35rem; }
+.panel-btn {
+  background: var(--et-bg);
+  border: 1.5px solid var(--et-soft);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  color: var(--et-text);
+}
+.panel-btn:hover { border-color: var(--et-leaf); }
+.panel-btn.active {
+  background: var(--et-leaf);
+  color: white;
+  border-color: var(--et-leaf-deep);
+}
+.panel-name { font-weight: 800; font-size: 0.88rem; }
+.panel-eff { font-family: "SF Mono", Menlo, monospace; font-size: 0.74rem; color: var(--et-muted); }
+.panel-btn.active .panel-eff { color: rgba(255,255,255,0.85); }
+.panel-detail {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.7rem;
+  background: var(--et-bg);
+  border-left: 4px solid var(--et-sun);
+  border-radius: 4px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--et-text);
+}
+
+.orient-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; }
+.orient-btn {
+  background: var(--et-bg);
+  border: 1.5px solid var(--et-soft);
+  border-radius: 6px;
+  padding: 0.45rem 0.4rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  color: var(--et-text);
+}
+.orient-btn:hover { border-color: var(--et-leaf); }
+.orient-btn.active {
+  background: var(--et-sun);
+  color: var(--et-leaf-deep);
+  border-color: var(--et-sun-deep);
+}
+
+.slider-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--et-bg);
+  border: 1px solid var(--et-soft);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+}
+.slider-row input[type=range] { flex: 1; accent-color: var(--et-leaf); }
+.slider-val {
+  font-family: "SF Mono", Menlo, monospace;
+  font-weight: 800;
+  color: var(--et-leaf-deep);
+  min-width: 50px;
+  text-align: right;
+}
+
+.solar-feedback {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  background: var(--et-panel);
+  border-left: 6px solid var(--et-leaf);
+  border-top: 1px solid var(--et-soft);
+  border-right: 1px solid var(--et-soft);
+  border-bottom: 1px solid var(--et-soft);
+  border-radius: 4px;
+}
+.solar-feedback strong { color: var(--et-leaf-deep); }
+.solar-feedback.ok  { border-left-color: var(--et-good); background: #F0F8EF; }
+.solar-feedback.bad { border-left-color: var(--et-warn); background: #FFEBEB; }
+
+/* Quiz */
+.solar-bar {
+  display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;
+  background: var(--et-panel); border: 1px solid var(--et-soft);
+  border-radius: 10px; padding: 0.55rem 0.95rem; margin-bottom: 0.7rem;
+}
+.solar-stat { display: flex; flex-direction: column; min-width: 90px; }
+.bar-label {
+  font-size: 0.7rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--et-muted); font-weight: 700;
+}
+.bar-val { font-weight: 800; font-size: 1.05rem; color: var(--et-leaf-deep); }
+.solar-secondary {
+  margin-left: auto;
+  background: transparent;
+  border: 1.5px solid var(--et-line);
+  border-radius: 8px;
+  padding: 0.35rem 0.85rem;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.solar-secondary:hover { background: var(--et-bg); }
+
+.quiz-card {
+  background: var(--et-panel);
+  border: 2px solid var(--et-leaf);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+}
+.q-prompt { margin: 0 0 0.9rem; font-size: 1.05rem; line-height: 1.5; }
+.q-prompt em { color: var(--et-leaf-deep); font-weight: 700; }
+.q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; }
+@media (max-width: 540px) { .q-options { grid-template-columns: 1fr; } }
+.q-opt {
+  background: var(--et-bg);
+  border: 1.5px solid var(--et-soft);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+.q-opt:hover { background: white; border-color: var(--et-leaf); }
+.q-opt.correct { background: rgba(42,143,68,0.18); border-color: var(--et-good); color: var(--et-good); }
+.q-opt.wrong { background: rgba(199,46,46,0.18); border-color: var(--et-warn); color: var(--et-warn); }
+
+.solar-result {
+  margin-top: 1rem;
+  background: var(--et-panel);
+  border: 2px solid var(--et-leaf);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+.solar-result h3 {
+  margin: 0 0 0.3rem;
+  color: var(--et-leaf-deep);
+  font-size: 1.3rem;
+}
+.solar-result p { margin: 0 0 0.8rem; }
+.solar-go {
+  background: var(--et-leaf-deep);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.solar-go:hover { background: var(--et-leaf); }

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Environmental Technology — Solar Designer · OLS Showcase</title>
+  <link rel="icon" href="../assets/favicon-32.png" type="image/png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="demo-strip">
+    <a class="back" href="../">← Back to showcase</a>
+    <img class="crest-small" src="../assets/crest-64.png" alt="">
+    <span class="title">Environmental Technology</span>
+    <span class="meta">A-Level CCEA · Energy from the Sun</span>
+  </div>
+
+  <main class="solar">
+
+    <header class="solar-hero">
+      <span class="kicker">Renewable design</span>
+      <h1>Power a Home from the Sun</h1>
+      <p>Design a domestic solar PV system for an NI home. Choose panel type, orientation and tilt — see the live estimate of annual generation vs household demand.</p>
+    </header>
+
+    <nav class="solar-tabs">
+      <button class="solar-tab active" data-tab="design" id="tabDesign">Solar designer</button>
+      <button class="solar-tab" data-tab="quiz" id="tabQuiz">Knowledge check</button>
+    </nav>
+
+    <!-- Designer mode -->
+    <section class="solar-pane" id="paneDesign">
+      <div class="solar-stage">
+        <!-- Visualisation -->
+        <div class="house-frame">
+          <svg viewBox="0 0 600 360" id="houseSvg" class="house-svg" aria-label="Solar house"></svg>
+          <div class="energy-readout">
+            <div class="readout-row"><span class="r-label">Annual yield</span><span class="r-val" id="yieldVal">— kWh/yr</span></div>
+            <div class="readout-row"><span class="r-label">Demand met</span><span class="r-val" id="metVal">— %</span></div>
+            <div class="readout-row"><span class="r-label">CO₂ saved</span><span class="r-val" id="co2Val">— kg/yr</span></div>
+            <div class="readout-row"><span class="r-label">Cost (est.)</span><span class="r-val" id="costVal">£—</span></div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <aside class="solar-controls">
+          <h2>Panel choice</h2>
+          <div class="panel-row" id="panelRow"></div>
+          <p class="panel-detail" id="panelDetail"></p>
+
+          <h2>Orientation</h2>
+          <div class="orient-row" id="orientRow"></div>
+
+          <h2>Roof tilt</h2>
+          <label class="slider-row">
+            <input type="range" min="0" max="60" step="5" value="35" id="tilt">
+            <span class="slider-val"><span id="tiltVal">35</span>°</span>
+          </label>
+
+          <h2>Roof area covered</h2>
+          <label class="slider-row">
+            <input type="range" min="5" max="30" step="1" value="15" id="area">
+            <span class="slider-val"><span id="areaVal">15</span> m²</span>
+          </label>
+        </aside>
+      </div>
+
+      <p class="solar-feedback" id="solarFb">Design choices update the yield live. Try a south-facing roof at 35° with monocrystalline panels — see how much demand you can meet.</p>
+    </section>
+
+    <!-- Quiz mode -->
+    <section class="solar-pane" id="paneQuiz" hidden>
+      <header class="solar-bar">
+        <div class="solar-stat"><span class="bar-label">Question</span><span class="bar-val"><span id="qIdx">1</span> / <span id="qTotal">8</span></span></div>
+        <div class="solar-stat"><span class="bar-label">Score</span><span class="bar-val" id="qScore">0</span></div>
+        <button class="solar-secondary" id="qReset" type="button">Reset</button>
+      </header>
+
+      <p class="solar-feedback" id="qFeedback">Each question is grounded in the CCEA Energy from the Sun fact files.</p>
+
+      <article class="quiz-card">
+        <p class="q-prompt" id="qPrompt"></p>
+        <div class="q-options" id="qOptions"></div>
+      </article>
+
+      <div class="solar-result" id="solarResult" hidden>
+        <h3 id="resultTitle">Quiz complete</h3>
+        <p id="resultMsg"></p>
+        <button class="solar-go" id="qAgain" type="button">Play again</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

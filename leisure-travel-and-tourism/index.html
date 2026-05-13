@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leisure, Travel and Tourism — Tech in the Customer Journey · OLS Showcase</title>
+  <link rel="icon" href="../assets/favicon-32.png" type="image/png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="demo-strip">
+    <a class="back" href="../">← Back to showcase</a>
+    <img class="crest-small" src="../assets/crest-64.png" alt="">
+    <span class="title">Leisure, Travel and Tourism</span>
+    <span class="meta">GCSE CCEA · Unit 1 — Technology and change in the industry</span>
+  </div>
+
+  <main class="ltt">
+
+    <header class="ltt-hero">
+      <span class="kicker">Customer journey</span>
+      <h1>Tech Through the Trip</h1>
+      <p>A customer's journey runs from inspiration to sharing the memories. Drag each modern technology onto the stage of the journey where it adds the most value. Then take the factors-of-change quiz.</p>
+    </header>
+
+    <nav class="ltt-tabs">
+      <button class="ltt-tab active" data-tab="journey" id="tabJourney">Build the journey</button>
+      <button class="ltt-tab" data-tab="quiz" id="tabQuiz">Factors of change</button>
+    </nav>
+
+    <!-- Journey mode -->
+    <section class="ltt-pane" id="paneJourney">
+      <header class="ltt-bar">
+        <div class="ltt-stat"><span class="bar-label">Tech placed</span><span class="bar-val"><span id="placedN">0</span> / 10</span></div>
+        <div class="ltt-stat"><span class="bar-label">Correct fits</span><span class="bar-val" id="correctN">0</span></div>
+        <button class="ltt-secondary" id="journeyReset" type="button">Reset</button>
+      </header>
+
+      <p class="ltt-feedback" id="jFeedback">Pick a technology below, then tap the journey stage where it best fits. Try to put all ten in.</p>
+
+      <!-- Journey rail -->
+      <div class="journey-row" id="journeyRow">
+        <div class="stage-card" data-stage="dream">
+          <span class="stage-num">1</span>
+          <h3>Dream &amp; research</h3>
+          <p>Inspiration — looking for ideas, comparing destinations, reading reviews.</p>
+          <ul class="stage-drop"></ul>
+        </div>
+        <div class="stage-card" data-stage="book">
+          <span class="stage-num">2</span>
+          <h3>Plan &amp; book</h3>
+          <p>Choose, compare prices, secure flights / accommodation / tickets.</p>
+          <ul class="stage-drop"></ul>
+        </div>
+        <div class="stage-card" data-stage="travel">
+          <span class="stage-num">3</span>
+          <h3>Travel &amp; check-in</h3>
+          <p>Getting there — airport, ferry, station, hotel reception.</p>
+          <ul class="stage-drop"></ul>
+        </div>
+        <div class="stage-card" data-stage="experience">
+          <span class="stage-num">4</span>
+          <h3>At the destination</h3>
+          <p>Doing the activities. Finding food, attractions, transport on the ground.</p>
+          <ul class="stage-drop"></ul>
+        </div>
+        <div class="stage-card" data-stage="share">
+          <span class="stage-num">5</span>
+          <h3>Reflect &amp; share</h3>
+          <p>Post-trip: reviews, photos, social media, recommending to friends.</p>
+          <ul class="stage-drop"></ul>
+        </div>
+      </div>
+
+      <!-- Tech bank -->
+      <section class="tech-bank">
+        <h2>Technology toolbox</h2>
+        <div class="tech-grid" id="techGrid"></div>
+      </section>
+
+      <div class="ltt-result" id="lttResult" hidden>
+        <h3 id="resultTitle">Journey complete</h3>
+        <p id="resultMsg"></p>
+        <button class="ltt-go" id="journeyAgain" type="button">Try again</button>
+      </div>
+    </section>
+
+    <!-- Quiz mode -->
+    <section class="ltt-pane" id="paneQuiz" hidden>
+      <header class="ltt-bar">
+        <div class="ltt-stat"><span class="bar-label">Question</span><span class="bar-val"><span id="qIdx">1</span> / <span id="qTotal">8</span></span></div>
+        <div class="ltt-stat"><span class="bar-label">Score</span><span class="bar-val" id="qScore">0</span></div>
+        <button class="ltt-secondary" id="qReset" type="button">Reset</button>
+      </header>
+
+      <p class="ltt-feedback" id="qFeedback">Each scenario is driven by one of the factors of change in CCEA Unit 1.</p>
+
+      <article class="quiz-card">
+        <p class="q-prompt" id="qPrompt"></p>
+        <div class="q-options" id="qOptions"></div>
+      </article>
+
+      <div class="ltt-result" id="quizResult" hidden>
+        <h3 id="qResultTitle">Quiz complete</h3>
+        <p id="qResultMsg"></p>
+        <button class="ltt-go" id="quizAgain" type="button">Play again</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
