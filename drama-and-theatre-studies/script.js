@@ -149,39 +149,56 @@ function drawStage() {
 }
 
 // ----- Drag handling -----
-function bindDrag() {
-  stageSvg.querySelectorAll(".lamp-head").forEach(g => {
-    let dragging = false;
-    let offset = { x: 0, y: 0 };
-    const id = g.dataset.id;
-    const lamp = LAMPS.find(l => l.id === id);
+// We listen on the stage SVG itself so listeners survive the redraw that
+// happens on every pointermove. The dragged lamp is tracked by id.
+let _dragLampId = null;
+let _dragOffset = { x: 0, y: 0 };
+let _dragInited = false;
 
-    const ptr = e => {
-      const pt = stageSvg.createSVGPoint();
-      pt.x = e.clientX; pt.y = e.clientY;
-      return pt.matrixTransform(stageSvg.getScreenCTM().inverse());
-    };
-    g.addEventListener("pointerdown", e => {
-      dragging = true;
-      g.classList.add("dragging");
-      g.setPointerCapture(e.pointerId);
-      const p = ptr(e);
-      offset.x = p.x - lamp.x; offset.y = p.y - lamp.y;
-    });
-    g.addEventListener("pointermove", e => {
-      if (!dragging) return;
-      const p = ptr(e);
-      lamp.x = Math.max(60, Math.min(940, p.x - offset.x));
-      lamp.y = Math.max(40, Math.min(100, p.y - offset.y));  // stay on light bar zone
-      drawStage();
-    });
-    g.addEventListener("pointerup", e => {
-      dragging = false;
-      g.classList.remove("dragging");
-      g.releasePointerCapture(e.pointerId);
-    });
-  });
+function svgPoint(e) {
+  const pt = stageSvg.createSVGPoint();
+  pt.x = e.clientX; pt.y = e.clientY;
+  return pt.matrixTransform(stageSvg.getScreenCTM().inverse());
 }
+
+function initDragOnce() {
+  if (_dragInited) return;
+  _dragInited = true;
+  // pointerdown: only when on a lamp head
+  stageSvg.addEventListener("pointerdown", e => {
+    const head = e.target.closest(".lamp-head");
+    if (!head) return;
+    e.preventDefault();
+    _dragLampId = head.dataset.id;
+    const lamp = LAMPS.find(l => l.id === _dragLampId);
+    const p = svgPoint(e);
+    _dragOffset.x = p.x - lamp.x;
+    _dragOffset.y = p.y - lamp.y;
+    stageSvg.setPointerCapture(e.pointerId);
+    stageSvg.classList.add("dragging");
+  });
+  stageSvg.addEventListener("pointermove", e => {
+    if (!_dragLampId) return;
+    const lamp = LAMPS.find(l => l.id === _dragLampId);
+    if (!lamp) return;
+    const p = svgPoint(e);
+    lamp.x = Math.max(60, Math.min(940, p.x - _dragOffset.x));
+    lamp.y = Math.max(30, Math.min(140, p.y - _dragOffset.y));
+    drawStage();
+  });
+  const stop = e => {
+    if (!_dragLampId) return;
+    _dragLampId = null;
+    stageSvg.classList.remove("dragging");
+    try { stageSvg.releasePointerCapture(e.pointerId); } catch {}
+  };
+  stageSvg.addEventListener("pointerup", stop);
+  stageSvg.addEventListener("pointercancel", stop);
+  stageSvg.addEventListener("pointerleave", stop);
+}
+
+// kept for compatibility — no-op since drag is wired on the SVG itself
+function bindDrag() { initDragOnce(); }
 
 // ----- Lamp panel -----
 function drawPanel() {

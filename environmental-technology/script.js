@@ -264,8 +264,10 @@ function nextQ() {
     b.addEventListener("click", () => handle(opt, b, q.ans));
     qOptions.appendChild(b);
   });
-  qFeedback.innerHTML = "Each question is grounded in the CCEA Energy from the Sun fact files.";
+  // Per-question feedback bar is now silent until they answer
+  qFeedback.innerHTML = "";
   qFeedback.className = "solar-feedback";
+  qFeedback.style.visibility = "hidden";
 }
 function handle(picked, btn, correct) {
   document.querySelectorAll(".q-opt").forEach(x => x.disabled = true);
@@ -274,15 +276,18 @@ function handle(picked, btn, correct) {
     qs++; qScore.textContent = qs;
     qFeedback.innerHTML = `<strong>Correct.</strong>`;
     qFeedback.className = "solar-feedback ok";
+    qFeedback.style.visibility = "visible";
     ding();
+    setTimeout(() => { qi++; nextQ(); }, 1700);
   } else {
     btn.classList.add("wrong");
     [...qOptions.children].find(b => b.textContent === correct)?.classList.add("correct");
-    qFeedback.innerHTML = `<strong>The answer is: ${correct}.</strong>`;
+    qFeedback.innerHTML = `<strong>The answer is: ${correct}.</strong> <button class="qfb-next" type="button">Next question &rarr;</button>`;
     qFeedback.className = "solar-feedback bad";
+    qFeedback.style.visibility = "visible";
     buzz();
+    qFeedback.querySelector(".qfb-next")?.addEventListener("click", () => { qi++; nextQ(); });
   }
-  setTimeout(() => { qi++; nextQ(); }, 1700);
 }
 function finish() {
   solarResult.hidden = false;

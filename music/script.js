@@ -72,42 +72,97 @@ const INSTRUMENTS = [
 ];
 
 // dance form definitions
+// Each dance now uses a distinct tempo AND a distinctively shaped melody +
+// bodhrán pattern, so even a non-musician can hear the difference.
+// Notes are now {note, dur} pairs so we can give the hornpipe its dotted swing.
 const DANCES = {
   jig: {
     name: "Jig",
     time: "6/8",
-    desc: "<strong>Six-eight time</strong> — two groups of three quavers per bar (ONE-two-three, ONE-two-three). A skipping, lilting feel. Used for set dances and céilí jigs.",
-    drumPattern: ["x", ".", ".", "o", ".", "."], // ONE-and-a TWO-and-a (drumbeat on 1 and 4)
+    bpm: 96,
+    desc: "<strong>Six-eight time</strong> — two groups of three quavers per bar (ONE-two-three, ONE-two-three). A skipping, lilting feel. The melody and bodhrán both lean strongly on beats 1 and 4 of each bar.",
+    // 4 bars, each bar = 6 eighth-notes. Melody emphasises beat 1 and 4 (group starts).
     melody: {
-      tinWhistle: ["D5","E5","F#5","G5","A5","B5","A5","G5","F#5","E5","D5","F#5", "G5","A5","B5","A5","G5","F#5","E5","F#5","G5","A5","F#5","D5"],
-      fiddle:     ["D4","F#4","A4","D5","F#4","A4","D4","F#4","A4","D5","F#4","A4", "B4","D5","G4","B4","D5","G4","A4","C#5","E5","A4","C#5","E5"],
+      tinWhistle: [
+        // bar 1: G-E-D F-A-G        ONE-two-three FOUR-five-six
+        "G5","E5","D5","F5","A5","G5",
+        // bar 2:
+        "G5","F5","E5","D5","E5","F5",
+        // bar 3:
+        "G5","E5","D5","F5","A5","G5",
+        // bar 4 (cadence):
+        "G5","A5","F5","D5","E5","D5",
+      ],
+      fiddle: [
+        "D4","D4","D4","A4","A4","A4",
+        "G4","G4","G4","D4","D4","D4",
+        "D4","D4","D4","A4","A4","A4",
+        "G4","A4","D4","D4","D4","D4",
+      ],
+      noteDur: "8n",
     },
-    subdivisions: 24, // 24 eighth-notes
-    pulse: "8n",
+    // drum pattern is 6 sixteenth slots — BOOM on 1, light tap on 4 only.
+    // The "x" is hard, the "." is silence, "h" is a light hand-stroke.
+    drumPattern: ["X",".",".","x",".","."],
+    subdivisions: 24,
   },
   reel: {
     name: "Reel",
     time: "4/4",
-    desc: "<strong>Four-four time</strong> — even quavers, ONE-two-three-four. Driving, level pulse. The most common Irish trad form.",
-    drumPattern: ["x", ".", ".", ".", "o", ".", ".", "."],
+    bpm: 124,
+    desc: "<strong>Four-four time</strong> — even quavers, ONE-two-three-four with eight quavers per bar. Driving, level pulse. The bodhrán hits every beat. The most common Irish trad form.",
     melody: {
-      tinWhistle: ["E5","G5","E5","D5","B4","D5","E5","G5", "A5","G5","E5","D5","B4","D5","E5","G5"],
-      fiddle:     ["E4","G4","B4","E5","E5","B4","G4","E4", "A4","E4","A4","C#5","E5","C#5","A4","E4"],
+      tinWhistle: [
+        // bar 1: rising scalar passage typical of a reel
+        "D5","E5","F#5","G5","A5","G5","F#5","E5",
+        // bar 2:
+        "D5","F#5","A5","F#5","D5","F#5","A5","F#5",
+        // bar 3:
+        "G5","A5","B5","A5","G5","F#5","E5","D5",
+        // bar 4:
+        "D5","F#5","A5","F#5","D5","E5","F#5","D5",
+      ],
+      fiddle: [
+        "D4","A4","D4","A4","D4","A4","D4","A4",
+        "D4","A4","D4","A4","D4","A4","D4","A4",
+        "G4","D5","G4","D5","G4","D5","G4","D5",
+        "D4","A4","D4","A4","D4","A4","D4","A4",
+      ],
+      noteDur: "8n",
     },
-    subdivisions: 16,
-    pulse: "8n",
+    // BOOM on every beat (1,3,5,7 in 8-eighth-note bar) — steady driving pulse
+    drumPattern: ["X",".","x",".","X",".","x","."],
+    subdivisions: 32,
   },
   hornpipe: {
     name: "Hornpipe",
-    time: "4/4 dotted",
-    desc: "<strong>Four-four with a swung dotted rhythm</strong> — LONG-short, LONG-short. Heavier, slower than a reel. Often performed in hard shoes.",
-    drumPattern: ["x", ".", "o", ".", "x", ".", "o", "."],
+    time: "4/4 swung",
+    bpm: 92,
+    desc: "<strong>Four-four with a heavily dotted swing</strong> — LOOOONG-short, LOOOONG-short. Slower than a reel, with each pair of quavers played as a dotted-eighth + sixteenth. Often performed in hard shoes — you can almost hear the heel.",
+    // Hornpipe melody — pairs of notes per beat, swung
     melody: {
-      tinWhistle: ["D5","F#5","D5","A5","F#5","D5","A5","D5", "E5","G5","E5","B5","G5","E5","B5","E5"],
-      fiddle:     ["D4","A4","D4","A4","F#4","D4","A4","D4", "E4","B4","E4","B4","G4","E4","B4","E4"],
+      tinWhistle: [
+        // each "LONG-short" pair = 8n. + 16n
+        "D5","F#5","A5","F#5","D5","F#5","A5","F#5",
+        "G5","B5","D5","B5","G5","B5","D5","B5",
+        "F#5","A5","D5","A5","F#5","A5","D5","A5",
+        "D5","F#5","G5","A5","F#5","D5","A4","D5",
+      ],
+      fiddle: [
+        "D4","D4","A4","A4","D4","D4","A4","A4",
+        "G4","G4","D5","D5","G4","G4","D5","D5",
+        "D4","D4","A4","A4","D4","D4","A4","A4",
+        "G4","G4","D4","D4","A4","A4","D4","D4",
+      ],
+      // alternating long-short
+      durs: ["8n.","16n","8n.","16n","8n.","16n","8n.","16n",
+             "8n.","16n","8n.","16n","8n.","16n","8n.","16n",
+             "8n.","16n","8n.","16n","8n.","16n","8n.","16n",
+             "8n.","16n","8n.","16n","8n.","16n","8n.","16n"],
     },
-    subdivisions: 16,
-    pulse: "8n.", // dotted feel via durations
+    // BOOM on beats 1 and 3 (the down-beats of the swung pairs)
+    drumPattern: ["X",".",".",".","x",".",".","."],
+    subdivisions: 32,
   },
 };
 
@@ -159,13 +214,18 @@ INSTRUMENTS.forEach(ins => {
   instrumentRow.appendChild(el);
 });
 
-// Dance form buttons
+// Dance form buttons — selecting one snaps the tempo slider to the dance's
+// intrinsic bpm (user can still drag the slider afterwards to change it).
 danceButtons.forEach(b => {
   b.addEventListener("click", () => {
     danceButtons.forEach(x => x.classList.remove("active"));
     b.classList.add("active");
     activeDance = b.dataset.dance;
-    danceDesc.innerHTML = DANCES[activeDance].desc;
+    const d = DANCES[activeDance];
+    danceDesc.innerHTML = d.desc;
+    tempo.value = d.bpm;
+    tempoVal.textContent = d.bpm;
+    if (toneReady) Tone.Transport.bpm.value = d.bpm;
   });
 });
 
@@ -189,43 +249,68 @@ function stopAll() {
 function playDance(danceId) {
   stopAll();
   const d = DANCES[danceId];
+  // Each dance has its own intrinsic tempo — the slider acts as an override
+  // but defaults to the dance's bpm.
   Tone.Transport.bpm.value = parseInt(tempo.value, 10);
+
   const events = [];
-  const subDur = "8n";
-  // melody
-  d.melody.tinWhistle.forEach((n, i) => { if (!muted.tinWhistle) events.push({ time: `0:0:${i*2}`, note: n, instr: "tinWhistle" }); });
-  d.melody.fiddle.forEach((n, i) => { if (!muted.fiddle) events.push({ time: `0:0:${i*2}`, note: n, instr: "fiddle" }); });
-  // drum
-  d.drumPattern.forEach((p, i) => {
-    if (p !== "." && !muted["bodhrán"]) {
-      const totalSubdiv = d.subdivisions;
-      const step = totalSubdiv / d.drumPattern.length;
-      // repeat drum pattern across the bar
-      for (let bar = 0; bar < totalSubdiv; bar += step) {
-        events.push({ time: `0:0:${(bar + i*step - i*step) * 2}`, drum: p });
-      }
-      // simpler: just one cycle of drum pattern
-    }
-  });
-  // simpler drum: just step through pattern at step length matching subdivisions
+  const drumLen  = d.drumPattern.length;       // 8th-notes per bar (6 for jig, 8 for reel/hornpipe)
+  const ticksPerBar = drumLen * 2;             // 16th-notes per bar
+  const bars = Math.floor(d.melody.tinWhistle.length / drumLen);
+
+  // Place each melody note at its 16th-note tick offset within the loop.
+  // For the hornpipe, alternate dotted-8th + 16th to give the swung feel.
+  function tickAt(step) {
+    if (danceId !== "hornpipe") return step * 2; // straight 8ths
+    const bar = Math.floor(step / 8);
+    const within = step % 8;
+    // 3+1 swing pattern over each beat: long-short long-short long-short long-short
+    const swing = [0, 3, 4, 7, 8, 11, 12, 15];
+    return bar * 16 + swing[within];
+  }
+  function noteDur(step) {
+    if (danceId !== "hornpipe") return d.melody.noteDur || "8n";
+    return step % 2 === 0 ? "8n." : "16n";
+  }
+
+  if (!muted.tinWhistle) {
+    d.melody.tinWhistle.forEach((n, i) => {
+      events.push({ time: `0:0:${tickAt(i)}`, note: n, instr: "tinWhistle", dur: noteDur(i) });
+    });
+  }
+  if (!muted.fiddle) {
+    d.melody.fiddle.forEach((n, i) => {
+      events.push({ time: `0:0:${tickAt(i)}`, note: n, instr: "fiddle", dur: noteDur(i) });
+    });
+  }
+  // Bodhrán loops the drum pattern across every bar.
+  // "X" = hard accented hit, "x" = light hit.
   if (!muted["bodhrán"]) {
-    const totalSteps = d.subdivisions;
-    const drumLen = d.drumPattern.length;
-    for (let i = 0; i < totalSteps; i++) {
-      const p = d.drumPattern[i % drumLen];
-      if (p !== ".") events.push({ time: `0:0:${i*2}`, drum: p });
+    for (let bar = 0; bar < bars; bar++) {
+      for (let i = 0; i < drumLen; i++) {
+        const c = d.drumPattern[i];
+        if (c === ".") continue;
+        const tick = bar * ticksPerBar + i * 2;
+        events.push({ time: `0:0:${tick}`, drum: c });
+      }
     }
   }
+
+  const totalTicks = bars * ticksPerBar;
   part = new Tone.Part((time, ev) => {
-    if (ev.instr === "tinWhistle") synths.tinWhistle.triggerAttackRelease(ev.note, "8n", time);
-    if (ev.instr === "fiddle")     synths.fiddle.triggerAttackRelease(ev.note, "8n", time);
-    if (ev.drum)                   bodran.triggerAttack(time);
+    if (ev.instr === "tinWhistle") synths.tinWhistle.triggerAttackRelease(ev.note, ev.dur || "8n", time);
+    if (ev.instr === "fiddle")     synths.fiddle.triggerAttackRelease(ev.note, ev.dur || "8n", time);
+    if (ev.drum) {
+      // Hard "X" hit is louder than light "x" hit so the meter accent is audible.
+      bodran.volume.value = ev.drum === "X" ? -6 : -16;
+      bodran.triggerAttack(time);
+    }
   }, events);
   part.loop = true;
-  part.loopEnd = `0:0:${d.subdivisions * 2}`;
+  part.loopEnd = `0:0:${totalTicks}`;
   part.start(0);
   Tone.Transport.start();
-  sessionFb.innerHTML = `Playing a <strong>${d.name}</strong> in ${d.time}. Right-click an instrument to mute it.`;
+  sessionFb.innerHTML = `Playing a <strong>${d.name}</strong> at ${parseInt(tempo.value, 10)} bpm in ${d.time}. ${d.desc.replace(/<[^>]+>/g, "")}`;
   sessionFb.className = "mus-feedback ok";
 }
 

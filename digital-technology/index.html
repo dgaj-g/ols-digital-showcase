@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Digital Technology — Representing Images in Binary · OLS Showcase</title>
+  <title>Digital Technology — Cloud Computing · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="style.css">
@@ -13,77 +13,85 @@
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
     <span class="title">Digital Technology</span>
-    <span class="meta">GCSE CCEA · Unit 1 — Representing images</span>
+    <span class="meta">GCSE CCEA · Unit 1 — Cloud Computing</span>
   </div>
 
-  <main class="bin">
+  <main class="cloud">
 
-    <header class="bin-hero">
-      <span class="kicker">/ unit_1 / representing_images.bin</span>
-      <h1>1s and 0s — how a computer stores a picture</h1>
-      <p>Every pixel is a single bit. Black = <code>1</code>, white = <code>0</code>. Tap a cell to flip its bit. Watch the binary readout on the right.</p>
+    <header class="cloud-hero">
+      <span class="kicker">/ unit_1 / cloud_computing.json</span>
+      <h1>Local or Cloud?</h1>
+      <p>Cloud computing means storing data and running software on <em>remote servers</em> accessed over the internet — instead of on the device in front of you. Sort the services, then weigh up the pros and cons.</p>
     </header>
 
-    <nav class="bin-tabs">
-      <button class="bin-tab active" data-tab="draw" id="tabDraw">Free draw</button>
-      <button class="bin-tab" data-tab="challenge" id="tabChallenge">Match the target</button>
+    <nav class="cloud-tabs">
+      <button class="cloud-tab active" data-tab="sort" id="tabSort">Sort the services</button>
+      <button class="cloud-tab" data-tab="pros" id="tabPros">Pros vs Cons</button>
     </nav>
 
-    <section class="bin-stage">
+    <!-- Sort mode -->
+    <section class="cloud-pane" id="paneSort">
+      <header class="cloud-bar">
+        <div class="cloud-stat"><span class="bar-label">Sorted</span><span class="bar-val"><span id="sSorted">0</span> / 10</span></div>
+        <div class="cloud-stat"><span class="bar-label">Correct</span><span class="bar-val" id="sCorrect">0</span></div>
+        <div class="cloud-stat"><span class="bar-label">Wrong</span><span class="bar-val" id="sWrong">0</span></div>
+        <button class="cloud-secondary" id="sortReset" type="button">Reset</button>
+      </header>
+      <p class="cloud-feedback" id="sFeedback">Pick a service from the toolbox, then tap a column. <strong>Local</strong> means the software / data lives on the device itself. <strong>Cloud</strong> means it lives on a remote server reached over the internet.</p>
 
-      <!-- LEFT: editor or target+editor -->
-      <div class="bin-editor-wrap">
-        <div class="bin-mini-toolbar" id="drawToolbar">
-          <button class="bin-action" id="btnClear" type="button">Clear all (0s)</button>
-          <button class="bin-action" id="btnInvert" type="button">Invert all bits</button>
+      <div class="sort-board">
+        <div class="sort-col" data-cat="local">
+          <header><span class="col-tag local">Local</span><p>On the device — installed software, files on a hard drive or USB stick.</p></header>
+          <div class="sort-drop"></div>
         </div>
-
-        <div class="bin-challenge-bar" id="challengeBar" hidden>
-          <div class="bin-stat"><span class="bar-label">Target</span><span class="bar-val"><span id="tIdx">1</span> / <span id="tTotal">5</span></span></div>
-          <div class="bin-stat"><span class="bar-label">Match</span><span class="bar-val" id="matchPct">0 %</span></div>
-          <div class="bin-stat"><span class="bar-label">Score</span><span class="bar-val" id="cScore">0</span></div>
-          <button class="bin-action" id="btnSubmit" type="button">Submit</button>
-          <button class="bin-action bin-secondary" id="btnSkip" type="button">Skip</button>
+        <div class="sort-pool" id="sortPool">
+          <header><span class="pool-tag">Services to sort</span></header>
+          <div class="pool-list" id="sortPoolList"></div>
         </div>
-
-        <div class="bin-target-row" id="targetRow" hidden>
-          <div>
-            <span class="target-label">Target image</span>
-            <div class="bin-target" id="binTarget"></div>
-          </div>
-          <div>
-            <span class="target-label">Your image</span>
-            <div class="bin-target editable" id="binTargetMirror">your editor →</div>
-          </div>
-        </div>
-
-        <div class="bin-grid-wrap">
-          <span class="bar-label" style="margin-bottom:.4rem;display:inline-block">Your 8 × 8 image</span>
-          <div class="bin-grid" id="binGrid"></div>
+        <div class="sort-col" data-cat="cloud">
+          <header><span class="col-tag cloud">Cloud</span><p>On remote servers — reached over the internet from any device, anywhere.</p></header>
+          <div class="sort-drop"></div>
         </div>
       </div>
 
-      <!-- RIGHT: binary readout -->
-      <aside class="bin-readout">
-        <header>
-          <span class="readout-tag">stdout</span>
-          <span class="readout-info">8 × 8 = <span id="totalBits">64</span> bits = <span id="totalBytes">8</span> B</span>
-        </header>
-        <table class="bin-table" id="binTable"></table>
-        <footer class="readout-footer">
-          <div><span class="bar-label">Bits ON</span><span class="bar-val" id="onCount">0</span></div>
-          <div><span class="bar-label">% filled</span><span class="bar-val" id="onPct">0 %</span></div>
-        </footer>
-      </aside>
+      <div class="cloud-result" id="sortResult" hidden>
+        <h3 id="sortTitle">Round complete</h3>
+        <p id="sortMsg"></p>
+        <button class="cloud-go" id="sortAgain" type="button">Play again</button>
+      </div>
     </section>
 
-    <p class="bin-feedback" id="binFeedback" aria-live="polite">Tap a cell to flip its bit. Every row's binary appears on the right.</p>
+    <!-- Pros/Cons mode -->
+    <section class="cloud-pane" id="panePros" hidden>
+      <header class="cloud-bar">
+        <div class="cloud-stat"><span class="bar-label">Sorted</span><span class="bar-val"><span id="pSorted">0</span> / 10</span></div>
+        <div class="cloud-stat"><span class="bar-label">Correct</span><span class="bar-val" id="pCorrect">0</span></div>
+        <div class="cloud-stat"><span class="bar-label">Wrong</span><span class="bar-val" id="pWrong">0</span></div>
+        <button class="cloud-secondary" id="prosReset" type="button">Reset</button>
+      </header>
+      <p class="cloud-feedback" id="pFeedback">Each statement describes something about using the cloud. Drag it into the <strong>Advantage</strong> or <strong>Disadvantage</strong> column.</p>
 
-    <div class="bin-result" id="binResult" hidden>
-      <h3 id="binResultTitle">Challenge complete</h3>
-      <p id="binResultMsg"></p>
-      <button class="bin-action" id="btnAgain" type="button">Run challenge again</button>
-    </div>
+      <div class="sort-board">
+        <div class="sort-col" data-cat="pro">
+          <header><span class="col-tag advantage">Advantage</span><p>Reasons cloud computing is a good idea.</p></header>
+          <div class="sort-drop"></div>
+        </div>
+        <div class="sort-pool" id="prosPool">
+          <header><span class="pool-tag">Statements about the cloud</span></header>
+          <div class="pool-list" id="prosPoolList"></div>
+        </div>
+        <div class="sort-col" data-cat="con">
+          <header><span class="col-tag disadvantage">Disadvantage</span><p>Reasons cloud computing has costs and risks.</p></header>
+          <div class="sort-drop"></div>
+        </div>
+      </div>
+
+      <div class="cloud-result" id="prosResult" hidden>
+        <h3 id="prosTitle">Round complete</h3>
+        <p id="prosMsg"></p>
+        <button class="cloud-go" id="prosAgain" type="button">Play again</button>
+      </div>
+    </section>
 
   </main>
 

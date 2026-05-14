@@ -307,14 +307,15 @@ function handleAnswer(picked, btn) {
     qFeedback.innerHTML = `<strong>Correct.</strong> ${TECHNIQUES[qAnswer].title}: ${TECHNIQUES[qAnswer].desc}`;
     qFeedback.className = "art-feedback ok";
     ding();
+    setTimeout(nextQuestion, 1500);
   } else {
     btn.classList.add("wrong");
     document.querySelector(`.quiz-opt:nth-child(${[...qOptions.children].findIndex(c => c.textContent === TECHNIQUES[qAnswer].title)+1})`)?.classList.add("correct");
-    qFeedback.innerHTML = `<strong>Not quite.</strong> That swatch was made using <em>${TECHNIQUES[qAnswer].title}</em> — ${TECHNIQUES[qAnswer].desc}`;
+    qFeedback.innerHTML = `<strong>Not quite.</strong> That swatch was made using <em>${TECHNIQUES[qAnswer].title}</em> — ${TECHNIQUES[qAnswer].desc} <button class="qfb-next" type="button">Next swatch &rarr;</button>`;
     qFeedback.className = "art-feedback bad";
     buzz();
+    qFeedback.querySelector(".qfb-next")?.addEventListener("click", nextQuestion);
   }
-  setTimeout(nextQuestion, 1500);
 }
 
 function finishQuiz() {

@@ -2,33 +2,41 @@
 // Two modes. Match: tap an Irish phrase, hear it spoken, tap its English meaning.
 // Grammar: read an English sentence, choose Tá or Is.
 
+// Each phrase has:
+//   ga    — proper Gaeilge spelling (what we display)
+//   en    — English translation
+//   phon  — phonetic respelling that an English-voice TTS can read out
+//           and produce something close to correct Irish pronunciation
+// We use `phon` for spoken audio because almost no browser ships a native
+// Gaeilge voice — letting an English voice read Gaeilge orthography
+// produces nonsense (e.g. "Dia dhuit" → "die-uh d-hu-it").
 const VOCAB_ROUNDS = [
   // Round 1 — greetings
   [
-    { ga: "Dia dhuit",            en: "Hello" },
-    { ga: "Dia is Muire dhuit",   en: "Hello (reply)" },
-    { ga: "Slán",                 en: "Goodbye" },
-    { ga: "Conas atá tú?",        en: "How are you?" },
-    { ga: "Tá mé go maith",       en: "I am well" },
-    { ga: "Go raibh maith agat",  en: "Thank you" },
+    { ga: "Dia dhuit",            en: "Hello",                phon: "Jee-ah ghwitch" },
+    { ga: "Dia is Muire dhuit",   en: "Hello (reply)",        phon: "Jee-ah iss Mwirra ghwitch" },
+    { ga: "Slán",                 en: "Goodbye",              phon: "Slawn" },
+    { ga: "Conas atá tú?",        en: "How are you?",         phon: "Cunnus a-taw too?" },
+    { ga: "Tá mé go maith",       en: "I am well",            phon: "Taw may guh moh" },
+    { ga: "Go raibh maith agat",  en: "Thank you",            phon: "Guh rev moh ah-gut" },
   ],
   // Round 2 — personal info
   [
-    { ga: "Is mise Áine",         en: "I am Áine" },
-    { ga: "Cad is ainm duit?",    en: "What is your name?" },
-    { ga: "Tá mé trí déag",       en: "I am thirteen" },
-    { ga: "Tá mé i mo chónaí i mBéal Feirste", en: "I live in Belfast" },
-    { ga: "Is as Ard Mhacha mé",  en: "I am from Armagh" },
-    { ga: "Tá mé tuirseach",      en: "I am tired" },
+    { ga: "Is mise Áine",         en: "I am Áine",            phon: "Iss mish-eh Awn-yeh" },
+    { ga: "Cad is ainm duit?",    en: "What is your name?",   phon: "Cod iss an-im ditch?" },
+    { ga: "Tá mé trí déag",       en: "I am thirteen",        phon: "Taw may tree jayg" },
+    { ga: "Tá mé i mo chónaí i mBéal Feirste", en: "I live in Belfast", phon: "Taw may ih muh kho-nee ih may-al fersht-yeh" },
+    { ga: "Is as Ard Mhacha mé",  en: "I am from Armagh",     phon: "Iss oss ard wokh-ah may" },
+    { ga: "Tá mé tuirseach",      en: "I am tired",           phon: "Taw may turr-shokh" },
   ],
   // Round 3 — family
   [
-    { ga: "Tá máthair agam",      en: "I have a mother" },
-    { ga: "Tá athair agam",       en: "I have a father" },
-    { ga: "Tá deartháir agam",    en: "I have a brother" },
-    { ga: "Tá deirfiúr agam",     en: "I have a sister" },
-    { ga: "Tá madra againn",      en: "We have a dog" },
-    { ga: "Is dochtúir í mo mháthair", en: "My mother is a doctor" },
+    { ga: "Tá máthair agam",      en: "I have a mother",      phon: "Taw maw-her ah-gum" },
+    { ga: "Tá athair agam",       en: "I have a father",      phon: "Taw ah-her ah-gum" },
+    { ga: "Tá deartháir agam",    en: "I have a brother",     phon: "Taw drah-har ah-gum" },
+    { ga: "Tá deirfiúr agam",     en: "I have a sister",      phon: "Taw jerr-foor ah-gum" },
+    { ga: "Tá madra againn",      en: "We have a dog",        phon: "Taw mod-rah a-gin" },
+    { ga: "Is dochtúir í mo mháthair", en: "My mother is a doctor", phon: "Iss dokh-toor ee muh waw-her" },
   ],
 ];
 
@@ -70,21 +78,41 @@ if (window.speechSynthesis) {
   loadVoices();
   window.speechSynthesis.onvoiceschanged = loadVoices;
 }
+// Strategy: if the browser has a real Gaeilge (ga-IE) voice, use it on the
+// proper Irish text. Otherwise fall back to a UK / Irish English voice and
+// feed it the phonetic respelling — that produces a much closer approximation
+// to real Irish pronunciation than letting it sound out the Gaeilge letters.
 function pickIrishVoice() {
   return voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ga"))
-      || voices.find(v => v.name && /irish|gaelic/i.test(v.name))
-      || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en-ie"))
+      || voices.find(v => v.name && /irish gaelic|gaelic/i.test(v.name))
       || null;
 }
-function speak(text) {
+function pickEnglishVoice() {
+  return voices.find(v => v.lang && v.lang.toLowerCase() === "en-ie")
+      || voices.find(v => v.lang && v.lang.toLowerCase() === "en-gb")
+      || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en"))
+      || null;
+}
+function speak(item) {
   if (!window.speechSynthesis) return;
+  // item can be a string (back-compat) or {ga, phon}
+  const ga = typeof item === "string" ? item : item.ga;
+  const phon = typeof item === "string" ? item : item.phon;
   const doSpeak = () => {
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "ga-IE";
-    const v = pickIrishVoice();
-    if (v) u.voice = v;
-    u.rate = 0.9;
+    const irishVoice = pickIrishVoice();
+    let u;
+    if (irishVoice) {
+      u = new SpeechSynthesisUtterance(ga);
+      u.lang = "ga-IE";
+      u.voice = irishVoice;
+    } else {
+      u = new SpeechSynthesisUtterance(phon || ga);
+      const v = pickEnglishVoice();
+      if (v) u.voice = v;
+      u.lang = v ? v.lang : "en-IE";
+    }
+    u.rate = 0.85;
     window.speechSynthesis.speak(u);
   };
   loadVoices();
@@ -144,7 +172,7 @@ function startRound() {
     t.className = "match-tile";
     t.dataset.idx = i;
     t.innerHTML = `<span class="tile-text">${p.ga}</span><button class="speak-btn" type="button" aria-label="Hear ${p.ga}">▶</button>`;
-    t.querySelector(".speak-btn").addEventListener("click", e => { e.stopPropagation(); speak(p.ga); });
+    t.querySelector(".speak-btn").addEventListener("click", e => { e.stopPropagation(); speak(p); });
     t.addEventListener("click", () => selectIrish(i, t));
     irishList.appendChild(t);
   });
@@ -161,7 +189,7 @@ function startRound() {
 
 function selectIrish(idx, tile) {
   if (tile.classList.contains("matched")) return;
-  speak(pairs[idx].ga);
+  speak(pairs[idx]);
   irishList.querySelectorAll(".match-tile.selected").forEach(x => x.classList.remove("selected"));
   if (selectedIrish === idx) { selectedIrish = null; vFeedback.textContent = "Cleared."; vFeedback.className = "gae-feedback"; return; }
   selectedIrish = idx;

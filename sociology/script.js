@@ -189,14 +189,15 @@ function answer(picked, btn) {
     qFeedback.innerHTML = `<strong>Correct.</strong>`;
     qFeedback.className = "soc-feedback ok";
     ding();
+    setTimeout(() => { qi++; nextQ(); }, 1500);
   } else {
     btn.classList.add("wrong");
     [...qOptions.children].find(b => b.textContent === q.answer)?.classList.add("correct");
-    qFeedback.innerHTML = `<strong>The answer is: ${q.answer}.</strong>`;
+    qFeedback.innerHTML = `<strong>The answer is: ${q.answer}.</strong> <button class="qfb-next" type="button">Next question &rarr;</button>`;
     qFeedback.className = "soc-feedback bad";
     buzz();
+    qFeedback.querySelector(".qfb-next")?.addEventListener("click", () => { qi++; nextQ(); });
   }
-  setTimeout(() => { qi++; nextQ(); }, 1500);
 }
 function finish() {
   socResult.hidden = false;

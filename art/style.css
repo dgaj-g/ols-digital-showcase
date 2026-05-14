@@ -231,6 +231,21 @@ body {
   font-style: italic;
   min-height: 1.3em;
 }
+.qfb-next {
+  background: var(--art-rust);
+  color: var(--art-paper);
+  border: none;
+  border-radius: 999px;
+  padding: 0.32rem 0.85rem;
+  font: inherit;
+  font-style: italic;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  font-family: Georgia, serif;
+  font-size: 0.92rem;
+}
+.qfb-next:hover { background: var(--art-rust-deep); }
 .art-feedback strong { color: var(--art-rust); font-style: normal; }
 .art-feedback.ok  { border-left-color: var(--art-good); background: #F0F8EF; }
 .art-feedback.bad { border-left-color: var(--art-warn); background: #FFEBEB; }

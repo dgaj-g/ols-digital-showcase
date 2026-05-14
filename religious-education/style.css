@@ -196,6 +196,20 @@ body {
   padding: 0.6rem 0.9rem;
   font-style: italic;
 }
+.qfb-next {
+  background: var(--re-burgundy);
+  color: var(--re-paper);
+  border: none;
+  padding: 0.3rem 0.85rem;
+  font: inherit;
+  font-style: italic;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  font-family: Georgia, serif;
+  font-size: 0.92rem;
+}
+.qfb-next:hover { background: var(--re-burgundy-deep); }
 .re-feedback strong { color: var(--re-burgundy); font-style: normal; }
 .re-feedback.ok  { border-left-color: var(--re-good); }
 .re-feedback.bad { border-left-color: var(--re-warn); }

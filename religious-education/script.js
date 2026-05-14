@@ -195,14 +195,15 @@ qOpts.forEach(btn => {
       qFeedback.innerHTML = `<strong>Correct.</strong>`;
       qFeedback.className = "re-feedback ok";
       ding();
+      setTimeout(() => { qi++; nextQ(); }, 1500);
     } else {
       btn.classList.add("wrong");
       document.querySelector(`.q-opt[data-id="${correct}"]`).classList.add("correct");
-      qFeedback.innerHTML = `<strong>Not quite.</strong> The statement is ${correct === "both" ? "true of both traditions" : `more characteristic of ${correct} teaching`}.`;
+      qFeedback.innerHTML = `<strong>Not quite.</strong> The statement is ${correct === "both" ? "true of both traditions" : `more characteristic of ${correct} teaching`}. <button class="qfb-next" type="button">Next question &rarr;</button>`;
       qFeedback.className = "re-feedback bad";
       buzz();
+      qFeedback.querySelector(".qfb-next")?.addEventListener("click", () => { qi++; nextQ(); });
     }
-    setTimeout(() => { qi++; nextQ(); }, 1500);
   });
 });
 

@@ -8,7 +8,7 @@ const DEPARTMENTS = [
   { slug: "business-studies",             name: "Business Studies",          level: "GCSE",    board: "CCEA", topic: "Public vs private sector",                      activity: "Drag-and-drop sorter" },
   { slug: "careers",                      name: "Careers",                   level: "KS3",     board: "—",    topic: "Workplace and employability",                   activity: "Decision tree" },
   { slug: "chemistry",                    name: "Chemistry",                 level: "GCSE",    board: "CCEA", topic: "The Periodic Table",                            activity: "Interactive table" },
-  { slug: "digital-technology",           name: "Digital Technology",        level: "GCSE",    board: "CCEA", topic: "Representing images in binary",                 activity: "Pixel visualiser" },
+  { slug: "digital-technology",           name: "Digital Technology",        level: "GCSE",    board: "CCEA", topic: "Cloud computing",                               activity: "Local vs Cloud sorter" },
   { slug: "drama-and-theatre-studies",    name: "Drama and Theatre Studies", level: "A-Level", board: "WJEC", topic: "Stage lighting design",                         activity: "Lighting designer" },
   { slug: "english",                      name: "English",                   level: "GCSE",    board: "CCEA", topic: "Rhetorical devices in speech",                  activity: "Text highlighter" },
   { slug: "environmental-technology",     name: "Environmental Technology",  level: "A-Level", board: "CCEA", topic: "Energy from the Sun — solar PV &amp; passive design",  activity: "Solar designer" },

@@ -196,10 +196,13 @@ body {
 }
 .dna-result p { margin: 0 0 0.8rem; }
 
-/* Bacterium draggable */
+/* Bacterium clickable */
 .bact {
   cursor: pointer;
-  transition: transform 0.15s, filter 0.15s;
+  transition: filter 0.15s;
 }
-.bact:hover { transform: scale(1.08); filter: drop-shadow(0 0 6px var(--bio-cyan)); }
-.bact.taken { filter: drop-shadow(0 0 8px var(--bio-green)); }
+/* Important: do NOT use CSS `transform` here — it would overwrite the SVG
+   `transform="translate(...)"` attribute and shoot the bacterium to (0,0).
+   We use filter only for the hover/selected glow. */
+.bact:hover { filter: drop-shadow(0 0 8px var(--bio-cyan)) brightness(1.12); }
+.bact.taken { filter: drop-shadow(0 0 10px var(--bio-green)) brightness(1.15); }

@@ -51,6 +51,27 @@ body {
   color: var(--ph-text);
 }
 .phys-hero p { margin: 0; max-width: 70ch; color: var(--ph-muted); }
+.phys-hero p strong { color: var(--ph-cyan); }
+.phys-howto {
+  list-style: none;
+  padding: 0;
+  margin: 0.8rem 0 0;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.phys-howto li {
+  flex: 1 1 220px;
+  background: var(--ph-bg);
+  border: 1px solid var(--ph-line);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.92rem;
+  color: var(--ph-text);
+  line-height: 1.4;
+}
+.phys-howto strong { color: var(--ph-cyan); font-family: var(--ph-mono); margin-right: 0.3rem; }
+.phys-howto em { color: var(--ph-violet); font-style: italic; }
 
 .phys-bar {
   display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;

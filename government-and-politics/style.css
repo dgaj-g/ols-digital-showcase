@@ -98,7 +98,8 @@ body {
   content: "";
   position: absolute;
   left: 30px; right: 30px;
-  top: 110px;
+  /* Sits behind the centre of the portrait circle — never crosses the year/name text below */
+  top: 56px;
   height: 4px;
   background: var(--pot-blue);
   z-index: 0;

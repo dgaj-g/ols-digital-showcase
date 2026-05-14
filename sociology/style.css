@@ -134,6 +134,19 @@ body {
   border-bottom: 1px solid var(--soc-soft);
   padding: 0.6rem 0.9rem;
 }
+.qfb-next {
+  background: var(--soc-violet);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  font-size: 0.92rem;
+}
+.qfb-next:hover { background: #5B21B6; }
 .soc-feedback strong { color: var(--soc-violet); }
 .soc-feedback.ok  { border-left-color: var(--soc-green); }
 .soc-feedback.bad { border-left-color: var(--soc-warn); }

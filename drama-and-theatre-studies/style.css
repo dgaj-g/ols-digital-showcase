@@ -232,7 +232,8 @@ body {
 .stage-result .stage-secondary { margin: 0 0.4rem; }
 
 /* SVG lamp visuals — handled inline; this just helps when dragging */
-.lamp-head { cursor: grab; }
-.lamp-head.dragging { cursor: grabbing; }
+.lamp-head { cursor: grab; touch-action: none; }
+.stage-svg.dragging { cursor: grabbing; }
 .lamp-head circle { transition: filter 0.15s; }
 .lamp-head:hover circle.fixture { filter: drop-shadow(0 0 6px white); }
+.stage-svg { touch-action: none; }
