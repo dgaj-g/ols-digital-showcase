@@ -313,7 +313,7 @@ function bkLoadRound() {
   bkRenderList();
   bkRenderPool();
   bkBasketDrop.innerHTML = "";
-  bkFeedback.innerHTML = "Drag (or tap an item then tap the basket) each item on your <em>liosta siopadóireachta</em> into the basket. Items <em>not</em> on the list will be sent back.";
+  bkFeedback.innerHTML = "Tap an item on the shelf and then tap the basket — or drag the item directly across. Items <em>not</em> on your <em>liosta siopadóireachta</em> will be sent back.";
   bkFeedback.className = "ga-feedback";
   bkResultEl.hidden = true;
 }
@@ -342,22 +342,20 @@ function bkRenderPool() {
     const f = FOOD_BY_ID[id];
     const card = document.createElement("div");
     card.className = "food-card";
-    card.draggable = true;
     card.dataset.id = id;
     // Shelf cards are PICTURE-ONLY — the player must recognise the picture
     // and match it against the Irish word on the shopping list.
     card.innerHTML = `<div class="food-svg">${f.svg}</div>`;
     if (bkState.placed.includes(id)) card.classList.add("used");
 
-    card.addEventListener("dragstart", e => {
-      if (bkState.placed.includes(id)) { e.preventDefault(); return; }
-      card.classList.add("dragging");
-      e.dataTransfer.setData("text/plain", id);
-      e.dataTransfer.effectAllowed = "move";
-    });
-    card.addEventListener("dragend", () => card.classList.remove("dragging"));
+    // Pointer-based drag — works for mouse, touchscreen, stylus and
+    // Promethean board pens alike. (HTML5 dragstart/drop doesn't fire
+    // on touch devices, which is why we don't use it here.)
+    card.addEventListener("pointerdown", e => onCardPointerDown(e, card, id));
 
+    // Tap-to-select fallback (click fires after a tap with no drag)
     card.addEventListener("click", () => {
+      if (bkState._justDragged) return;
       if (bkState.placed.includes(id)) return;
       bkPoolEl.querySelectorAll(".food-card.selected").forEach(x => x.classList.remove("selected"));
       if (bkState.selectedId === id) {
@@ -377,18 +375,82 @@ function bkRenderPool() {
   });
 }
 
-bkBasketDrop.addEventListener("dragover", e => {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = "move";
-  bkBasketDrop.classList.add("over");
-});
-bkBasketDrop.addEventListener("dragleave", () => bkBasketDrop.classList.remove("over"));
-bkBasketDrop.addEventListener("drop", e => {
-  e.preventDefault();
-  bkBasketDrop.classList.remove("over");
-  const id = e.dataTransfer.getData("text/plain");
-  if (id) bkAttempt(id);
-});
+// ---- Pointer-Events-based drag (touch-friendly) ----
+let _drag = null;
+const DRAG_THRESHOLD = 6; // px before a press becomes a drag
+
+function onCardPointerDown(e, card, id) {
+  if (bkState.placed.includes(id)) return;
+  if (e.button !== undefined && e.button !== 0) return; // primary button only
+  _drag = {
+    card, id, pointerId: e.pointerId,
+    startX: e.clientX, startY: e.clientY,
+    offsetX: 0, offsetY: 0,
+    ghost: null, activated: false,
+  };
+  try { card.setPointerCapture(e.pointerId); } catch {}
+  card.addEventListener("pointermove", onCardPointerMove);
+  card.addEventListener("pointerup", onCardPointerUp);
+  card.addEventListener("pointercancel", onCardPointerUp);
+}
+
+function onCardPointerMove(e) {
+  if (!_drag || e.pointerId !== _drag.pointerId) return;
+  const dx = e.clientX - _drag.startX;
+  const dy = e.clientY - _drag.startY;
+  if (!_drag.activated && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+    // Activate drag: build a floating ghost that follows the pointer
+    const rect = _drag.card.getBoundingClientRect();
+    const ghost = _drag.card.cloneNode(true);
+    ghost.classList.add("dragging-ghost");
+    ghost.style.position = "fixed";
+    ghost.style.left = rect.left + "px";
+    ghost.style.top = rect.top + "px";
+    ghost.style.width = rect.width + "px";
+    ghost.style.height = rect.height + "px";
+    ghost.style.pointerEvents = "none";
+    ghost.style.zIndex = "10000";
+    document.body.appendChild(ghost);
+    _drag.card.classList.add("dragging");
+    _drag.ghost = ghost;
+    _drag.activated = true;
+    _drag.offsetX = e.clientX - rect.left;
+    _drag.offsetY = e.clientY - rect.top;
+  }
+  if (_drag.activated) {
+    _drag.ghost.style.left = (e.clientX - _drag.offsetX) + "px";
+    _drag.ghost.style.top  = (e.clientY - _drag.offsetY) + "px";
+    const under = document.elementFromPoint(e.clientX, e.clientY);
+    bkBasketDrop.classList.toggle("over", !!under?.closest("#bkBasketDrop"));
+  }
+}
+
+function onCardPointerUp(e) {
+  if (!_drag || e.pointerId !== _drag.pointerId) return;
+  const drag = _drag;
+  _drag = null;
+  drag.card.removeEventListener("pointermove", onCardPointerMove);
+  drag.card.removeEventListener("pointerup", onCardPointerUp);
+  drag.card.removeEventListener("pointercancel", onCardPointerUp);
+  try { drag.card.releasePointerCapture(drag.pointerId); } catch {}
+
+  if (drag.activated) {
+    // Hide ghost momentarily so elementFromPoint sees what's underneath
+    drag.ghost.style.display = "none";
+    const under = document.elementFromPoint(e.clientX, e.clientY);
+    drag.ghost.remove();
+    drag.card.classList.remove("dragging");
+    bkBasketDrop.classList.remove("over");
+    // Flag so the click that follows pointerup doesn't also fire select
+    bkState._justDragged = true;
+    setTimeout(() => { bkState._justDragged = false; }, 80);
+    if (under && under.closest("#bkBasketDrop")) {
+      bkAttempt(drag.id);
+    }
+  }
+}
+
+// Basket click (tap-to-place)
 bkBasketDrop.addEventListener("click", () => {
   if (bkState.selectedId) bkAttempt(bkState.selectedId);
 });

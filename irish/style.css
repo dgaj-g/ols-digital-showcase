@@ -427,6 +427,17 @@ body {
   user-select: none;
   transition: transform 0.1s, border-color 0.12s, box-shadow 0.12s;
   position: relative;
+  /* Required for pointer-events drag on touchscreens — without this
+     a finger drag scrolls the page instead of moving the card. */
+  touch-action: none;
+  -webkit-user-drag: none;
+}
+.food-card.dragging-ghost {
+  cursor: grabbing;
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 12px 24px rgba(60,45,20,0.35);
+  opacity: 0.94;
+  border-color: var(--ga-gold);
 }
 .food-card:hover {
   border-color: var(--ga-green);
