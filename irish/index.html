@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Irish — Vocab and Grammar · OLS Showcase</title>
+  <title>Gaeilge — Siopa Bia · OLS Showcase</title>
   <link rel="icon" href="../assets/favicon-32.png" type="image/png">
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="style.css">
@@ -12,80 +12,114 @@
   <div class="demo-strip">
     <a class="back" href="../">← Back to showcase</a>
     <img class="crest-small" src="../assets/crest-64.png" alt="">
-    <span class="title">Irish / Gaeilge</span>
-    <span class="meta">KS3 · Introductions, family, tá vs is</span>
+    <span class="title">Gaeilge / Irish</span>
+    <span class="meta">KS3 · Bia agus deoch — food &amp; drink vocabulary</span>
   </div>
 
-  <main class="gae">
+  <main class="ga">
 
-    <header class="gae-hero">
-      <span class="kicker">Gaeilge · KS3</span>
-      <h1>Dia dhuit — Beginning Irish</h1>
-      <p>Match the phrases, listen to each in Irish, then take the tá vs is grammar challenge. Score points in both modes.</p>
+    <header class="ga-hero">
+      <svg class="ga-knot" viewBox="0 0 80 80" aria-hidden="true">
+        <path d="M40 8 L62 30 L40 52 L18 30 Z M40 28 L62 50 L40 72 L18 50 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="40" cy="40" r="6" fill="none" stroke="currentColor" stroke-width="3"/>
+      </svg>
+      <span class="kicker">Gaeilge · KS3 · Bia agus Deoch</span>
+      <h1>Siopa Bia</h1>
+      <p>Learn the Irish words for food and drink. <em>Aithin an bia</em> — recognise each item, then <em>líon an ciseán</em> — fill a shopping basket from a Gaeilge list. No sound needed — just look and match.</p>
     </header>
 
-    <nav class="gae-tabs">
-      <button class="gae-tab active" data-tab="vocab" id="tabVocab">Match the phrases</button>
-      <button class="gae-tab" data-tab="grammar" id="tabGrammar">Tá or Is?</button>
+    <nav class="ga-tabs">
+      <button class="ga-tab active" data-tab="identify" id="tabIdentify">
+        <span class="tab-ga">Aithin an Bia</span>
+        <span class="tab-en">Identify</span>
+      </button>
+      <button class="ga-tab" data-tab="basket" id="tabBasket">
+        <span class="tab-ga">Líon an Ciseán</span>
+        <span class="tab-en">Fill the basket</span>
+      </button>
+      <button class="ga-tab" data-tab="memory" id="tabMemory">
+        <span class="tab-ga">Cluiche Cuimhne</span>
+        <span class="tab-en">Memory match</span>
+      </button>
     </nav>
 
-    <!-- Vocab match -->
-    <section class="gae-pane" id="paneVocab">
-      <header class="gae-bar">
-        <div class="gae-stat"><span class="bar-label">Round</span><span class="bar-val"><span id="rNum">1</span> / <span id="rTotal">3</span></span></div>
-        <div class="gae-stat"><span class="bar-label">Matched</span><span class="bar-val" id="matched">0 / 6</span></div>
-        <div class="gae-stat"><span class="bar-label">Mistakes</span><span class="bar-val" id="mistakes">0</span></div>
-        <button class="gae-secondary" id="vocabReset" type="button">Reset</button>
+    <!-- Identify mode -->
+    <section class="ga-pane" id="paneIdentify">
+      <header class="ga-bar">
+        <div class="ga-stat"><span class="bar-label">Ceist</span><span class="bar-val"><span id="iIdx">1</span> / <span id="iTotal">10</span></span></div>
+        <div class="ga-stat"><span class="bar-label">Ceart</span><span class="bar-val" id="iCorrect">0</span></div>
+        <div class="ga-stat"><span class="bar-label">Mícheart</span><span class="bar-val" id="iWrong">0</span></div>
+        <button class="ga-secondary" id="idReset" type="button">Reset</button>
       </header>
-      <p class="gae-feedback" id="vFeedback" aria-live="polite">Tap an Irish phrase to hear it, then tap its English meaning.</p>
 
-      <div class="match-grid">
-        <div class="match-col">
-          <h3>As Gaeilge — tap to hear</h3>
-          <div class="match-list" id="irishList"></div>
+      <div class="id-board">
+        <div class="id-card-frame">
+          <div class="id-svg" id="idSvg" aria-hidden="true"></div>
         </div>
-        <div class="match-col">
-          <h3>In English</h3>
-          <div class="match-list" id="englishList"></div>
+        <div class="id-question">
+          <p class="id-prompt"><span class="ga-text">Cad é seo?</span><span class="en-text">What is this?</span></p>
+          <div class="id-options" id="idOptions"></div>
+          <p class="ga-feedback" id="iFeedback" aria-live="polite">Pick the Irish word that matches the picture.</p>
         </div>
       </div>
 
-      <div class="gae-result" id="vocabResult" hidden>
-        <h3 id="vTitle">Round complete</h3>
-        <p id="vMsg"></p>
-        <button class="gae-go" id="vNext" type="button">Next round →</button>
+      <div class="ga-result" id="idResult" hidden>
+        <h3 id="idTitle">Maith thú!</h3>
+        <p id="idMsg"></p>
+        <button class="ga-go" id="idAgain" type="button">Imir arís — Play again</button>
       </div>
     </section>
 
-    <!-- Tá vs Is grammar -->
-    <section class="gae-pane" id="paneGrammar" hidden>
-      <header class="gae-bar">
-        <div class="gae-stat"><span class="bar-label">Question</span><span class="bar-val"><span id="gIdx">1</span> / <span id="gTotal">8</span></span></div>
-        <div class="gae-stat"><span class="bar-label">Score</span><span class="bar-val" id="gScore">0</span></div>
-        <button class="gae-secondary" id="grammarReset" type="button">Reset</button>
+    <!-- Basket mode -->
+    <section class="ga-pane" id="paneBasket" hidden>
+      <header class="ga-bar">
+        <div class="ga-stat"><span class="bar-label">Babhta</span><span class="bar-val"><span id="bRound">1</span> / <span id="bTotal">4</span></span></div>
+        <div class="ga-stat"><span class="bar-label">Ceart</span><span class="bar-val" id="bCorrect">0</span></div>
+        <div class="ga-stat"><span class="bar-label">Mícheart</span><span class="bar-val" id="bWrong">0</span></div>
+        <button class="ga-secondary" id="bkReset" type="button">Reset</button>
       </header>
 
-      <article class="gae-rules">
-        <div class="rule"><span class="rule-tag">Tá</span><p>used for <strong>temporary</strong> states, location, feelings, age, and how you are.</p></div>
-        <div class="rule"><span class="rule-tag is">Is</span><p>used for <strong>identity</strong> — saying who or what someone is.</p></div>
-      </article>
+      <p class="ga-feedback" id="bFeedback" aria-live="polite">Drag each item from the shelf into your basket — but only the ones on the shopping list above.</p>
 
-      <p class="gae-feedback" id="gFeedback" aria-live="polite">Read the English sentence below and choose the right verb form.</p>
-
-      <article class="grammar-card">
-        <span class="g-tag">Translate to Irish — which verb?</span>
-        <p class="g-prompt" id="gPrompt"></p>
-        <div class="g-options">
-          <button class="g-opt" id="gOptTa" type="button"><span class="rule-tag">Tá</span> for a temporary state</button>
-          <button class="g-opt" id="gOptIs" type="button"><span class="rule-tag is">Is</span> for an identity</button>
+      <div class="bk-top">
+        <div class="bk-list-card">
+          <header><span class="bk-tag">Liosta Siopadóireachta</span><span class="bk-tag-en">Shopping list</span></header>
+          <ul class="bk-list" id="bkList"></ul>
         </div>
-        <p class="g-answer" id="gAnswer" hidden></p>
-      </article>
+        <div class="bk-basket-card">
+          <header><span class="bk-tag basket">An Ciseán</span><span class="bk-tag-en">The basket</span></header>
+          <div class="bk-basket-drop" id="bkBasketDrop"></div>
+        </div>
+      </div>
 
-      <div class="gae-result" id="grammarResult" hidden>
-        <h3 id="gTitle">Round complete</h3>
-        <p id="gMsg"></p>
-        <button class="gae-go" id="gAgain" type="button">Play again</button>
+      <div class="bk-shelf">
+        <header><span class="bk-tag shelf">An Seilf</span><span class="bk-tag-en">The shelf — drag what you need</span></header>
+        <div class="bk-pool" id="bkPool"></div>
+      </div>
+
+      <div class="ga-result" id="bkResult" hidden>
+        <h3 id="bkTitle">Maith thú!</h3>
+        <p id="bkMsg"></p>
+        <button class="ga-go" id="bkAgain" type="button">Babhta nua — Next round</button>
+      </div>
+    </section>
+
+    <!-- Memory match mode -->
+    <section class="ga-pane" id="paneMemory" hidden>
+      <header class="ga-bar">
+        <div class="ga-stat"><span class="bar-label">Péirí</span><span class="bar-val"><span id="mPairs">0</span> / <span id="mTotalPairs">8</span></span></div>
+        <div class="ga-stat"><span class="bar-label">Iarrachtaí</span><span class="bar-val" id="mTries">0</span></div>
+        <button class="ga-secondary" id="mReset" type="button">Reset</button>
+      </header>
+
+      <p class="ga-feedback" id="mFeedback" aria-live="polite">Flip two cards at a time — match each picture with its Irish word.</p>
+
+      <div class="memory-grid" id="memoryGrid"></div>
+
+      <div class="ga-result" id="memoryResult" hidden>
+        <h3 id="mTitle">Maith thú!</h3>
+        <p id="mMsg"></p>
+        <button class="ga-go" id="mAgain" type="button">Imir arís — Play again</button>
       </div>
     </section>
 

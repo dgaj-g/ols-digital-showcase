@@ -1,322 +1,576 @@
-// Irish — Vocab + Tá vs Is grammar
-// Two modes. Match: tap an Irish phrase, hear it spoken, tap its English meaning.
-// Grammar: read an English sentence, choose Tá or Is.
+// Gaeilge — Siopa Bia (Food & Drink Vocabulary)
+// Purely visual demo. No TTS, no phonetic respellings.
+// Three modes: Identify (picture → Irish word), Basket (drag items from a Gaeilge shopping list),
+// and Memory match (flip pairs of picture + Irish word).
 
-// Each phrase has:
-//   ga    — proper Gaeilge spelling (what we display)
-//   en    — English translation
-//   phon  — phonetic respelling that an English-voice TTS can read out
-//           and produce something close to correct Irish pronunciation
-// We use `phon` for spoken audio because almost no browser ships a native
-// Gaeilge voice — letting an English voice read Gaeilge orthography
-// produces nonsense (e.g. "Dia dhuit" → "die-uh d-hu-it").
-const VOCAB_ROUNDS = [
-  // Round 1 — greetings
-  [
-    { ga: "Dia dhuit",            en: "Hello",                phon: "Jee-ah ghwitch" },
-    { ga: "Dia is Muire dhuit",   en: "Hello (reply)",        phon: "Jee-ah iss Mwirra ghwitch" },
-    { ga: "Slán",                 en: "Goodbye",              phon: "Slawn" },
-    { ga: "Conas atá tú?",        en: "How are you?",         phon: "Cunnus a-taw too?" },
-    { ga: "Tá mé go maith",       en: "I am well",            phon: "Taw may guh moh" },
-    { ga: "Go raibh maith agat",  en: "Thank you",            phon: "Guh rev moh ah-gut" },
-  ],
-  // Round 2 — personal info
-  [
-    { ga: "Is mise Áine",         en: "I am Áine",            phon: "Iss mish-eh Awn-yeh" },
-    { ga: "Cad is ainm duit?",    en: "What is your name?",   phon: "Cod iss an-im ditch?" },
-    { ga: "Tá mé trí déag",       en: "I am thirteen",        phon: "Taw may tree jayg" },
-    { ga: "Tá mé i mo chónaí i mBéal Feirste", en: "I live in Belfast", phon: "Taw may ih muh kho-nee ih may-al fersht-yeh" },
-    { ga: "Is as Ard Mhacha mé",  en: "I am from Armagh",     phon: "Iss oss ard wokh-ah may" },
-    { ga: "Tá mé tuirseach",      en: "I am tired",           phon: "Taw may turr-shokh" },
-  ],
-  // Round 3 — family
-  [
-    { ga: "Tá máthair agam",      en: "I have a mother",      phon: "Taw maw-her ah-gum" },
-    { ga: "Tá athair agam",       en: "I have a father",      phon: "Taw ah-her ah-gum" },
-    { ga: "Tá deartháir agam",    en: "I have a brother",     phon: "Taw drah-har ah-gum" },
-    { ga: "Tá deirfiúr agam",     en: "I have a sister",      phon: "Taw jerr-foor ah-gum" },
-    { ga: "Tá madra againn",      en: "We have a dog",        phon: "Taw mod-rah a-gin" },
-    { ga: "Is dochtúir í mo mháthair", en: "My mother is a doctor", phon: "Iss dokh-toor ee muh waw-her" },
-  ],
+// -------- Data: 14 food/drink items, each with an inline SVG illustration --------
+const SVG = {
+  aran: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="50" cy="68" rx="40" ry="18" fill="#C68B4B" stroke="#5C3309" stroke-width="2.5"/>
+    <path d="M10,68 Q12,32 50,28 Q88,32 90,68 Z" fill="#E8B97A" stroke="#5C3309" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M26,46 Q30,38 36,38" stroke="#7A4A1A" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M44,38 Q49,30 54,38" stroke="#7A4A1A" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M62,40 Q66,32 72,40" stroke="#7A4A1A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  bainne: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M30,28 L50,14 L70,28 L70,90 L30,90 Z" fill="#F8FAFB" stroke="#1F3A5F" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M30,28 L70,28 L50,40 Z" fill="#D5DDE4" stroke="#1F3A5F" stroke-width="2"/>
+    <path d="M50,14 L50,40" stroke="#1F3A5F" stroke-width="2"/>
+    <ellipse cx="50" cy="64" rx="14" ry="10" fill="#4A8FD4"/>
+    <path d="M42,64 Q50,55 58,64" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="46" cy="60" r="1.5" fill="#FFFFFF"/>
+  </svg>`,
+  cais: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12,72 L88,72 L72,30 Z" fill="#F5C843" stroke="#6B5108" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M12,72 L72,30" stroke="#6B5108" stroke-width="2"/>
+    <circle cx="38" cy="62" r="5" fill="#C99416"/>
+    <circle cx="55" cy="54" r="4" fill="#C99416"/>
+    <circle cx="60" cy="65" r="3" fill="#C99416"/>
+    <circle cx="46" cy="48" r="2.5" fill="#C99416"/>
+  </svg>`,
+  ubh: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="50" cy="56" rx="28" ry="36" fill="#FFF8E1" stroke="#7A6438" stroke-width="2.5"/>
+    <ellipse cx="40" cy="42" rx="6" ry="9" fill="#FFFFFF" opacity="0.7"/>
+  </svg>`,
+  iasc: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22,50 Q35,25 65,30 Q82,35 88,50 Q82,65 65,70 Q35,75 22,50 Z" fill="#5BA6D8" stroke="#0D2A40" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M22,50 L6,30 L11,50 L6,70 Z" fill="#5BA6D8" stroke="#0D2A40" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="72" cy="46" r="3.5" fill="#FFFFFF" stroke="#0D2A40" stroke-width="1.5"/>
+    <circle cx="72" cy="46" r="1.5" fill="#0D2A40"/>
+    <path d="M55,40 Q60,45 55,50" stroke="#0D2A40" stroke-width="1.5" fill="none"/>
+    <path d="M50,52 Q55,57 50,62" stroke="#0D2A40" stroke-width="1.5" fill="none"/>
+    <path d="M62,55 Q67,60 62,65" stroke="#0D2A40" stroke-width="1.5" fill="none"/>
+  </svg>`,
+  sicin: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="62" cy="38" rx="24" ry="20" fill="#D29A65" stroke="#5C3309" stroke-width="2.5" transform="rotate(-22 62 38)"/>
+    <rect x="28" y="58" width="38" height="14" rx="7" fill="#F2E5C8" stroke="#7A6438" stroke-width="2.5" transform="rotate(35 47 65)"/>
+    <circle cx="22" cy="82" r="7" fill="#F2E5C8" stroke="#7A6438" stroke-width="2.5"/>
+    <path d="M55,28 Q62,22 70,26" stroke="#7A4A1A" stroke-width="1.5" fill="none" opacity="0.5"/>
+  </svg>`,
+  pratai: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="32" cy="58" rx="20" ry="14" fill="#BD8A56" stroke="#4D3210" stroke-width="2.2" transform="rotate(-12 32 58)"/>
+    <ellipse cx="60" cy="42" rx="22" ry="15" fill="#CFA075" stroke="#4D3210" stroke-width="2.2" transform="rotate(20 60 42)"/>
+    <ellipse cx="64" cy="70" rx="18" ry="13" fill="#B3784A" stroke="#4D3210" stroke-width="2.2" transform="rotate(-8 64 70)"/>
+    <circle cx="30" cy="56" r="1.5" fill="#4D3210"/>
+    <circle cx="36" cy="62" r="1" fill="#4D3210"/>
+    <circle cx="60" cy="42" r="1.5" fill="#4D3210"/>
+    <circle cx="52" cy="38" r="1" fill="#4D3210"/>
+    <circle cx="64" cy="72" r="1.2" fill="#4D3210"/>
+  </svg>`,
+  caireid: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M38,32 L62,32 L54,90 L46,90 Z" fill="#E68C2A" stroke="#7A3F00" stroke-width="2.5" stroke-linejoin="round"/>
+    <line x1="42" y1="46" x2="58" y2="46" stroke="#7A3F00" stroke-width="1.4"/>
+    <line x1="44" y1="58" x2="56" y2="58" stroke="#7A3F00" stroke-width="1.4"/>
+    <line x1="46" y1="70" x2="54" y2="70" stroke="#7A3F00" stroke-width="1.4"/>
+    <line x1="47" y1="80" x2="53" y2="80" stroke="#7A3F00" stroke-width="1.4"/>
+    <path d="M40,32 Q32,16 24,12 Q32,22 36,30 Z" fill="#3F8B3F" stroke="#1F5A1F" stroke-width="2"/>
+    <path d="M50,32 Q50,12 50,8 Q54,18 54,30 Z" fill="#4FA04F" stroke="#1F5A1F" stroke-width="2"/>
+    <path d="M60,32 Q68,16 76,12 Q68,22 64,30 Z" fill="#3F8B3F" stroke="#1F5A1F" stroke-width="2"/>
+  </svg>`,
+  trata: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="58" r="32" fill="#E74C3C" stroke="#5C0000" stroke-width="2.5"/>
+    <path d="M50,28 Q42,22 35,24 Q42,28 46,30 Q40,28 36,30 Q42,34 50,30 Q58,34 64,30 Q60,28 54,30 Q58,28 65,24 Q58,22 50,28 Z" fill="#3F8B3F" stroke="#1F5A1F" stroke-width="1.5"/>
+    <ellipse cx="40" cy="50" rx="5" ry="8" fill="#FFFFFF" opacity="0.32"/>
+  </svg>`,
+  ull: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M28,46 Q28,24 44,28 Q50,16 56,28 Q72,24 72,46 Q72,82 50,84 Q28,82 28,46 Z" fill="#D9362B" stroke="#5C0000" stroke-width="2.5"/>
+    <path d="M50,28 Q50,18 56,12" stroke="#5A3A1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M52,22 Q60,18 68,21 Q62,26 52,25 Z" fill="#3F8B3F" stroke="#1F5A1F" stroke-width="1.5"/>
+    <ellipse cx="40" cy="44" rx="5" ry="10" fill="#FFFFFF" opacity="0.35"/>
+  </svg>`,
+  oraiste: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="55" r="32" fill="#F39C12" stroke="#5C2900" stroke-width="2.5"/>
+    <circle cx="50" cy="55" r="32" fill="none" stroke="#7A3F00" stroke-width="0.8" opacity="0.4"/>
+    <line x1="50" y1="23" x2="50" y2="87" stroke="#7A3F00" stroke-width="0.8" opacity="0.45"/>
+    <line x1="22" y1="40" x2="78" y2="70" stroke="#7A3F00" stroke-width="0.8" opacity="0.45"/>
+    <line x1="22" y1="70" x2="78" y2="40" stroke="#7A3F00" stroke-width="0.8" opacity="0.45"/>
+    <path d="M48,23 Q52,16 60,17 Q56,24 50,25 Z" fill="#3F8B3F" stroke="#1F5A1F" stroke-width="1.5"/>
+    <ellipse cx="38" cy="44" rx="5" ry="9" fill="#FFFFFF" opacity="0.3"/>
+  </svg>`,
+  bananai: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14,42 Q18,24 34,22 Q60,20 82,42 Q90,58 80,72 Q72,60 66,56 Q50,50 36,55 Q24,58 14,55 Q8,48 14,42 Z" fill="#F5D247" stroke="#5C4500" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M22,44 Q42,36 62,40" stroke="#A88B14" stroke-width="1.5" fill="none" opacity="0.55"/>
+    <path d="M28,50 Q48,44 66,48" stroke="#A88B14" stroke-width="1" fill="none" opacity="0.4"/>
+    <ellipse cx="14" cy="42" rx="5" ry="4" fill="#7A5A2E" stroke="#3D2E18" stroke-width="1.8"/>
+  </svg>`,
+  tae: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40,30 Q42,22 38,15" stroke="#A0A0A0" stroke-width="2" fill="none" opacity="0.55" stroke-linecap="round"/>
+    <path d="M50,28 Q52,18 48,10" stroke="#A0A0A0" stroke-width="2" fill="none" opacity="0.55" stroke-linecap="round"/>
+    <path d="M60,30 Q62,22 58,15" stroke="#A0A0A0" stroke-width="2" fill="none" opacity="0.55" stroke-linecap="round"/>
+    <path d="M22,40 L78,40 L72,75 L28,75 Z" fill="#F8FAFB" stroke="#1F3A5F" stroke-width="2.5" stroke-linejoin="round"/>
+    <ellipse cx="50" cy="40" rx="25" ry="6" fill="#6B3A0E" stroke="#3D2008" stroke-width="2"/>
+    <ellipse cx="50" cy="40" rx="25" ry="6" fill="none" stroke="#1F3A5F" stroke-width="2.5"/>
+    <path d="M72,50 Q90,52 90,62 Q90,72 72,68" fill="none" stroke="#1F3A5F" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M20,75 L80,75 L84,85 L16,85 Z" fill="#D5DDE4" stroke="#1F3A5F" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>`,
+  uisce: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M30,18 L70,18 L66,88 L34,88 Z" fill="#FFFFFF" fill-opacity="0.65" stroke="#1F3A5F" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M32,42 L68,42 L65,88 L35,88 Z" fill="#5BA6D8" fill-opacity="0.55"/>
+    <ellipse cx="50" cy="42" rx="18" ry="3" fill="#5BA6D8" fill-opacity="0.85"/>
+    <path d="M30,18 L70,18 L66,88 L34,88 Z" fill="none" stroke="#1F3A5F" stroke-width="2.5" stroke-linejoin="round"/>
+    <ellipse cx="50" cy="18" rx="20" ry="3.5" fill="none" stroke="#1F3A5F" stroke-width="2"/>
+    <ellipse cx="40" cy="55" rx="3" ry="5" fill="#FFFFFF" opacity="0.7"/>
+    <ellipse cx="58" cy="65" rx="2" ry="3" fill="#FFFFFF" opacity="0.5"/>
+  </svg>`,
+};
+
+const FOODS = [
+  { id: "aran",     ga: "arán",     en: "bread",       svg: SVG.aran },
+  { id: "bainne",   ga: "bainne",   en: "milk",        svg: SVG.bainne },
+  { id: "cais",     ga: "cáis",     en: "cheese",      svg: SVG.cais },
+  { id: "ubh",      ga: "ubh",      en: "egg",         svg: SVG.ubh },
+  { id: "iasc",     ga: "iasc",     en: "fish",        svg: SVG.iasc },
+  { id: "sicin",    ga: "sicín",    en: "chicken",     svg: SVG.sicin },
+  { id: "pratai",   ga: "prátaí",   en: "potatoes",    svg: SVG.pratai },
+  { id: "caireid",  ga: "cairéad",  en: "carrot",      svg: SVG.caireid },
+  { id: "trata",    ga: "tráta",    en: "tomato",      svg: SVG.trata },
+  { id: "ull",      ga: "úll",      en: "apple",       svg: SVG.ull },
+  { id: "oraiste",  ga: "oráiste",  en: "orange",      svg: SVG.oraiste },
+  { id: "bananai",  ga: "banana",   en: "banana",      svg: SVG.bananai },
+  { id: "tae",      ga: "tae",      en: "tea",         svg: SVG.tae },
+  { id: "uisce",    ga: "uisce",    en: "water",       svg: SVG.uisce },
 ];
 
-// Grammar questions — each has the English sentence + expected verb
-const GRAMMAR_QS = [
-  { en: "I am tired.",                 verb: "tá", why: "Tired is a temporary state — use <strong>tá</strong>: <em>Tá mé tuirseach.</em>" },
-  { en: "I am Áine (my name).",        verb: "is", why: "Identity — use <strong>is</strong>: <em>Is mise Áine.</em>" },
-  { en: "I am a student.",             verb: "is", why: "Saying what you are (identity / occupation) — use <strong>is</strong>: <em>Is mac léinn mé.</em>" },
-  { en: "I am from Newry.",            verb: "is", why: "Identity (origin / where you are from) — use <strong>is</strong>: <em>Is as an Iúr mé.</em>" },
-  { en: "I am cold.",                  verb: "tá", why: "Feelings / temporary state — use <strong>tá</strong>: <em>Tá mé fuar.</em>" },
-  { en: "I am in school.",             verb: "tá", why: "Location — use <strong>tá</strong>: <em>Tá mé ar scoil.</em>" },
-  { en: "I am fifteen years old.",     verb: "tá", why: "Age — use <strong>tá</strong>: <em>Tá mé cúig bliana déag d'aois.</em>" },
-  { en: "She is a teacher.",           verb: "is", why: "Identity (occupation) — use <strong>is</strong>: <em>Is múinteoir í.</em>" },
+const FOOD_BY_ID = Object.fromEntries(FOODS.map(f => [f.id, f]));
+
+// Shopping lists for the basket mode. Each round is 4 items the shopper needs.
+const SHOPPING_ROUNDS = [
+  ["aran", "bainne", "ull", "cais"],
+  ["tae", "trata", "sicin", "pratai"],
+  ["iasc", "oraiste", "ubh", "caireid"],
+  ["bananai", "uisce", "cais", "aran"],
 ];
 
-// ---- audio
+// -------- Audio (subtle feedback only, no speech) --------
 let ac;
-function tone(f, ms, type="sine", g=0.05) {
-  try { ac = ac || new (window.AudioContext||window.webkitAudioContext)();
-    const o = ac.createOscillator(); const gn = ac.createGain();
-    o.type=type; o.frequency.value=f; gn.gain.value=g;
+function tone(f, ms, type = "sine", g = 0.04) {
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = ac.createOscillator();
+    const gn = ac.createGain();
+    o.type = type; o.frequency.value = f; gn.gain.value = g;
     o.connect(gn); gn.connect(ac.destination); o.start();
-    gn.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + ms/1000);
-    o.stop(ac.currentTime + ms/1000 + 0.02);
+    gn.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + ms / 1000);
+    o.stop(ac.currentTime + ms / 1000 + 0.02);
   } catch {}
 }
-function ding() { tone(660, 80, "triangle", 0.05); setTimeout(()=>tone(990,100,"triangle",0.05),70); }
-function buzz() { tone(180, 200, "sawtooth", 0.05); }
-function fanfare() { [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,200,"triangle",0.05),i*110)); }
+function ding()    { tone(720, 80, "triangle", 0.04); setTimeout(() => tone(960, 100, "triangle", 0.04), 70); }
+function buzz()    { tone(180, 200, "sawtooth", 0.04); }
+function fanfare() { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => tone(f, 200, "triangle", 0.04), i * 110)); }
 
-// ---- TTS
-let voices = [];
-let voicesReady = false;
-function loadVoices() {
-  voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  if (voices.length) voicesReady = true;
-}
-if (window.speechSynthesis) {
-  loadVoices();
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-}
-// Strategy: if the browser has a real Gaeilge (ga-IE) voice, use it on the
-// proper Irish text. Otherwise fall back to a UK / Irish English voice and
-// feed it the phonetic respelling — that produces a much closer approximation
-// to real Irish pronunciation than letting it sound out the Gaeilge letters.
-function pickIrishVoice() {
-  return voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ga"))
-      || voices.find(v => v.name && /irish gaelic|gaelic/i.test(v.name))
-      || null;
-}
-function pickEnglishVoice() {
-  return voices.find(v => v.lang && v.lang.toLowerCase() === "en-ie")
-      || voices.find(v => v.lang && v.lang.toLowerCase() === "en-gb")
-      || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en"))
-      || null;
-}
-function speak(item) {
-  if (!window.speechSynthesis) return;
-  // item can be a string (back-compat) or {ga, phon}
-  const ga = typeof item === "string" ? item : item.ga;
-  const phon = typeof item === "string" ? item : item.phon;
-  const doSpeak = () => {
-    window.speechSynthesis.cancel();
-    const irishVoice = pickIrishVoice();
-    let u;
-    if (irishVoice) {
-      u = new SpeechSynthesisUtterance(ga);
-      u.lang = "ga-IE";
-      u.voice = irishVoice;
-    } else {
-      u = new SpeechSynthesisUtterance(phon || ga);
-      const v = pickEnglishVoice();
-      if (v) u.voice = v;
-      u.lang = v ? v.lang : "en-IE";
-    }
-    u.rate = 0.85;
-    window.speechSynthesis.speak(u);
-  };
-  loadVoices();
-  if (voicesReady) doSpeak();
-  else {
-    let done = false;
-    const onReady = () => { if (done) return; done = true; loadVoices(); doSpeak(); };
-    window.speechSynthesis.addEventListener("voiceschanged", onReady, { once: true });
-    setTimeout(onReady, 600);
+// -------- Utilities --------
+function shuffle(a) {
+  const arr = a.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
+  return arr;
+}
+function sample(arr, n, exclude = []) {
+  const pool = arr.filter(x => !exclude.includes(x));
+  return shuffle(pool).slice(0, n);
 }
 
-// ---- DOM
-const tabVocab = document.getElementById("tabVocab");
-const tabGrammar = document.getElementById("tabGrammar");
-const paneVocab = document.getElementById("paneVocab");
-const paneGrammar = document.getElementById("paneGrammar");
-tabVocab.addEventListener("click", () => { tabVocab.classList.add("active"); tabGrammar.classList.remove("active"); paneVocab.hidden = false; paneGrammar.hidden = true; });
-tabGrammar.addEventListener("click", () => { tabGrammar.classList.add("active"); tabVocab.classList.remove("active"); paneVocab.hidden = true; paneGrammar.hidden = false; startGrammar(); });
+// =================================================================
+// MODE 1 — Aithin an Bia (Identify): picture shown, pick Irish word
+// =================================================================
+const idState = { queue: [], idx: 0, correct: 0, wrong: 0 };
+const idSvgEl     = document.getElementById("idSvg");
+const idOptionsEl = document.getElementById("idOptions");
+const idFeedback  = document.getElementById("iFeedback");
+const idResultEl  = document.getElementById("idResult");
+const idTitleEl   = document.getElementById("idTitle");
+const idMsgEl     = document.getElementById("idMsg");
+const idIdxEl     = document.getElementById("iIdx");
+const idTotalEl   = document.getElementById("iTotal");
+const idCorrectEl = document.getElementById("iCorrect");
+const idWrongEl   = document.getElementById("iWrong");
 
-// ---- Vocab match ----
-const irishList = document.getElementById("irishList");
-const englishList = document.getElementById("englishList");
-const rNum = document.getElementById("rNum");
-const rTotal = document.getElementById("rTotal");
-const matched = document.getElementById("matched");
-const mistakes = document.getElementById("mistakes");
-const vFeedback = document.getElementById("vFeedback");
-const vocabResult = document.getElementById("vocabResult");
-const vTitle = document.getElementById("vTitle");
-const vMsg = document.getElementById("vMsg");
-const vNext = document.getElementById("vNext");
+function idStart() {
+  idState.queue = shuffle(FOODS).slice(0, 10);
+  idState.idx = 0;
+  idState.correct = 0;
+  idState.wrong = 0;
+  idTotalEl.textContent = idState.queue.length;
+  idCorrectEl.textContent = "0";
+  idWrongEl.textContent = "0";
+  idResultEl.hidden = true;
+  idNextQuestion();
+}
 
-let round = 0;
-let pairs = [];
-let matchedCount = 0;
-let mistakeCount = 0;
-let selectedIrish = null;
+function idNextQuestion() {
+  if (idState.idx >= idState.queue.length) return idFinish();
+  const item = idState.queue[idState.idx];
+  idIdxEl.textContent = idState.idx + 1;
+  idSvgEl.innerHTML = item.svg;
 
-rTotal.textContent = VOCAB_ROUNDS.length;
+  // 3 distractors from the rest of the FOODS list
+  const distractorIds = sample(FOODS.map(f => f.id), 3, [item.id]);
+  const distractors = distractorIds.map(id => FOOD_BY_ID[id]);
+  const options = shuffle([item, ...distractors]);
 
-function startRound() {
-  pairs = [...VOCAB_ROUNDS[round]];
-  matchedCount = 0; mistakeCount = 0; selectedIrish = null;
-  rNum.textContent = round + 1;
-  matched.textContent = `0 / ${pairs.length}`;
-  mistakes.textContent = "0";
-  vocabResult.hidden = true;
-  vFeedback.innerHTML = "Tap an Irish phrase (and hear it), then tap its English meaning.";
-  vFeedback.className = "gae-feedback";
-
-  // Render Irish list in original order, English in shuffled order
-  irishList.innerHTML = "";
-  englishList.innerHTML = "";
-  pairs.forEach((p, i) => {
-    const t = document.createElement("div");
-    t.className = "match-tile";
-    t.dataset.idx = i;
-    t.innerHTML = `<span class="tile-text">${p.ga}</span><button class="speak-btn" type="button" aria-label="Hear ${p.ga}">▶</button>`;
-    t.querySelector(".speak-btn").addEventListener("click", e => { e.stopPropagation(); speak(p); });
-    t.addEventListener("click", () => selectIrish(i, t));
-    irishList.appendChild(t);
+  idOptionsEl.innerHTML = "";
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "id-opt";
+    btn.dataset.id = opt.id;
+    btn.textContent = opt.ga;
+    btn.addEventListener("click", () => idChoose(btn, opt, item));
+    idOptionsEl.appendChild(btn);
   });
-  const shuffled = [...pairs].map((p, i) => ({ ...p, origIdx: i })).sort(() => Math.random() - 0.5);
-  shuffled.forEach(p => {
-    const t = document.createElement("div");
-    t.className = "match-tile";
-    t.dataset.idx = p.origIdx;
-    t.innerHTML = `<span class="tile-text">${p.en}</span>`;
-    t.addEventListener("click", () => selectEnglish(p.origIdx, t));
-    englishList.appendChild(t);
-  });
+
+  idFeedback.innerHTML = "Pick the Irish word that matches the picture.";
+  idFeedback.className = "ga-feedback";
 }
 
-function selectIrish(idx, tile) {
-  if (tile.classList.contains("matched")) return;
-  speak(pairs[idx]);
-  irishList.querySelectorAll(".match-tile.selected").forEach(x => x.classList.remove("selected"));
-  if (selectedIrish === idx) { selectedIrish = null; vFeedback.textContent = "Cleared."; vFeedback.className = "gae-feedback"; return; }
-  selectedIrish = idx;
-  tile.classList.add("selected");
-  vFeedback.innerHTML = `Selected <em>${pairs[idx].ga}</em>. Now tap its English meaning.`;
-  vFeedback.className = "gae-feedback";
-}
+function idChoose(btn, chosen, correct) {
+  // Lock all buttons
+  idOptionsEl.querySelectorAll(".id-opt").forEach(b => b.disabled = true);
 
-function selectEnglish(idx, tile) {
-  if (tile.classList.contains("matched")) return;
-  if (selectedIrish === null) {
-    vFeedback.innerHTML = "Tap an Irish phrase first.";
-    vFeedback.className = "gae-feedback bad";
-    return;
-  }
-  if (selectedIrish === idx) {
-    // matched
-    tile.classList.add("matched");
-    irishList.querySelector(`.match-tile[data-idx="${idx}"]`).classList.add("matched");
-    irishList.querySelectorAll(".match-tile.selected").forEach(x => x.classList.remove("selected"));
-    selectedIrish = null;
-    matchedCount++;
-    matched.textContent = `${matchedCount} / ${pairs.length}`;
-    vFeedback.innerHTML = `<strong>Match.</strong> Well done.`;
-    vFeedback.className = "gae-feedback ok";
-    ding();
-    if (matchedCount === pairs.length) {
-      setTimeout(() => {
-        vocabResult.hidden = false;
-        vTitle.textContent = mistakeCount === 0 ? "Clean round." : `Round ${round + 1} complete.`;
-        vMsg.textContent = `${pairs.length} matched with ${mistakeCount} mistake${mistakeCount === 1 ? "" : "s"}.`;
-        if (round >= VOCAB_ROUNDS.length - 1) {
-          vNext.textContent = "Start over";
-          vNext.onclick = () => { round = 0; startRound(); };
-          if (mistakeCount === 0) fanfare();
-        } else {
-          vNext.textContent = "Next round →";
-          vNext.onclick = () => { round++; startRound(); };
-          fanfare();
-        }
-      }, 300);
-    }
-  } else {
-    tile.classList.add("wrong-flash");
-    setTimeout(() => tile.classList.remove("wrong-flash"), 400);
-    mistakeCount++;
-    mistakes.textContent = mistakeCount;
-    vFeedback.innerHTML = `<strong>Not quite.</strong> Try a different English meaning — listen to the Irish again if it helps.`;
-    vFeedback.className = "gae-feedback bad";
-    buzz();
-  }
-}
-
-document.getElementById("vocabReset").addEventListener("click", () => { round = 0; startRound(); });
-startRound();
-
-// ---- Grammar (Tá or Is) ----
-const gIdx = document.getElementById("gIdx");
-const gTotal = document.getElementById("gTotal");
-const gScore = document.getElementById("gScore");
-const gFeedback = document.getElementById("gFeedback");
-const gPrompt = document.getElementById("gPrompt");
-const gOptTa = document.getElementById("gOptTa");
-const gOptIs = document.getElementById("gOptIs");
-const gAnswer = document.getElementById("gAnswer");
-const grammarResult = document.getElementById("grammarResult");
-const gTitle = document.getElementById("gTitle");
-const gMsg = document.getElementById("gMsg");
-
-let gQueue = [], gI = 0, gS = 0;
-
-function startGrammar() {
-  gQueue = [...GRAMMAR_QS].sort(() => Math.random() - 0.5);
-  gI = 0; gS = 0;
-  gScore.textContent = "0";
-  gTotal.textContent = gQueue.length;
-  grammarResult.hidden = true;
-  nextGrammar();
-}
-
-function nextGrammar() {
-  if (gI >= gQueue.length) { finishGrammar(); return; }
-  const q = gQueue[gI];
-  gIdx.textContent = gI + 1;
-  gPrompt.innerHTML = `In English: <em>"${q.en}"</em> — which verb form would you use?`;
-  gAnswer.hidden = true;
-  gFeedback.innerHTML = "Read the English sentence, then choose the right verb form.";
-  gFeedback.className = "gae-feedback";
-  gOptTa.classList.remove("correct", "wrong");
-  gOptIs.classList.remove("correct", "wrong");
-  gOptTa.disabled = false;
-  gOptIs.disabled = false;
-}
-
-function answerG(picked) {
-  const q = gQueue[gI];
-  gOptTa.disabled = true; gOptIs.disabled = true;
-  const btn = picked === "tá" ? gOptTa : gOptIs;
-  if (picked === q.verb) {
+  if (chosen.id === correct.id) {
     btn.classList.add("correct");
-    gS++; gScore.textContent = gS;
-    gFeedback.innerHTML = `<strong>Correct.</strong>`;
-    gFeedback.className = "gae-feedback ok";
+    idState.correct++;
+    idCorrectEl.textContent = idState.correct;
+    idFeedback.innerHTML = `<strong>Tá an ceart agat — correct.</strong> <em>${correct.ga}</em> means "${correct.en}". <button class="qfb-next" type="button">Ar aghaidh — next &rarr;</button>`;
+    idFeedback.className = "ga-feedback ok";
     ding();
   } else {
     btn.classList.add("wrong");
-    (q.verb === "tá" ? gOptTa : gOptIs).classList.add("correct");
-    gFeedback.innerHTML = `<strong>Not quite.</strong>`;
-    gFeedback.className = "gae-feedback bad";
+    const correctBtn = idOptionsEl.querySelector(`.id-opt[data-id="${correct.id}"]`);
+    if (correctBtn) correctBtn.classList.add("reveal");
+    idState.wrong++;
+    idWrongEl.textContent = idState.wrong;
+    idFeedback.innerHTML = `<strong>Ní hea — not quite.</strong> You picked <em>${chosen.ga}</em> ("${chosen.en}"). The right word for this picture is <em>${correct.ga}</em> — "${correct.en}". <button class="qfb-next" type="button">Ar aghaidh — next &rarr;</button>`;
+    idFeedback.className = "ga-feedback bad";
     buzz();
   }
-  gAnswer.hidden = false;
-  gAnswer.innerHTML = q.why;
-  setTimeout(() => { gI++; nextGrammar(); }, 1800);
-}
-gOptTa.addEventListener("click", () => answerG("tá"));
-gOptIs.addEventListener("click", () => answerG("is"));
-
-function finishGrammar() {
-  grammarResult.hidden = false;
-  let t, m;
-  if (gS === gQueue.length) { t = "Faultless."; m = `${gS} / ${gQueue.length}. Tá and Is sorted.`; fanfare(); }
-  else if (gS >= 6) { t = "Strong."; m = `${gS} / ${gQueue.length}. Review the explanations, then go again.`; fanfare(); }
-  else { t = "Round complete."; m = `${gS} / ${gQueue.length}. The rules at the top are the revision.`; }
-  gTitle.textContent = t;
-  gMsg.textContent = m;
+  idFeedback.querySelector(".qfb-next")?.addEventListener("click", () => {
+    idState.idx++;
+    idNextQuestion();
+  });
 }
 
-document.getElementById("grammarReset").addEventListener("click", startGrammar);
-document.getElementById("gAgain").addEventListener("click", startGrammar);
+function idFinish() {
+  idResultEl.hidden = false;
+  const total = idState.queue.length;
+  let title, msg;
+  if (idState.correct === total) {
+    title = "Iontach! — Excellent!";
+    msg = `${idState.correct} / ${total} — every Irish word in the right place. Go hiontach.`;
+    fanfare();
+  } else if (idState.correct >= total - 2) {
+    title = "Maith thú — Well done.";
+    msg = `${idState.correct} / ${total}. Almost perfect — a quick review of the missed words and you're there.`;
+    fanfare();
+  } else {
+    title = "Coinnigh ort — Keep going.";
+    msg = `${idState.correct} / ${total}. Each wrong answer told you the right Irish word — try once more.`;
+  }
+  idTitleEl.textContent = title;
+  idMsgEl.textContent = msg;
+}
+
+document.getElementById("idReset").addEventListener("click", idStart);
+document.getElementById("idAgain").addEventListener("click", idStart);
+
+// =================================================================
+// MODE 2 — Líon an Ciseán (Fill the basket)
+// Show a shopping list in Irish; drag the matching items from the shelf.
+// =================================================================
+const bkState = { round: 0, listIds: [], poolIds: [], placed: [], correct: 0, wrong: 0, selectedId: null };
+const bkListEl     = document.getElementById("bkList");
+const bkBasketDrop = document.getElementById("bkBasketDrop");
+const bkPoolEl     = document.getElementById("bkPool");
+const bkFeedback   = document.getElementById("bFeedback");
+const bkResultEl   = document.getElementById("bkResult");
+const bkTitleEl    = document.getElementById("bkTitle");
+const bkMsgEl      = document.getElementById("bkMsg");
+const bkRoundEl    = document.getElementById("bRound");
+const bkTotalEl    = document.getElementById("bTotal");
+const bkCorrectEl  = document.getElementById("bCorrect");
+const bkWrongEl    = document.getElementById("bWrong");
+bkTotalEl.textContent = SHOPPING_ROUNDS.length;
+
+function bkStart() {
+  bkState.round = 0;
+  bkState.correct = 0;
+  bkState.wrong = 0;
+  bkCorrectEl.textContent = "0";
+  bkWrongEl.textContent = "0";
+  bkResultEl.hidden = true;
+  bkLoadRound();
+}
+
+function bkLoadRound() {
+  bkState.placed = [];
+  bkState.selectedId = null;
+  bkRoundEl.textContent = bkState.round + 1;
+  bkState.listIds = SHOPPING_ROUNDS[bkState.round].slice();
+  const distractors = sample(FOODS.map(f => f.id), 4, bkState.listIds);
+  bkState.poolIds = shuffle([...bkState.listIds, ...distractors]);
+  bkRenderList();
+  bkRenderPool();
+  bkBasketDrop.innerHTML = "";
+  bkFeedback.innerHTML = "Drag (or tap an item then tap the basket) each item on your <em>liosta siopadóireachta</em> into the basket. Items <em>not</em> on the list will be sent back.";
+  bkFeedback.className = "ga-feedback";
+  bkResultEl.hidden = true;
+}
+
+function bkRenderList() {
+  bkListEl.innerHTML = "";
+  bkState.listIds.forEach((id, i) => {
+    const f = FOOD_BY_ID[id];
+    const li = document.createElement("li");
+    li.dataset.id = id;
+    if (bkState.placed.includes(id)) li.classList.add("done");
+    li.innerHTML = `
+      <span class="bk-num">${i + 1}</span>
+      <span class="bk-word">${f.ga}</span>
+      <span class="bk-en" style="font-size:0.78rem;color:var(--ga-muted);font-style:italic;">(${f.en})</span>
+      <span class="bk-check">${bkState.placed.includes(id) ? "&#x2713;" : ""}</span>
+    `;
+    bkListEl.appendChild(li);
+  });
+}
+
+function bkRenderPool() {
+  bkPoolEl.innerHTML = "";
+  bkState.poolIds.forEach(id => {
+    const f = FOOD_BY_ID[id];
+    const card = document.createElement("div");
+    card.className = "food-card";
+    card.draggable = true;
+    card.dataset.id = id;
+    card.innerHTML = `<div class="food-svg">${f.svg}</div><div class="food-label">${f.ga}</div>`;
+    if (bkState.placed.includes(id)) card.classList.add("used");
+
+    card.addEventListener("dragstart", e => {
+      if (bkState.placed.includes(id)) { e.preventDefault(); return; }
+      card.classList.add("dragging");
+      e.dataTransfer.setData("text/plain", id);
+      e.dataTransfer.effectAllowed = "move";
+    });
+    card.addEventListener("dragend", () => card.classList.remove("dragging"));
+
+    card.addEventListener("click", () => {
+      if (bkState.placed.includes(id)) return;
+      bkPoolEl.querySelectorAll(".food-card.selected").forEach(x => x.classList.remove("selected"));
+      if (bkState.selectedId === id) {
+        bkState.selectedId = null;
+        bkFeedback.textContent = "Selection cleared.";
+        bkFeedback.className = "ga-feedback";
+        return;
+      }
+      bkState.selectedId = id;
+      card.classList.add("selected");
+      bkFeedback.innerHTML = `<em>${f.ga}</em> selected — now tap the basket to place it.`;
+      bkFeedback.className = "ga-feedback";
+    });
+
+    bkPoolEl.appendChild(card);
+  });
+}
+
+bkBasketDrop.addEventListener("dragover", e => {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  bkBasketDrop.classList.add("over");
+});
+bkBasketDrop.addEventListener("dragleave", () => bkBasketDrop.classList.remove("over"));
+bkBasketDrop.addEventListener("drop", e => {
+  e.preventDefault();
+  bkBasketDrop.classList.remove("over");
+  const id = e.dataTransfer.getData("text/plain");
+  if (id) bkAttempt(id);
+});
+bkBasketDrop.addEventListener("click", () => {
+  if (bkState.selectedId) bkAttempt(bkState.selectedId);
+});
+
+function bkAttempt(id) {
+  if (bkState.placed.includes(id)) return;
+  const f = FOOD_BY_ID[id];
+  const onList = bkState.listIds.includes(id);
+
+  if (onList) {
+    bkState.placed.push(id);
+    bkState.correct++;
+    bkCorrectEl.textContent = bkState.correct;
+    const card = document.createElement("div");
+    card.className = "food-card in-basket";
+    card.innerHTML = `<div class="food-svg">${f.svg}</div><div class="food-label">${f.ga}</div>`;
+    bkBasketDrop.appendChild(card);
+    bkFeedback.innerHTML = `<strong>Maith thú —</strong> <em>${f.ga}</em> ("${f.en}") was on the list.`;
+    bkFeedback.className = "ga-feedback ok";
+    ding();
+    bkRenderList();
+    bkRenderPool();
+    if (bkState.placed.length === bkState.listIds.length) {
+      setTimeout(bkFinishRound, 450);
+    }
+  } else {
+    bkState.wrong++;
+    bkWrongEl.textContent = bkState.wrong;
+    const card = bkPoolEl.querySelector(`.food-card[data-id="${id}"]`);
+    if (card) {
+      card.classList.add("flash-bad");
+      setTimeout(() => card.classList.remove("flash-bad"), 380);
+    }
+    bkFeedback.innerHTML = `<strong>Ní hea —</strong> <em>${f.ga}</em> ("${f.en}") isn't on the list. Leave it on the shelf.`;
+    bkFeedback.className = "ga-feedback bad";
+    buzz();
+  }
+  bkState.selectedId = null;
+  bkPoolEl.querySelectorAll(".food-card.selected").forEach(x => x.classList.remove("selected"));
+}
+
+function bkFinishRound() {
+  bkResultEl.hidden = false;
+  const isLast = bkState.round === SHOPPING_ROUNDS.length - 1;
+  bkTitleEl.textContent = isLast ? "Críochnaithe! — Finished!" : "Babhta críochnaithe — Round done.";
+  bkMsgEl.textContent = isLast
+    ? `All ${SHOPPING_ROUNDS.length} shopping lists complete. ${bkState.correct} correct items, ${bkState.wrong} wrong attempts overall.`
+    : `Shopping list ${bkState.round + 1} done. ${bkState.wrong === 0 ? "Perfect this round — no wrong items." : "Keep going."}`;
+  document.getElementById("bkAgain").textContent = isLast ? "Tosaigh arís — Start over" : "Babhta nua — Next round";
+  if (bkState.wrong === 0) fanfare();
+}
+
+document.getElementById("bkReset").addEventListener("click", bkStart);
+document.getElementById("bkAgain").addEventListener("click", () => {
+  if (bkState.round >= SHOPPING_ROUNDS.length - 1) {
+    bkStart();
+  } else {
+    bkState.round++;
+    bkLoadRound();
+  }
+});
+
+// =================================================================
+// MODE 3 — Cluiche Cuimhne (Memory match)
+// Flip pairs: picture card matches its Irish word card.
+// =================================================================
+const memState = { cards: [], flipped: [], matched: 0, tries: 0, locked: false };
+const memoryGrid = document.getElementById("memoryGrid");
+const mPairsEl   = document.getElementById("mPairs");
+const mTotalPairs= document.getElementById("mTotalPairs");
+const mTriesEl   = document.getElementById("mTries");
+const mFeedback  = document.getElementById("mFeedback");
+const memResult  = document.getElementById("memoryResult");
+const mTitleEl   = document.getElementById("mTitle");
+const mMsgEl     = document.getElementById("mMsg");
+const MEMORY_PAIRS = 8;
+
+function memStart() {
+  memState.matched = 0;
+  memState.tries = 0;
+  memState.flipped = [];
+  memState.locked = false;
+  mPairsEl.textContent = "0";
+  mTotalPairs.textContent = MEMORY_PAIRS;
+  mTriesEl.textContent = "0";
+  memResult.hidden = true;
+  mFeedback.innerHTML = "Flip two cards at a time — match each picture with its Irish word.";
+  mFeedback.className = "ga-feedback";
+
+  const picks = shuffle(FOODS).slice(0, MEMORY_PAIRS);
+  const cards = [];
+  picks.forEach(f => {
+    cards.push({ pairId: f.id, type: "pic", food: f });
+    cards.push({ pairId: f.id, type: "word", food: f });
+  });
+  memState.cards = shuffle(cards);
+
+  memoryGrid.innerHTML = "";
+  memState.cards.forEach((c, i) => {
+    const card = document.createElement("div");
+    card.className = "mem-card";
+    card.dataset.idx = i;
+    const frontHtml = c.type === "pic"
+      ? `<div class="mem-face mem-front">${c.food.svg}</div>`
+      : `<div class="mem-face mem-front word">${c.food.ga}</div>`;
+    card.innerHTML = `
+      <div class="mem-inner">
+        <div class="mem-face mem-back">?</div>
+        ${frontHtml}
+      </div>
+    `;
+    card.addEventListener("click", () => memFlip(i, card));
+    memoryGrid.appendChild(card);
+  });
+}
+
+function memFlip(idx, card) {
+  if (memState.locked) return;
+  if (card.classList.contains("flipped") || card.classList.contains("matched")) return;
+  card.classList.add("flipped");
+  memState.flipped.push({ idx, card });
+  if (memState.flipped.length === 2) {
+    memState.tries++;
+    mTriesEl.textContent = memState.tries;
+    const [a, b] = memState.flipped;
+    const ca = memState.cards[a.idx];
+    const cb = memState.cards[b.idx];
+    if (ca.pairId === cb.pairId && ca.type !== cb.type) {
+      a.card.classList.add("matched");
+      b.card.classList.add("matched");
+      memState.matched++;
+      mPairsEl.textContent = memState.matched;
+      mFeedback.innerHTML = `<strong>Maith thú —</strong> <em>${ca.food.ga}</em> means "${ca.food.en}".`;
+      mFeedback.className = "ga-feedback ok";
+      ding();
+      memState.flipped = [];
+      if (memState.matched === MEMORY_PAIRS) setTimeout(memFinish, 450);
+    } else {
+      memState.locked = true;
+      a.card.classList.add("mismatch");
+      b.card.classList.add("mismatch");
+      mFeedback.innerHTML = `Not a match — try again.`;
+      mFeedback.className = "ga-feedback bad";
+      buzz();
+      setTimeout(() => {
+        a.card.classList.remove("flipped", "mismatch");
+        b.card.classList.remove("flipped", "mismatch");
+        memState.flipped = [];
+        memState.locked = false;
+      }, 900);
+    }
+  }
+}
+
+function memFinish() {
+  memResult.hidden = false;
+  mTitleEl.textContent = "Críochnaithe! — Finished!";
+  mMsgEl.textContent = `All ${MEMORY_PAIRS} pairs matched in ${memState.tries} tries. ${memState.tries <= MEMORY_PAIRS + 2 ? "Iontach — excellent memory." : "Try again to beat your score."}`;
+  fanfare();
+}
+
+document.getElementById("mReset").addEventListener("click", memStart);
+document.getElementById("mAgain").addEventListener("click", memStart);
+
+// =================================================================
+// Tabs
+// =================================================================
+const tabBtns = {
+  identify: document.getElementById("tabIdentify"),
+  basket:   document.getElementById("tabBasket"),
+  memory:   document.getElementById("tabMemory"),
+};
+const panes = {
+  identify: document.getElementById("paneIdentify"),
+  basket:   document.getElementById("paneBasket"),
+  memory:   document.getElementById("paneMemory"),
+};
+Object.entries(tabBtns).forEach(([key, btn]) => {
+  btn.addEventListener("click", () => {
+    Object.values(tabBtns).forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    Object.entries(panes).forEach(([k, p]) => p.hidden = k !== key);
+  });
+});
+
+// Boot
+idStart();
+bkStart();
+memStart();

@@ -18,7 +18,7 @@ const DEPARTMENTS = [
   { slug: "health-and-social-care",       name: "Health and Social Care",    level: "A-Level", board: "CCEA", topic: "Human nutrition and dietary intake",            activity: "Dietary analyser" },
   { slug: "history",                      name: "History",                   level: "GCSE",    board: "CCEA", topic: "New tensions emerge 1991–2003",                 activity: "Interactive timeline" },
   { slug: "home-economics",               name: "Home Economics",            level: "GCSE",    board: "CCEA", topic: "Food safety in the kitchen",                    activity: "Hazard hunter" },
-  { slug: "irish",                        name: "Irish / Gaeilge",           level: "KS3",     board: "—",    topic: "Introductions, personal info, family",          activity: "Vocab + grammar game" },
+  { slug: "irish",                        name: "Irish / Gaeilge",           level: "KS3",     board: "—",    topic: "Bia agus deoch — food &amp; drink vocabulary",  activity: "Picture-word game + shopping basket" },
   { slug: "junior-science",               name: "Junior Science",            level: "KS3",     board: "—",    topic: "Cells, organisation and specialised cells",     activity: "Cell explorer" },
   { slug: "leisure-travel-and-tourism",   name: "Leisure, Travel &amp; Tourism", level: "GCSE",  board: "CCEA", topic: "Technology &amp; change in the industry",          activity: "Customer journey builder" },
   { slug: "mathematics",                  name: "Mathematics",               level: "KS3",     board: "—",    topic: "Fractions, decimals and percentages",           activity: "Live converter" },
