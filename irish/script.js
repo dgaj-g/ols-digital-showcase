@@ -325,10 +325,11 @@ function bkRenderList() {
     const li = document.createElement("li");
     li.dataset.id = id;
     if (bkState.placed.includes(id)) li.classList.add("done");
+    // List shows the Irish word ONLY — the player must know what it
+    // means before they can pick the right picture off the shelf.
     li.innerHTML = `
       <span class="bk-num">${i + 1}</span>
       <span class="bk-word">${f.ga}</span>
-      <span class="bk-en" style="font-size:0.78rem;color:var(--ga-muted);font-style:italic;">(${f.en})</span>
       <span class="bk-check">${bkState.placed.includes(id) ? "&#x2713;" : ""}</span>
     `;
     bkListEl.appendChild(li);
@@ -343,7 +344,9 @@ function bkRenderPool() {
     card.className = "food-card";
     card.draggable = true;
     card.dataset.id = id;
-    card.innerHTML = `<div class="food-svg">${f.svg}</div><div class="food-label">${f.ga}</div>`;
+    // Shelf cards are PICTURE-ONLY — the player must recognise the picture
+    // and match it against the Irish word on the shopping list.
+    card.innerHTML = `<div class="food-svg">${f.svg}</div>`;
     if (bkState.placed.includes(id)) card.classList.add("used");
 
     card.addEventListener("dragstart", e => {
@@ -365,7 +368,8 @@ function bkRenderPool() {
       }
       bkState.selectedId = id;
       card.classList.add("selected");
-      bkFeedback.innerHTML = `<em>${f.ga}</em> selected — now tap the basket to place it.`;
+      // Don't reveal the Irish word here — that would defeat the point.
+      bkFeedback.innerHTML = `Item selected — now tap the basket to place it.`;
       bkFeedback.className = "ga-feedback";
     });
 
